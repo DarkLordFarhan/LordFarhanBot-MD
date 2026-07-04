@@ -6,7 +6,7 @@ This is a WhatsApp bot built using the Baileys library for group management, inc
 
 <div align="center"> 
   <a href="https://youtube.com/@mr_unique_hacker"> 
-    <img src="https://github.com/DarkLordFarhan/LordFarhan-MD/blob/main/assets/bot_image.jpg" alt="LordFarhan" height="300"> 
+    <img src="https://github.com/DarkLordFarhan/LordFarhanBot-MD/blob/main/assets/bot_image.jpg" alt="LordFarhan" height="300"> 
   </a> 
 </div>
 
