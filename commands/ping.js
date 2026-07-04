@@ -8,11 +8,11 @@ function formatTime(seconds) {
     seconds = seconds % (60 * 60);
     const minutes = Math.floor(seconds / 60);
     seconds = Math.floor(seconds % 60);
-    let time = '';
+    let time = '\;
     if (days > 0) time += days + 'd ';
     if (hours > 0) time += hours + 'h ';
     if (minutes > 0) time += minutes + 'm ';
-    if (seconds > 0 || time === '') time += seconds + 's';
+    if (seconds > 0 || time === ''') time += seconds + 's';
     return time.trim();
 }
 
@@ -24,14 +24,11 @@ async function pingCommand(sock, chatId, message) {
         const ping = Math.round((end - start) / 2);
         const uptimeFormatted = formatTime(process.uptime());
 
-        const botInfo = [
-            '┏━━〔 🤖 𝐋𝐨𝐫𝐝𝐅𝐚𝐫𝐡𝐚𝐧 𝐁𝐨𝐭 〕━━┓',
-            '┃ 🚀 Ping     : ' + ping + ' ms',
-            '┃ ⏱️ Uptime   : ' + uptimeFormatted,
-            '┃ 🔖 Version  : v' + settings.version,
-            '┗━━━━━━━━━━━━━━━━━━━━━┛'
-        ].join('
-');
+        const botInfo = '┏━━〔 🤖 𝐋𝐨𝐫𝐝𝐅𝐚𝐫𝐡𝐚𝐧 𝐁𝐨𝐭 〕━━┓' + '\n' +
+            '┃ 🚀 Ping     : ' + ping + ' ms' + '\n' +
+            '┃ ⏱️ Uptime   : ' + uptimeFormatted + '\n' +
+            '┃ 🔖 Version  : v' + settings.version + '\n' +
+            '┗━━━━━━━━━━━━━━━━━━━━━┛';
 
         await sock.sendMessage(chatId, { text: botInfo }, { quoted: message });
     } catch (error) {
