@@ -2,15 +2,11 @@
 
 This is a WhatsApp bot built using the Baileys library for group management, including features like tagging all members, muting/unmuting, and many more. It's designed to help admins efficiently manage WhatsApp groups.
 
-<div align="center"> 
-  <a href="https://git.io/typing-svg"> 
-    <img src="https://readme-typing-svg.demolab.com?font=Ribeye&size=50&pause=1000&color=33ff00&center=true&width=910&height=100&lines=Knight-Bot;Multi+Device+Whatsapp+Bot;Coded+By+Professor" alt="Typing SVG" />
-  </a> 
-</div> 
+[![Typing SVG](https://readme-typing-svg.demolab.com?font=Fira+Code&pause=1000&color=5EBB26&width=435&lines=LordFarhan+Bot+;Coded+by+DarkLordFarhanXMDTech+)](https://git.io/typing-svg)
 
 <div align="center"> 
   <a href="https://youtube.com/@mr_unique_hacker"> 
-    <img src="https://github.com/DarkLordFarhan/LordFarhan-MD/blob/main/assets/bot_image.jpg" alt="Knight Bot" height="300"> 
+    <img src="https://github.com/DarkLordFarhan/LordFarhan-MD/blob/main/assets/bot_image.jpg" alt="LordFarhan" height="300"> 
   </a> 
 </div>
 
@@ -47,7 +43,7 @@ This is a WhatsApp bot built using the Baileys library for group management, inc
 
 ### Step 1: Fork the Repository
 
-Click the button below to fork the Knight Bot repository to your GitHub account:
+Click the button below to fork the LordFarhan repository to your GitHub account:
 
 <div align="center">
   <a href="https://github.com/DarkLordFarhan/LordFarhanbot-MD/fork">
@@ -62,7 +58,7 @@ Click the button below to fork the Knight Bot repository to your GitHub account:
 Deploy the bot and easily connect it to your WhatsApp account by pair code. Click the button below to deploy the bot on Replit.
 
 <div align="center">
-  <a href="https://knight-bot-paircode.onrender.com" target="_blank">
+  <a href="https://LordFarhan-paircode.onrender.com" target="_blank">
     
   </a>
 </div>
