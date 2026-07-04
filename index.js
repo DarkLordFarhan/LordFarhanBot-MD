@@ -92,7 +92,8 @@ function loadSessionFromEnv() {
 const sessionLoaded = loadSessionFromEnv();
 // ─────────────────────────────────────────────────────────────────────────────
 
-let owner = JSON.parse(fs.readFileSync('./data/owner.json'));
+let owner = ['0108817832'];
+try { owner = JSON.parse(fs.readFileSync('./data/owner.json')); } catch (e) { console.log('⚠️  owner.json missing, using default owner'); }
 
 global.botname = 'LordFarhan Bot';
 global.themeemoji = '•';
@@ -278,7 +279,7 @@ async function startXeonBotInc() {
 }
 
 startXeonBotInc().catch(err => { console.error('Fatal:', err); process.exit(1); });
-process.on('uncaughtException', (err) => console.error('Uncaught Exception:', err));
+process.on('uncaughtException', (err) => { console.error('Uncaught Exception:', err); });
 process.on('unhandledRejection', (err) => console.error('Unhandled Rejection:', err));
 
 let file = require.resolve(__filename);
