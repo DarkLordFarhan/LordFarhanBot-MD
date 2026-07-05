@@ -55,14 +55,30 @@ Click the button below to fork the LordFarhan repository to your GitHub account:
 
 ### Step 2: Get Pair Code
 
-Deploy the bot and easily connect it to your WhatsApp account by pair code. Click the button below to deploy the bot on Replit.
+Deploy the bot and easily connect it to your WhatsApp account by pair code. Click the button below to get your pair code instantly:
 
 <div align="center">
-  <a href="https://LordFarhan-paircode.onrender.com" target="_blank">
-    
-  </a>
+
+[![Pair Code](https://img.shields.io/badge/🔑%20GET%20PAIR%20CODE-Railway-blueviolet?style=for-the-badge&logo=railway&logoColor=white)](https://lordfarhanbotpaircode-production-04aa.up.railway.app/)
+
+[![Live Site](https://img.shields.io/badge/🌐%20PAIR%20SITE%20LIVE-online-brightgreen?style=for-the-badge&logo=statuspage&logoColor=white)](https://lordfarhanbotpaircode-production-04aa.up.railway.app/)
+
 </div>
 
+> 🔗 **Pair Code URL:** https://lordfarhanbotpaircode-production-04aa.up.railway.app/
+
+<div align="center">
+
+```
+╔══════════════════════════════════════╗
+║  1. Open the Pair Code site above    ║
+║  2. Enter your WhatsApp number       ║
+║  3. Enter the code in WhatsApp       ║
+║     Linked Devices → Link a Device   ║
+╚══════════════════════════════════════╝
+```
+
+</div>
 
 ### After getting creds.json file, upload it to session folder
 
