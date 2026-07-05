@@ -5,7 +5,7 @@ This is a WhatsApp bot built using the Baileys library for group management, inc
 [![Typing SVG](https://readme-typing-svg.demolab.com?font=Fira+Code&pause=1000&color=5EBB26&width=435&lines=LordFarhan+Bot+;Coded+by+DarkLordFarhanXMDTech+)](https://git.io/typing-svg)
 
 <div align="center"> 
-  <a href="https://youtube.com/@mr_unique_hacker"> 
+  <a href="https://youtube.com/@DarkLordFarhanXMD"> 
     <img src="https://github.com/DarkLordFarhan/LordFarhanBot-MD/blob/main/assets/bot_image.jpg" alt="LordFarhan" height="300"> 
   </a> 
 </div>
