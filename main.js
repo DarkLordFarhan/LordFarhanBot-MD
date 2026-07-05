@@ -146,19 +146,14 @@ const soraCommand = require('./commands/sora');
 // Global settings
 global.packname = settings.packname;
 global.author = settings.author;
-global.channelLink = "https://whatsapp.com/channel/0029Vb8ANT4J93weNOlcux3g";
+global.channelLink = "";
 global.ytch = "Dark Lord Farhan";
 
 // Add this near the top of main.js with other global configurations
 const channelInfo = {
     contextInfo: {
         forwardingScore: 1,
-        isForwarded: true,
-        forwardedNewsletterMessageInfo: {
-            newsletterJid: '120363161513685998@newsletter',
-            newsletterName: 'LordFarhanBot MD',
-            serverMessageId: -1
-        }
+        isForwarded: true
     }
 };
 
@@ -197,7 +192,7 @@ async function handleMessages(sock, messageUpdate, printLog) {
 
             if (buttonId === 'channel') {
                 await sock.sendMessage(chatId, {
-                    text: '📢 *Join our Channel:*\nhttps://whatsapp.com/channel/0029Vb8ANT4J93weNOlcux3g'
+                    text: '📢 *Join our Channel:*\nPowered by LordBOTs'
                 }, { quoted: message });
                 return;
             } else if (buttonId === 'owner') {
@@ -206,7 +201,7 @@ async function handleMessages(sock, messageUpdate, printLog) {
                 return;
             } else if (buttonId === 'support') {
                 await sock.sendMessage(chatId, {
-                    text: `🔗 *Support*\n\nhttps://whatsapp.com/channel/0029Vb8ANT4J93weNOlcux3g`
+                    text: `🔗 *Support*\n\nPowered by LordBOTs`
                 }, { quoted: message });
                 return;
             }

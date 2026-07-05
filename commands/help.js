@@ -159,9 +159,7 @@ async function helpCommand(sock, chatId, message) {
 ║ ➤ .git
 ║ ➤ .github
 ╚═══════════════════╝
-
-📢 *Join our channel for updates:*
-https://whatsapp.com/channel/0029Vb8ANT4J93weNOlcux3g`;
+`;
 
     try {
         const imagePath = path.join(__dirname, '../assets/bot_image.jpg');
@@ -173,12 +171,7 @@ https://whatsapp.com/channel/0029Vb8ANT4J93weNOlcux3g`;
                 caption: helpMessage,
                 contextInfo: {
                     forwardingScore: 1,
-                    isForwarded: true,
-                    forwardedNewsletterMessageInfo: {
-                        newsletterJid: '120363161513685998@newsletter',
-                        newsletterName: 'LordFarhan Bot',
-                        serverMessageId: -1
-                    }
+                    isForwarded: true
                 }
             }, { quoted: message });
         } else {
@@ -186,12 +179,7 @@ https://whatsapp.com/channel/0029Vb8ANT4J93weNOlcux3g`;
                 text: helpMessage,
                 contextInfo: {
                     forwardingScore: 1,
-                    isForwarded: true,
-                    forwardedNewsletterMessageInfo: {
-                        newsletterJid: '120363161513685998@newsletter',
-                        newsletterName: 'LordFarhan Bot',
-                        serverMessageId: -1
-                    }
+                    isForwarded: true
                 }
             }, { quoted: message });
         }
