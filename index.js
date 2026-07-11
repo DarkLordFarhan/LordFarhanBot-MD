@@ -109,6 +109,19 @@ const channelInfo = {
     }
 };
 
+// ─── FANCY FONT (serif, "Times New Roman"-style) ──────────────────────────────
+// WhatsApp has no real font support, so bots fake it with Unicode Mathematical
+// Alphanumeric glyphs. Bold Serif renders closest to a Times New Roman look.
+function toSerifFont(str) {
+    return str.replace(/[A-Za-z0-9]/g, (ch) => {
+        const code = ch.codePointAt(0);
+        if (code >= 65 && code <= 90) return String.fromCodePoint(0x1D400 + (code - 65));   // A-Z
+        if (code >= 97 && code <= 122) return String.fromCodePoint(0x1D41A + (code - 97));  // a-z
+        if (code >= 48 && code <= 57) return String.fromCodePoint(0x1D7CE + (code - 48));   // 0-9
+        return ch;
+    });
+}
+
 async function startXeonBotInc() {
     try {
         let { version, isLatest } = await fetchLatestBaileysVersion();
@@ -216,10 +229,19 @@ async function startXeonBotInc() {
                 console.log(chalk.green('Connected! => ' + JSON.stringify(XeonBotInc.user, null, 2)));
                 try {
                     const botNumber = XeonBotInc.user.id.split(':')[0] + '@s.whatsapp.net';
-                    await XeonBotInc.sendMessage(botNumber, {
-                        text: '*LordFarhan Bot Connected!*\n\nStatus: Online\n_Powered by DarkLordFarhanXMDTech_',
-                        ...channelInfo
-                    });
+                    const caption = toSerifFont('LordFarhan Bot Connected!') +
+                        '\n\n' + toSerifFont('Status: Online') +
+                        '\n' + toSerifFont('Powered by DarkLordFarhanXMDTech');
+                    const imagePath = path.join(__dirname, 'assets', 'bot_image.jpg');
+                    if (fs.existsSync(imagePath)) {
+                        await XeonBotInc.sendMessage(botNumber, {
+                            image: fs.readFileSync(imagePath),
+                            caption,
+                            ...channelInfo
+                        });
+                    } else {
+                        await XeonBotInc.sendMessage(botNumber, { text: caption, ...channelInfo });
+                    }
                 } catch (e) { console.error('Error sending connect message:', e.message); }
                 await delay(1999);
                 console.log(chalk.bold.blue('[ LordFarhan Bot ]'));
