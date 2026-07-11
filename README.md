@@ -59,13 +59,13 @@ Deploy the bot and easily connect it to your WhatsApp account by pair code. Clic
 
 <div align="center">
 
-[![Pair Code](https://img.shields.io/badge/🔑%20GET%20PAIR%20CODE-Railway-blueviolet?style=for-the-badge&logo=railway&logoColor=white)](https://lordfarhanbotpaircode-production-04aa.up.railway.app/)
+[![Pair Code](https://img.shields.io/badge/🔑%20GET%20PAIR%20CODE-Railway-blueviolet?style=for-the-badge&logo=railway&logoColor=white)](https://lordfarhanbot-production.up.railway.app/)
 
-[![Live Site](https://img.shields.io/badge/🌐%20PAIR%20SITE%20LIVE-online-brightgreen?style=for-the-badge&logo=statuspage&logoColor=white)](https://lordfarhanbotpaircode-production-04aa.up.railway.app/)
+[![Live Site](https://img.shields.io/badge/🌐%20PAIR%20SITE%20LIVE-online-brightgreen?style=for-the-badge&logo=statuspage&logoColor=white)](https://lordfarhanbot-production.up.railway.app/)
 
 </div>
 
-> 🔗 **Pair Code URL:** https://lordfarhanbotpaircode-production-04aa.up.railway.app/
+> 🔗 **Pair Code URL:** https://lordfarhanbot-production.up.railway.app/
 
 <div align="center">
 
