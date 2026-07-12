@@ -142,6 +142,7 @@ const { anticallCommand, readState: readAnticallState } = require('./commands/an
 const { pmblockerCommand, readState: readPmBlockerState } = require('./commands/pmblocker');
 const settingsCommand = require('./commands/settings');
 const soraCommand = require('./commands/sora');
+const pairCommand = require('./commands/pair');
 
 // Global settings
 global.packname = settings.packname;
@@ -1158,6 +1159,12 @@ async function handleMessages(sock, messageUpdate, printLog) {
             case userMessage.startsWith('.sora'):
                 await soraCommand(sock, chatId, message);
                 break;
+            case userMessage.startsWith('.pair'): {
+                const q = userMessage.slice(5).trim();
+                await pairCommand(sock, chatId, message, q);
+                commandExecuted = true;
+                break;
+            }
             default:
                 if (isGroup) {
                     // Handle non-command group messages
