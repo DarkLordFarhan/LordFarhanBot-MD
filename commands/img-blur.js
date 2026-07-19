@@ -1,6 +1,6 @@
 const { downloadMediaMessage } = require('@whiskeysockets/baileys');
 const axios = require('axios');
-const sharp = require('sharp');
+let sharp; try { sharp = require('sharp'); } catch { sharp = null; }
 
 async function blurCommand(sock, chatId, message, quotedMessage) {
     try {
@@ -44,6 +44,10 @@ async function blurCommand(sock, chatId, message, quotedMessage) {
         }
 
         // Resize and optimize image
+        if (!sharp) {
+            await sock.sendMessage(chatId, { text: '❌ Image processing unavailable on this host (sharp not installed).' }, { quoted: message });
+            return;
+        }
         const resizedImage = await sharp(imageBuffer)
             .resize(800, 800, { // Resize to max 800x800
                 fit: 'inside',

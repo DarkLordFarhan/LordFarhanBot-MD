@@ -1,4 +1,4 @@
-const sharp = require('sharp');
+let sharp; try { sharp = require('sharp'); } catch { sharp = null; }
 const fs = require('fs');
 const fsPromises = require('fs/promises');
 const fse = require('fs-extra');
@@ -27,6 +27,10 @@ const convertStickerToImage = async (sock, quotedMessage, chatId) => {
             return;
         }
 
+        if (!sharp) {
+            await sock.sendMessage(chatId, { text: '❌ Image processing unavailable on this host (sharp not installed).' });
+            return;
+        }
         const stickerFilePath = path.join(tempDir, `sticker_${Date.now()}.webp`);
         const outputImagePath = path.join(tempDir, `converted_image_${Date.now()}.png`);
 

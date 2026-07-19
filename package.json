@@ -25,7 +25,6 @@
   "dependencies": {
     "@adiwajshing/keyed-db": "^0.2.4",
     "express": "^4.18.2",
-    "@ffmpeg/ffmpeg": "^0.12.15",
     "@hapi/boom": "^10.0.1",
     "@types/node": "^18.0.6",
     "@whiskeysockets/baileys": "^v7.0.0-rc.9",

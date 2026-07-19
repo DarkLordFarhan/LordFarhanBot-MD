@@ -3,7 +3,7 @@ const { writeExifImg } = require('../lib/exif');
 const delay = time => new Promise(res => setTimeout(res, time));
 const fs = require('fs');
 const path = require('path');
-const sharp = require('sharp');
+let sharp; try { sharp = require('sharp'); } catch { sharp = null; }
 const webp = require('node-webpmux');
 const crypto = require('crypto');
 const { exec } = require('child_process');

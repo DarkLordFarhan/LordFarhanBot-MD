@@ -53,51 +53,159 @@ Click the button below to fork the LordFarhan repository to your GitHub account:
 
 ---
 
-### Step 2: Get Pair Code
+### Step 2: Get Your SESSION_ID
 
-Deploy the bot and easily connect it to your WhatsApp account by pair code. Click the button below to get your pair code instantly:
-
-<div align="center">
-
-[![Pair Code](https://img.shields.io/badge/🔑%20GET%20PAIR%20CODE-Railway-blueviolet?style=for-the-badge&logo=railway&logoColor=white)](https://lordfarhanbot-production.up.railway.app/)
-
-[![Live Site](https://img.shields.io/badge/🌐%20PAIR%20SITE%20LIVE-online-brightgreen?style=for-the-badge&logo=statuspage&logoColor=white)](https://lordfarhanbot-production.up.railway.app/)
-
-</div>
-
-> 🔗 **Pair Code URL:** https://lordfarhanbot-production.up.railway.app/
+You need a SESSION_ID to connect the bot to your WhatsApp without scanning a QR code every time.
 
 <div align="center">
 
-```
-╔══════════════════════════════════════╗
-║  1. Open the Pair Code site above    ║
-║  2. Enter your WhatsApp number       ║
-║  3. Enter the code in WhatsApp       ║
-║     Linked Devices → Link a Device   ║
-╚══════════════════════════════════════╝
-```
+[![Pair Code](https://img.shields.io/badge/🔑%20GET%20SESSION%20ID-Pair%20Site-blueviolet?style=for-the-badge&logo=whatsapp&logoColor=white)](https://lordfarhanbot-production.up.railway.app/)
 
 </div>
 
-### After getting creds.json file, upload it to session folder
+> 🔗 **Pair Site:** https://lordfarhanbot-production.up.railway.app/
+
+```
+╔══════════════════════════════════════════════╗
+║  1. Open the Pair Site above                 ║
+║  2. Enter your WhatsApp number (with code)   ║
+║     e.g. 254712345678 (no + or spaces)       ║
+║  3. A 8-digit code appears — enter it in     ║
+║     WhatsApp → Linked Devices → Link Device  ║
+║  4. The bot DMs you the SESSION_ID           ║
+╚══════════════════════════════════════════════╝
+```
+
+Copy the full `SESSION_ID` value — you'll paste it in each deployment below.
 
 ---
 
-### Step 3: Deploy Now
+### Step 3: Choose Your Deployment
 
-For further customization and setup guidance, click the button below:
+---
+
+## 📱 Deploy on Termux (Android)
+
+Run the bot directly on your Android phone using Termux.
+
+### Requirements
+- [Termux](https://f-droid.org/en/packages/com.termux/) installed from **F-Droid** (not Play Store)
+
+### Commands
+
+```bash
+# 1. Update packages and install dependencies
+pkg update -y && pkg upgrade -y
+pkg install -y nodejs git ffmpeg
+
+# 2. Clone the bot
+git clone https://github.com/DarkLordFarhan/LordFarhanBot-MD.git
+cd LordFarhanBot-MD
+
+# 3. Install Node packages
+npm install --legacy-peer-deps
+
+# 4. Set your SESSION_ID
+echo "SESSION_ID=YOUR_SESSION_ID_HERE" > .env
+
+# 5. Start the bot
+npm start
+```
+
+> Replace `YOUR_SESSION_ID_HERE` with the SESSION_ID you got from Step 2.
+
+### Keep bot running after closing Termux
+
+```bash
+# Install tmux
+pkg install tmux
+
+# Start a tmux session
+tmux new -s lordfarhan
+
+# Run the bot inside tmux
+cd LordFarhanBot-MD && npm start
+
+# Detach (bot keeps running): press Ctrl+B then D
+# Reattach later: tmux attach -t lordfarhan
+```
+
+### Update the bot later
+
+```bash
+cd LordFarhanBot-MD
+git pull
+npm install --legacy-peer-deps
+npm start
+```
+
+---
+
+## 🖥️ Deploy on Bot-hosting.net (Panel)
+
+### Setup Steps
+
+1. **Create a new server** on [bot-hosting.net](https://bot-hosting.net/)
+2. **Set Node.js version to 18 or higher** in server settings
+3. **Go to the Git tab** and paste your forked repo URL:
+   ```
+   https://github.com/YOUR_USERNAME/LordFarhanBot-MD.git
+   ```
+   Click **Pull** to clone the files.
+
+4. **Set Startup Command** (in the Startup tab):
+   ```
+   npm install --legacy-peer-deps && npm start
+   ```
+
+5. **Set Environment Variable** (in the Variables / Startup tab):
+   ```
+   SESSION_ID = YOUR_SESSION_ID_HERE
+   ```
+
+6. **Start the server** — the bot will install packages and connect automatically.
+
+> ⚠️ **If it crashes on install:** Go to the Console tab and run:
+> ```
+> npm install --legacy-peer-deps --ignore-scripts=false
+> ```
+> Then start the server again.
+
+---
+
+## 🟣 Deploy on Katabump (Recommended Panel)
 
 <div align="center">
-  <a href="🥲🥲🥲">
-    <img src="https://img.shields.io/badge/Deploy Tutorial-dc3545?style=for-the-badge&logo=youtube" alt="YouTube Link"/>
-  </a>
-  <a href="https://bot-hosting.net/">
-    <img src="https://img.shields.io/badge/Deploy on Panel-28a745?style=for-the-badge" alt="Deploy on Panel"/>
-  </a>
+<a href="https://dashboard.katabump.com/auth/login#d6b7d6" target="_blank">
+  <img src="https://img.shields.io/badge/Katabump-D6B7D6?style=for-the-badge&logo=server&logoColor=black" alt="Katabump"/>
+</a>
 </div>
 
-### Deploy on VPS
+1. Sign up at [dashboard.katabump.com](https://dashboard.katabump.com/auth/login#d6b7d6)
+2. Create a new Node.js server
+3. Pull from your forked repo
+4. Set startup command: `npm install --legacy-peer-deps && npm start`
+5. Add `SESSION_ID` in the Variables tab
+6. Start — works out of the box ✅
+
+---
+
+## ☁️ Deploy on Railway
+
+<div align="center">
+<a href="https://railway.app" target="_blank">
+  <img src="https://img.shields.io/badge/Deploy%20on-Railway-5865F2?style=for-the-badge&logo=railway&logoColor=white" alt="Railway"/>
+</a>
+</div>
+
+1. Go to [railway.app](https://railway.app) and create a new project
+2. Connect your GitHub and select your forked repo
+3. Add `SESSION_ID` in the **Variables** tab
+4. Railway auto-detects Node.js and deploys — no extra config needed
+
+---
+
+## 🖧 Deploy on VPS
 
 <div align="center">
   <a href="https://client.petrosky.io/aff.php?aff=394" target="_blank">
@@ -105,12 +213,29 @@ For further customization and setup guidance, click the button below:
   </a>
 </div>
 
-### Deploy on Below Panel
-<div align="center">
-<a href="https://dashboard.katabump.com/auth/login#d6b7d6" target="_blank">
-  <img src="https://img.shields.io/badge/Katabump-D6B7D6?style=for-the-badge&logo=server&logoColor=black" alt="Katabump"/>
-</a>
-</div>
+```bash
+# Install Node.js 20 (if not installed)
+curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+apt install -y nodejs git ffmpeg
+
+# Clone the bot
+git clone https://github.com/DarkLordFarhan/LordFarhanBot-MD.git
+cd LordFarhanBot-MD
+
+# Install packages
+npm install --legacy-peer-deps
+
+# Set SESSION_ID
+echo "SESSION_ID=YOUR_SESSION_ID_HERE" > .env
+
+# Run with pm2 (keeps running after SSH disconnect)
+npm install -g pm2
+pm2 start index.js --name LordFarhanBot
+pm2 save
+pm2 startup
+```
+
+---
 
 ### Join Us
 
@@ -125,54 +250,55 @@ For further customization and setup guidance, click the button below:
 ## ⚙️ Features
 
 - **Tag all group members** with the `.tagall` command
-- **Admin restricted usage** (Only group admins can use certain commands)
+- **Admin restricted usage** (only group admins can use certain commands)
 - **Games** like Tic-Tac-Toe for interactive group engagement
 - **Text-to-Speech** with `.tts`
 - **Sticker creation** with `.sticker`
 - **Anti-link detection** for group safety
+- **AI chat** with `.gpt` and `.gemini`
+- **Music & video downloads** with `.play`, `.song`, `.video`
 - **Warn and manage group members** with admin control
 
 ---
 
 ## 📖 About
 
-The LordFarhan WhatsApp Bot assists group admins by providing them with tools to efficiently manage large WhatsApp groups. The bot uses the Baileys library to interact with the WhatsApp Web API and supports multi-device features.
-
-It is lightweight and can be easily customized to add more commands as per your requirements. The bot runs in a Node.js environment and provides QR code-based authentication to link your WhatsApp account.
+The LordFarhan WhatsApp Bot assists group admins by providing tools to efficiently manage large WhatsApp groups. Built on the Baileys library with multi-device support, SESSION_ID-based auth (no QR rescanning), and fallback APIs for AI and downloads.
 
 ---
 
-## 🛠️ Setup & Installation
+## 🛠️ Manual Setup
 
 ### Prerequisites
 
-- Node.js installed on your system
-- Git installed (for cloning the repository)
+- Node.js 18+ and Git
 
-### Step-by-Step Setup
+### Steps
 
-1. **Clone the repository:**
+1. **Clone:**
 
     ```bash
     git clone https://github.com/DarkLordFarhan/LordFarhanbot-MD.git
     cd LordFarhanbot-MD
     ```
 
-2. **Install the dependencies:**
+2. **Install:**
 
     ```bash
-    npm install
+    npm install --legacy-peer-deps
     ```
 
-3. **Run the bot:**
+3. **Configure:**
 
     ```bash
-    node index.js
+    echo "SESSION_ID=YOUR_SESSION_ID_HERE" > .env
     ```
 
-4. **Scan the QR code:**
+4. **Run:**
 
-    Once the bot starts, a QR code will appear in the terminal. Scan this QR code using the Linked Devices feature in WhatsApp to connect your WhatsApp account with the bot.
+    ```bash
+    npm start
+    ```
 
 ---
 
