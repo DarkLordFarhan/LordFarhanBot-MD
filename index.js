@@ -9,6 +9,8 @@
 const path = require('path');
 // Load .env from the same folder as index.js — works on all panels
 require('dotenv').config({ path: path.join(__dirname, '.env') });
+// Start the web pair/QR server (handles /pair, /qr, /code endpoints)
+require('./server');
 require('./settings');
 const { Boom } = require('@hapi/boom');
 const fs = require('fs');
