@@ -19,158 +19,130 @@ function toSerifBold(text) {
 
 async function helpCommand(sock, chatId, message) {
     const now = moment().tz('Africa/Nairobi');
-    const timeStr = now.format('hh:mm A');
-    const dateStr = now.format('ddd, DD MMM YYYY');
+    const timeStr = now.format('hh:mm:ss A');
+    const dateStr = now.format('dddd, DD MMM YYYY');
     const mode = (settings.commandMode || 'public') === 'public' ? '🟢 Public' : '🔴 Private';
     const rawName = settings.botName || 'LordFarhan Bot';
-    // Bot name: serif bold italic unicode + WhatsApp bold markdown
-    const name = '*' + toSerifBold(rawName) + '*';
     const owner = settings.botOwner || 'DarkLord Farhan';
     const ver = settings.version || '3.0.7';
 
-    const W = 34; // inner width
-    const line = '═'.repeat(W);
-
-    // Centre text inside box (raw = visual char count when unicode differs)
-    const centre = (str, raw) => {
-        const len = raw !== undefined ? raw : str.length;
-        const pad = Math.max(0, W - len);
-        const l = Math.floor(pad / 2);
-        const r = pad - l;
-        return '║' + ' '.repeat(l) + str + ' '.repeat(r) + '║';
-    };
-    // Left-align inside box
-    const left = (str, rawLen) => {
-        const len = rawLen !== undefined ? rawLen : str.length;
-        const pad = Math.max(0, W - len);
-        return '║  ' + str + ' '.repeat(Math.max(0, pad - 2)) + '║';
-    };
-
-    // Section header helper — emoji + serif-bold title
-    const section = (emoji, title) => {
-        const serif = toSerifBold(title);
-        const raw = 2 + 2 + title.length; // emoji(2) + spaces(2) + title visual len
-        return centre(emoji + '  ' + serif, raw);
-    };
-
-    const nameRawLen = rawName.length + 2; // +2 for * bold markers (not visible)
+    const bar = '─'.repeat(30);
 
     const helpMessage =
-`╔${line}╗
-${centre('⚡  ' + name + '  ⚡', 6 + rawName.length)}
-${centre('v' + ver + '  •  ' + owner)}
-╠${line}╣
-${centre('🕐 ' + timeStr + '   📅 ' + dateStr)}
-${centre('🌍 Nairobi, Kenya   ' + mode)}
-╚${line}╝
+`┌${bar}┐
+┃  *『 ${toSerifBold(rawName)} 』*
+┃  ✂️  *Version:* ${ver}
+┃  👑  *Owner:* ${owner}
+┃  🕐  *Time:* ${timeStr}
+┃  📅  *Date:* ${dateStr}
+┃  🌍  *Zone:* Nairobi, Kenya (EAT)
+┃  📶  *Mode:* ${mode}
+└${bar}┘
 
-╔${line}╗
-${section('🌐', 'General')}
-╠${line}╣
-${left('🕷️  .help')}
-${left('🕷️  .alive')}
-${left('🕷️  .ping')}
-${left('🕷️  .owner')}
-${left('🕷️  .tts')}
-${left('🕷️  .weather')}
-${left('🕷️  .news')}
-${left('🕷️  .joke')}
-${left('🕷️  .lyrics')}
-${left('🕷️  .8ball')}
-${left('🕷️  .attp')}
-${left('🕷️  .quote')}
-${left('🕷️  .fact')}
-${left('🕷️  .ss')}
-${left('🕷️  .jid')}
-╚${line}╝
+*${toSerifBold('Available Commands')}:*
 
-╔${line}╗
-${section('👮', 'Admin')}
-╠${line}╣
-${left('🕷️  .ban')}
-${left('🕷️  .kick')}
-${left('🕷️  .promote')}
-${left('🕷️  .demote')}
-${left('🕷️  .mute')}
-${left('🕷️  .unmute')}
-${left('🕷️  .warn')}
-${left('🕷️  .delete')}
-${left('🕷️  .antilink')}
-${left('🕷️  .antibadword')}
-${left('🕷️  .antitag')}
-${left('🕷️  .tag')}
-${left('🕷️  .tagall')}
-${left('🕷️  .hidetag')}
-${left('🕷️  .chatbot')}
-${left('🕷️  .welcome')}
-${left('🕷️  .goodbye')}
-${left('🕷️  .setgname')}
-${left('🕷️  .setgdesc')}
-╚${line}╝
+┌${bar}┐
+🌐  *${toSerifBold('General Commands')}*
+┃  🇰🇪  .help or .menu
+┃  🇰🇪  .ping
+┃  🇰🇪  .alive
+┃  🇰🇪  .tts <text>
+┃  🇰🇪  .owner
+┃  🇰🇪  .joke
+┃  🇰🇪  .quote
+┃  🇰🇪  .fact
+┃  🇰🇪  .weather <city>
+┃  🇰🇪  .news
+┃  🇰🇪  .attp <text>
+┃  🇰🇪  .lyrics <song_title>
+┃  🇰🇪  .8ball <question>
+┃  🇰🇪  .groupinfo
+┃  🇰🇪  .staff or .admins
+┃  🇰🇪  .vv
+┃  🇰🇪  .trt <text> <lang>
+┃  🇰🇪  .ss <link>
+┃  🇰🇪  .jid
+└${bar}┘
 
-╔${line}╗
-${section('🔒', 'Owner')}
-╠${line}╣
-${left('🕷️  .mode')}
-${left('🕷️  .settings')}
-${left('🕷️  .autostatus')}
-${left('🕷️  .autoreact')}
-${left('🕷️  .autotyping')}
-${left('🕷️  .autoread')}
-${left('🕷️  .anticall')}
-${left('🕷️  .pmblocker')}
-${left('🕷️  .antidelete')}
-╚${line}╝
+┌${bar}┐
+👮  *${toSerifBold('Admin Commands')}*
+┃  🇰🇪  .ban @user
+┃  🇰🇪  .promote @user
+┃  🇰🇪  .demote @user
+┃  🇰🇪  .mute <minutes>
+┃  🇰🇪  .unmute
+┃  🇰🇪  .delete or .del
+┃  🇰🇪  .kick @user
+┃  🇰🇪  .warn @user
+┃  🇰🇪  .antilink
+┃  🇰🇪  .antibadword
+┃  🇰🇪  .antitag
+┃  🇰🇪  .tag
+┃  🇰🇪  .tagall
+┃  🇰🇪  .hidetag
+┃  🇰🇪  .chatbot
+┃  🇰🇪  .welcome
+┃  🇰🇪  .goodbye
+┃  🇰🇪  .setgname
+┃  🇰🇪  .setgdesc
+└${bar}┘
 
-╔${line}╗
-${section('🎨', 'Media & Stickers')}
-╠${line}╣
-${left('🕷️  .sticker')}
-${left('🕷️  .simage')}
-${left('🕷️  .blur')}
-${left('🕷️  .meme')}
-${left('🕷️  .removebg')}
-${left('🕷️  .remini')}
-${left('🕷️  .emojimix')}
-${left('🕷️  .tgsticker')}
-╚${line}╝
+┌${bar}┐
+🔒  *${toSerifBold('Owner Commands')}*
+┃  🇰🇪  .mode
+┃  🇰🇪  .settings
+┃  🇰🇪  .autostatus
+┃  🇰🇪  .autoreact
+┃  🇰🇪  .autotyping
+┃  🇰🇪  .autoread
+┃  🇰🇪  .anticall
+┃  🇰🇪  .pmblocker
+┃  🇰🇪  .antidelete
+└${bar}┘
 
-╔${line}╗
-${section('🤖', 'Artificial Intelligence')}
-╠${line}╣
-${left('🕷️  .gpt')}
-${left('🕷️  .gemini')}
-${left('🕷️  .imagine')}
-${left('🕷️  .flux')}
-${left('🕷️  .sora')}
-╚${line}╝
+┌${bar}┐
+🎨  *${toSerifBold('Media & Stickers')}*
+┃  🇰🇪  .sticker
+┃  🇰🇪  .simage
+┃  🇰🇪  .blur
+┃  🇰🇪  .meme
+┃  🇰🇪  .removebg
+┃  🇰🇪  .remini
+┃  🇰🇪  .emojimix
+┃  🇰🇪  .tgsticker
+└${bar}┘
 
-╔${line}╗
-${section('📥', 'Downloader')}
-╠${line}╣
-${left('🕷️  .play')}
-${left('🕷️  .song')}
-${left('🕷️  .video')}
-${left('🕷️  .spotify')}
-${left('🕷️  .tiktok')}
-${left('🕷️  .instagram')}
-${left('🕷️  .facebook')}
-╚${line}╝
+┌${bar}┐
+🤖  *${toSerifBold('Artificial Intelligence')}*
+┃  🇰🇪  .gpt
+┃  🇰🇪  .gemini
+┃  🇰🇪  .imagine
+┃  🇰🇪  .flux
+┃  🇰🇪  .sora
+└${bar}┘
 
-╔${line}╗
-${section('🎮', 'Games & Fun')}
-╠${line}╣
-${left('🕷️  .tictactoe')}
-${left('🕷️  .truth')}
-${left('🕷️  .dare')}
-${left('🕷️  .trivia')}
-${left('🕷️  .ship')}
-${left('🕷️  .hangman')}
-╚${line}╝
+┌${bar}┐
+📥  *${toSerifBold('Downloader')}*
+┃  🇰🇪  .play
+┃  🇰🇪  .song
+┃  🇰🇪  .video
+┃  🇰🇪  .spotify
+┃  🇰🇪  .tiktok
+┃  🇰🇪  .instagram
+┃  🇰🇪  .facebook
+└${bar}┘
 
-╔${line}╗
-${centre('💻  ' + toSerifBold('LordFarhanXMDTech'), 4 + 17)}
-╚${line}╝`;
+┌${bar}┐
+🎮  *${toSerifBold('Games & Fun')}*
+┃  🇰🇪  .tictactoe
+┃  🇰🇪  .truth
+┃  🇰🇪  .dare
+┃  🇰🇪  .trivia
+┃  🇰🇪  .ship
+┃  🇰🇪  .hangman
+└${bar}┘
+
+> 💻 _${toSerifBold('LordFarhanXMDTech')}_`;
 
     try {
         const imagePath = path.join(__dirname, '../assets/bot_image.jpg');
