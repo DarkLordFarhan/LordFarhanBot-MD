@@ -12,7 +12,7 @@ function toSerifBold(text) {
         a:'𝒂',b:'𝒃',c:'𝒄',d:'𝒅',e:'𝒆',f:'𝒇',g:'𝒈',h:'𝒉',i:'𝒊',j:'𝒋',
         k:'𝒌',l:'𝒍',m:'𝒎',n:'𝒏',o:'𝒐',p:'𝒑',q:'𝒒',r:'𝒓',s:'𝒔',t:'𝒕',
         u:'𝒖',v:'𝒗',w:'𝒘',x:'𝒙',y:'𝒚',z:'𝒛',
-        ' ':' '
+        ' ':' ','&':'&'
     };
     return text.split('').map(c => map[c] || c).join('');
 }
@@ -23,15 +23,15 @@ async function helpCommand(sock, chatId, message) {
     const dateStr = now.format('ddd, DD MMM YYYY');
     const mode = (settings.commandMode || 'public') === 'public' ? '🟢 Public' : '🔴 Private';
     const rawName = settings.botName || 'LordFarhan Bot';
-    const name = toSerifBold(rawName);
+    // Bot name: serif bold italic unicode + WhatsApp bold markdown
+    const name = '*' + toSerifBold(rawName) + '*';
     const owner = settings.botOwner || 'DarkLord Farhan';
     const ver = settings.version || '3.0.7';
 
     const W = 34; // inner width
     const line = '═'.repeat(W);
-    const thin = '─'.repeat(W);
 
-    // Helper: pad a string to inner width, centred
+    // Centre text inside box (raw = visual char count when unicode differs)
     const centre = (str, raw) => {
         const len = raw !== undefined ? raw : str.length;
         const pad = Math.max(0, W - len);
@@ -39,19 +39,25 @@ async function helpCommand(sock, chatId, message) {
         const r = pad - l;
         return '║' + ' '.repeat(l) + str + ' '.repeat(r) + '║';
     };
-    // Helper: left-align
+    // Left-align inside box
     const left = (str, rawLen) => {
         const len = rawLen !== undefined ? rawLen : str.length;
         const pad = Math.max(0, W - len);
         return '║  ' + str + ' '.repeat(Math.max(0, pad - 2)) + '║';
     };
 
-    // Bot name raw length (Unicode serif chars display as 1 glyph each)
-    const nameRawLen = rawName.length;
+    // Section header helper — emoji + serif-bold title
+    const section = (emoji, title) => {
+        const serif = toSerifBold(title);
+        const raw = 2 + 2 + title.length; // emoji(2) + spaces(2) + title visual len
+        return centre(emoji + '  ' + serif, raw);
+    };
+
+    const nameRawLen = rawName.length + 2; // +2 for * bold markers (not visible)
 
     const helpMessage =
 `╔${line}╗
-${centre('⚡  ' + name + '  ⚡', 6 + nameRawLen)}
+${centre('⚡  ' + name + '  ⚡', 6 + rawName.length)}
 ${centre('v' + ver + '  •  ' + owner)}
 ╠${line}╣
 ${centre('🕐 ' + timeStr + '   📅 ' + dateStr)}
@@ -59,7 +65,7 @@ ${centre('🌍 Nairobi, Kenya   ' + mode)}
 ╚${line}╝
 
 ╔${line}╗
-${centre('🌐  G E N E R A L')}
+${section('🌐', 'General')}
 ╠${line}╣
 ${left('🕷️  .help')}
 ${left('🕷️  .alive')}
@@ -79,7 +85,7 @@ ${left('🕷️  .jid')}
 ╚${line}╝
 
 ╔${line}╗
-${centre('👮  A D M I N')}
+${section('👮', 'Admin')}
 ╠${line}╣
 ${left('🕷️  .ban')}
 ${left('🕷️  .kick')}
@@ -103,7 +109,7 @@ ${left('🕷️  .setgdesc')}
 ╚${line}╝
 
 ╔${line}╗
-${centre('🔒  O W N E R')}
+${section('🔒', 'Owner')}
 ╠${line}╣
 ${left('🕷️  .mode')}
 ${left('🕷️  .settings')}
@@ -117,7 +123,7 @@ ${left('🕷️  .antidelete')}
 ╚${line}╝
 
 ╔${line}╗
-${centre('🎨  M E D I A  &  S T I C K E R S')}
+${section('🎨', 'Media & Stickers')}
 ╠${line}╣
 ${left('🕷️  .sticker')}
 ${left('🕷️  .simage')}
@@ -130,7 +136,7 @@ ${left('🕷️  .tgsticker')}
 ╚${line}╝
 
 ╔${line}╗
-${centre('🤖  A R T I F I C I A L  I N T E L L I G E N C E')}
+${section('🤖', 'Artificial Intelligence')}
 ╠${line}╣
 ${left('🕷️  .gpt')}
 ${left('🕷️  .gemini')}
@@ -140,7 +146,7 @@ ${left('🕷️  .sora')}
 ╚${line}╝
 
 ╔${line}╗
-${centre('📥  D O W N L O A D E R')}
+${section('📥', 'Downloader')}
 ╠${line}╣
 ${left('🕷️  .play')}
 ${left('🕷️  .song')}
@@ -152,7 +158,7 @@ ${left('🕷️  .facebook')}
 ╚${line}╝
 
 ╔${line}╗
-${centre('🎮  G A M E S  &  F U N')}
+${section('🎮', 'Games & Fun')}
 ╠${line}╣
 ${left('🕷️  .tictactoe')}
 ${left('🕷️  .truth')}
@@ -163,7 +169,7 @@ ${left('🕷️  .hangman')}
 ╚${line}╝
 
 ╔${line}╗
-${centre('💻  𝑳𝒐𝒓𝒅𝑭𝒂𝒓𝒉𝒂𝒏𝑿𝑴𝑫𝑻𝒆𝒄𝒉')}
+${centre('💻  ' + toSerifBold('LordFarhanXMDTech'), 4 + 17)}
 ╚${line}╝`;
 
     try {
