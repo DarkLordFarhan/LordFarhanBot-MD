@@ -8,118 +8,64 @@ async function helpCommand(sock, chatId, message) {
     const timeStr = now.format('hh:mm A');
     const dateStr = now.format('ddd, DD MMM YYYY');
     const mode = (settings.commandMode || 'public') === 'public' ? '🟢 Public' : '🔴 Private';
+    const name = settings.botName || 'LordFarhan Bot';
+    const owner = settings.botOwner || 'DarkLord Farhan';
+    const ver = settings.version || '3.0.7';
 
     const helpMessage =
-`╔══════════════════════════╗
-║   🤖 *${settings.botName || 'LordFarhan Bot'}*   ║
-║  ⚡ v${settings.version || '3.0.7'}  •  ${mode}
-║  👑 ${settings.botOwner || 'DarkLordFarhan'}
-║  🕐 ${timeStr}  •  Nairobi, Kenya
-║  📅 ${dateStr}
-╚══════════════════════════╝
+`╭━━━━━━━━━━━━━━━━━━━━━━━━╮
+      ⚡ *${name}* ⚡
+    _v${ver}  •  ${owner}_
+╰━━━━━━━━━━━━━━━━━━━━━━━━╯
+🕐 *${timeStr}*  📅 ${dateStr}
+🌍 Nairobi, Kenya  •  ${mode}
 
-*▸ 🌐 GENERAL*
-› .help / .menu — This menu
-› .alive — Bot status
-› .ping — Response time
-› .owner — Contact owner
-› .tts <text> — Text to speech
-› .weather <city> — Weather
-› .news — Latest headlines
-› .joke / .quote / .fact
-› .lyrics <song> — Song lyrics
-› .8ball <question>
-› .attp <text> — Animated text
-› .trt <text> <lang> — Translate
-› .ss <url> — Screenshot
-› .vv — View-once reveal
-› .groupinfo / .staff / .jid
+┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅
 
-*▸ 👮 ADMIN*
-› .ban / .kick @user
-› .promote / .demote @user
-› .mute <mins> / .unmute
-› .warn / .warnings @user
-› .delete / .del / .clear
-› .antilink / .antibadword
-› .antitag <on/off>
-› .tag <msg> / .tagall / .hidetag
-› .chatbot / .resetlink
-› .welcome / .goodbye <on/off>
-› .setgdesc / .setgname / .setgpp
+*🌐 GENERAL*
+┌ .help  .alive  .ping  .owner
+├ .tts  .weather  .news  .joke
+├ .lyrics  .8ball  .attp  .quote
+└ .trt  .ss  .vv  .jid  .fact
 
-*▸ 🔒 OWNER*
-› .mode <public/private>
-› .settings / .setpp
-› .clearsession / .cleartmp
-› .antidelete / .update
-› .autostatus <on/off>
-› .autoreact / .autotyping
-› .autoread / .anticall
-› .pmblocker <on/off>
-› .setmention / .mention <on/off>
+*👮 ADMIN*
+┌ .ban  .kick  .promote  .demote
+├ .mute  .unmute  .warn  .delete
+├ .antilink  .antibadword  .antitag
+├ .tag  .tagall  .hidetag  .chatbot
+└ .welcome  .goodbye  .setgname  .setgdesc
 
-*▸ 🎨 MEDIA & STICKERS*
-› .sticker — Image to sticker
-› .simage — Sticker to image
-› .blur — Blur image
-› .removebg — Remove background
-› .remini — Enhance image
-› .crop — Crop image
-› .meme — Random meme
-› .take <packname>
-› .emojimix <e1>+<e2>
-› .tgsticker <link>
-› .igs <instagram link>
+*🔒 OWNER*
+┌ .mode  .settings  .autostatus
+├ .autoreact  .autotyping  .autoread
+└ .anticall  .pmblocker  .antidelete
 
-*▸ 🤖 AI*
-› .gpt <question>
-› .gemini <question>
-› .imagine <prompt>
-› .flux <prompt>
-› .sora <prompt>
+*🎨 MEDIA & STICKERS*
+┌ .sticker  .simage  .blur  .meme
+└ .removebg  .remini  .emojimix  .tgsticker
 
-*▸ 📥 DOWNLOADER*
-› .play <song name>
-› .song <song name/link>
-› .video <name/link>
-› .spotify <query>
-› .tiktok <link>
-› .instagram <link>
-› .facebook <link>
+*🤖 AI*
+└ .gpt  .gemini  .imagine  .flux  .sora
 
-*▸ 🎮 GAMES*
-› .tictactoe @user
-› .hangman / .guess <letter>
-› .trivia / .answer <answer>
-› .truth / .dare
+*📥 DOWNLOADER*
+┌ .play  .song  .video  .spotify
+└ .tiktok  .instagram  .facebook
 
-*▸ 😄 FUN*
-› .compliment / .insult @user
-› .flirt / .shayari
-› .goodnight / .roseday
-› .character / .wasted @user
-› .ship / .simp / .stupid @user
+*🎮 GAMES & FUN*
+└ .tictactoe  .truth  .dare  .trivia  .ship
 
-*▸ 🌍 COUNTRY PICS*
-› .china .indonesia .japan
-› .korea .malaysia .pies
-
-> 💻 *LordFarhan Bot* by DarkLordFarhanXMDTech`;
+┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅
+    💻 _LordFarhanXMDTech_`;
 
     try {
         const imagePath = path.join(__dirname, '../assets/bot_image.jpg');
         if (fs.existsSync(imagePath)) {
             await sock.sendMessage(chatId, {
                 image: fs.readFileSync(imagePath),
-                caption: helpMessage,
-                contextInfo: { forwardingScore: 1, isForwarded: true }
+                caption: helpMessage
             }, { quoted: message });
         } else {
-            await sock.sendMessage(chatId, {
-                text: helpMessage,
-                contextInfo: { forwardingScore: 1, isForwarded: true }
-            }, { quoted: message });
+            await sock.sendMessage(chatId, { text: helpMessage }, { quoted: message });
         }
     } catch (error) {
         console.error('Error in help command:', error);
