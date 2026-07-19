@@ -103,7 +103,7 @@ git clone https://github.com/DarkLordFarhan/LordFarhanBot-MD.git
 cd LordFarhanBot-MD
 
 # 3. Install Node packages
-npm install --legacy-peer-deps
+npm install
 
 # 4. Set your SESSION_ID
 echo "SESSION_ID=YOUR_SESSION_ID_HERE" > .env
@@ -135,7 +135,7 @@ cd LordFarhanBot-MD && npm start
 ```bash
 cd LordFarhanBot-MD
 git pull
-npm install --legacy-peer-deps
+npm install
 npm start
 ```
 
