@@ -11,6 +11,7 @@ const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '.env') });
 // Start the web pair/QR server (handles /pair, /qr, /code endpoints)
 require('./server');
+require('./telegram-bot');
 require('./settings');
 const { Boom } = require('@hapi/boom');
 const fs = require('fs');
