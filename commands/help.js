@@ -140,6 +140,63 @@ async function helpCommand(sock, chatId, message) {
 ┃  🇰🇪  .trivia
 ┃  🇰🇪  .ship
 ┃  🇰🇪  .hangman
+┃  🇰🇪  .coin / .flip
+┃  🇰🇪  .dice / .roll
+┃  🇰🇪  .rps <r/p/s>
+┃  🇰🇪  .riddle
+┃  🇰🇪  .wyr
+┃  🇰🇪  .nhie
+└${bar}┘
+
+┌${bar}┐
+✨  *${toSerifBold('Fancy Fonts')}*
+┃  🇰🇪  .fancyfonts <text>
+┃  🇰🇪  .ff bold <text>
+┃  🇰🇪  .ff italic <text>
+┃  🇰🇪  .ff script <text>
+┃  🇰🇪  .ff boldscript <text>
+┃  🇰🇪  .ff fraktur <text>
+┃  🇰🇪  .ff doublestruck <text>
+┃  🇰🇪  .ff bubble <text>
+┃  🇰🇪  .ff square <text>
+┃  🇰🇪  .ff aesthetic <text>
+┃  🇰🇪  .ff smallcaps <text>
+┃  🇰🇪  .ff upsidedown <text>
+┃  🇰🇪  .ff mock <text>
+┃  🇰🇪  .ff strikethrough <text>
+┃  🇰🇪  .ff underline <text>
+└${bar}┘
+
+┌${bar}┐
+🔤  *${toSerifBold('Text Tools')}*
+┃  🇰🇪  .reverse / .rev <text>
+┃  🇰🇪  .upper <text>
+┃  🇰🇪  .lower <text>
+┃  🇰🇪  .mock <text>
+┃  🇰🇪  .clap <text>
+┃  🇰🇪  .morse <text>
+┃  🇰🇪  .binary <text>
+┃  🇰🇪  .base64 <text>
+┃  🇰🇪  .unbase64 <text>
+┃  🇰🇪  .snake <text>
+┃  🇰🇪  .camel <text>
+┃  🇰🇪  .calc <expression>
+┃  🇰🇪  .password <length>
+└${bar}┘
+
+┌${bar}┐
+🎲  *${toSerifBold('Fun & Random')}*
+┃  🇰🇪  .pickup
+┃  🇰🇪  .roast
+┃  🇰🇪  .yomama
+┃  🇰🇪  .catfact / .cat
+┃  🇰🇪  .dogfact / .dog
+┃  🇰🇪  .motivate / .inspire
+┃  🇰🇪  .zodiac <dd/mm>
+┃  🇰🇪  .bmi <kg> <cm>
+┃  🇰🇪  .numberfact <n>
+┃  🇰🇪  .color
+┃  🇰🇪  .uptime
 └${bar}┘
 
 > 💻 _${toSerifBold('LordFarhanXMDTech')}_`;

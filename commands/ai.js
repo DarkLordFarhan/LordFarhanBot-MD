@@ -1,8 +1,9 @@
-const axios = require('axios');
+'use strict';
 const fetch = require('node-fetch');
 
-// ── Helpers ────────────────────────────────────────────────────────────────────
-async function tryFetch(url, timeout = 12000) {
+const TIMEOUT = 15000;
+
+async function tryFetch(url, timeout = TIMEOUT) {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), timeout);
     try {
@@ -15,9 +16,20 @@ async function tryFetch(url, timeout = 12000) {
 }
 
 function extractText(data) {
-    // Handle various API response shapes
-    return data?.result || data?.answer || data?.message || data?.data ||
-           data?.response || data?.text || data?.output || data?.content || null;
+    if (!data) return null;
+    // Handle nested structures
+    if (typeof data.result === 'string' && data.result.trim()) return data.result.trim();
+    if (typeof data.answer === 'string' && data.answer.trim()) return data.answer.trim();
+    if (typeof data.message === 'string' && data.message.trim()) return data.message.trim();
+    if (typeof data.response === 'string' && data.response.trim()) return data.response.trim();
+    if (typeof data.text === 'string' && data.text.trim()) return data.text.trim();
+    if (typeof data.output === 'string' && data.output.trim()) return data.output.trim();
+    if (typeof data.content === 'string' && data.content.trim()) return data.content.trim();
+    if (typeof data.data === 'string' && data.data.trim()) return data.data.trim();
+    // OpenAI-compatible shape
+    if (data.choices?.[0]?.message?.content) return data.choices[0].message.content.trim();
+    if (data.choices?.[0]?.text) return data.choices[0].text.trim();
+    return null;
 }
 
 // ── GPT fallback chain ─────────────────────────────────────────────────────────
@@ -30,15 +42,17 @@ async function askGPT(query) {
         `https://vapis.my.id/api/chatgpt?q=${q}`,
         `https://zellapi.autos/ai/chatbot?text=${q}`,
         `https://api.siputzx.my.id/api/ai/chatgpt?content=${q}`,
+        `https://api.dreaded.site/api/chatgpt?text=${q}`,
+        `https://fastrestapis.fasturl.cloud/ai/gpt-4o?ask=${q}`,
     ];
     for (const url of apis) {
         try {
             const data = await tryFetch(url);
             const text = extractText(data);
-            if (text && String(text).trim().length > 0) return String(text).trim();
+            if (text && text.length > 0) return text;
         } catch (_) { /* try next */ }
     }
-    throw new Error('All GPT APIs failed');
+    throw new Error('All GPT APIs are currently unavailable. Please try again later.');
 }
 
 // ── Gemini fallback chain ──────────────────────────────────────────────────────
@@ -51,31 +65,33 @@ async function askGemini(query) {
         `https://api.siputzx.my.id/api/ai/gemini-pro?content=${q}`,
         `https://api.ryzendesu.vip/api/ai/gemini?text=${q}`,
         `https://zellapi.autos/ai/chatbot?text=${q}`,
+        `https://api.dreaded.site/api/gemini?text=${q}`,
+        `https://fastrestapis.fasturl.cloud/ai/gemini?ask=${q}`,
     ];
     for (const url of apis) {
         try {
             const data = await tryFetch(url);
             const text = extractText(data);
-            if (text && String(text).trim().length > 0) return String(text).trim();
+            if (text && text.length > 0) return text;
         } catch (_) { /* try next */ }
     }
-    throw new Error('All Gemini APIs failed');
+    throw new Error('All Gemini APIs are currently unavailable. Please try again later.');
 }
 
 // ── Main command handler ───────────────────────────────────────────────────────
 async function aiCommand(sock, chatId, message) {
     try {
         const text =
-            message.message?.conversation ||
-            message.message?.extendedTextMessage?.text || '';
+            message.message?.conversation?.trim() ||
+            message.message?.extendedTextMessage?.text?.trim() || '';
 
-        const parts = text.trim().split(/\s+/);
+        const parts = text.split(/\s+/);
         const command = parts[0].toLowerCase();
         const query = parts.slice(1).join(' ').trim();
 
         if (!query) {
             return await sock.sendMessage(chatId, {
-                text: `Please provide a question.\nExample: ${command} write a basic HTML page`
+                text: `🤖 Please provide a question.\n\nExamples:\n  ${command} explain quantum physics\n  ${command} write a poem about Kenya`
             }, { quoted: message });
         }
 
@@ -92,11 +108,14 @@ async function aiCommand(sock, chatId, message) {
         }
 
         await sock.sendMessage(chatId, { text: answer }, { quoted: message });
+        // Success reaction
+        await sock.sendMessage(chatId, { react: { text: '✅', key: message.key } });
 
     } catch (error) {
         console.error('[AI] error:', error.message);
+        await sock.sendMessage(chatId, { react: { text: '❌', key: message.key } });
         await sock.sendMessage(chatId, {
-            text: '❌ Failed to get a response. Please try again in a moment.'
+            text: `❌ ${error.message || 'Failed to get a response. Please try again in a moment.'}`
         }, { quoted: message });
     }
 }

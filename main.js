@@ -144,6 +144,21 @@ const settingsCommand = require('./commands/settings');
 const soraCommand = require('./commands/sora');
 const pairCommand = require('./commands/pair');
 
+// ── New commands ──────────────────────────────────────────────────────────────
+const fancyfontsCommand = require('./commands/fancyfonts');
+const {
+    reverseCommand, upperCommand, lowerCommand, mockCommand,
+    clapCommand, morseCommand, binaryCommand, base64Command,
+    unbase64Command, snakeCommand, camelCommand, uptimeCommand,
+    calcCommand, passwordCommand,
+} = require('./commands/texttools');
+const {
+    coinCommand, diceCommand, rpsCommand, riddleCommand,
+    pickupCommand, roastCommand, yomomaCommand, catfactCommand,
+    dogfactCommand, wyrCommand, nhieCommand, zodiacCommand,
+    bmiCommand, numberfactCommand, motivateCommand, colorCommand,
+} = require('./commands/funtools');
+
 // Global settings
 global.packname = settings.packname;
 global.author = settings.author;
@@ -1165,6 +1180,137 @@ async function handleMessages(sock, messageUpdate, printLog) {
                 commandExecuted = true;
                 break;
             }
+
+            // ── Fancy Fonts ────────────────────────────────────────────────
+            case userMessage.startsWith('.fancyfonts') || userMessage.startsWith('.ff ') || userMessage === '.ff':
+                await fancyfontsCommand(sock, chatId, message);
+                commandExecuted = true;
+                break;
+
+            // ── Text Tools ─────────────────────────────────────────────────
+            case userMessage.startsWith('.reverse') || userMessage.startsWith('.rev ') || userMessage === '.rev':
+                await reverseCommand(sock, chatId, message);
+                commandExecuted = true;
+                break;
+            case userMessage.startsWith('.upper'):
+                await upperCommand(sock, chatId, message);
+                commandExecuted = true;
+                break;
+            case userMessage.startsWith('.lower'):
+                await lowerCommand(sock, chatId, message);
+                commandExecuted = true;
+                break;
+            case userMessage.startsWith('.mock') || userMessage.startsWith('.spongebob'):
+                await mockCommand(sock, chatId, message);
+                commandExecuted = true;
+                break;
+            case userMessage.startsWith('.clap'):
+                await clapCommand(sock, chatId, message);
+                commandExecuted = true;
+                break;
+            case userMessage.startsWith('.morse'):
+                await morseCommand(sock, chatId, message);
+                commandExecuted = true;
+                break;
+            case userMessage.startsWith('.binary') || userMessage.startsWith('.bin ') || userMessage === '.bin':
+                await binaryCommand(sock, chatId, message);
+                commandExecuted = true;
+                break;
+            case userMessage.startsWith('.base64') || userMessage.startsWith('.b64 ') || userMessage === '.b64':
+                await base64Command(sock, chatId, message);
+                commandExecuted = true;
+                break;
+            case userMessage.startsWith('.unbase64') || userMessage.startsWith('.ub64 ') || userMessage === '.ub64':
+                await unbase64Command(sock, chatId, message);
+                commandExecuted = true;
+                break;
+            case userMessage.startsWith('.snake'):
+                await snakeCommand(sock, chatId, message);
+                commandExecuted = true;
+                break;
+            case userMessage.startsWith('.camel'):
+                await camelCommand(sock, chatId, message);
+                commandExecuted = true;
+                break;
+            case userMessage === '.uptime' || userMessage === '.runtime':
+                await uptimeCommand(sock, chatId, message);
+                commandExecuted = true;
+                break;
+            case userMessage.startsWith('.calc') || userMessage.startsWith('.calculate'):
+                await calcCommand(sock, chatId, message);
+                commandExecuted = true;
+                break;
+            case userMessage.startsWith('.password') || userMessage.startsWith('.genpass') || userMessage.startsWith('.passgen'):
+                await passwordCommand(sock, chatId, message);
+                commandExecuted = true;
+                break;
+
+            // ── Fun Tools ──────────────────────────────────────────────────
+            case userMessage === '.coin' || userMessage === '.flipcoin' || userMessage === '.flip':
+                await coinCommand(sock, chatId, message);
+                commandExecuted = true;
+                break;
+            case userMessage.startsWith('.dice') || userMessage.startsWith('.roll'):
+                await diceCommand(sock, chatId, message);
+                commandExecuted = true;
+                break;
+            case userMessage.startsWith('.rps') || userMessage.startsWith('.rockpaperscissors'):
+                await rpsCommand(sock, chatId, message);
+                commandExecuted = true;
+                break;
+            case userMessage.startsWith('.riddle'):
+                await riddleCommand(sock, chatId, message);
+                commandExecuted = true;
+                break;
+            case userMessage === '.pickup' || userMessage === '.pickupline' || userMessage === '.flirtline':
+                await pickupCommand(sock, chatId, message);
+                commandExecuted = true;
+                break;
+            case userMessage === '.roast':
+                await roastCommand(sock, chatId, message);
+                commandExecuted = true;
+                break;
+            case userMessage === '.yomama' || userMessage === '.ymj' || userMessage === '.yomomma':
+                await yomomaCommand(sock, chatId, message);
+                commandExecuted = true;
+                break;
+            case userMessage === '.catfact' || userMessage === '.cat':
+                await catfactCommand(sock, chatId, message);
+                commandExecuted = true;
+                break;
+            case userMessage === '.dogfact' || userMessage === '.dog':
+                await dogfactCommand(sock, chatId, message);
+                commandExecuted = true;
+                break;
+            case userMessage === '.wyr' || userMessage === '.wouldyourather':
+                await wyrCommand(sock, chatId, message);
+                commandExecuted = true;
+                break;
+            case userMessage === '.nhie' || userMessage === '.neverhaveiever':
+                await nhieCommand(sock, chatId, message);
+                commandExecuted = true;
+                break;
+            case userMessage.startsWith('.zodiac'):
+                await zodiacCommand(sock, chatId, message);
+                commandExecuted = true;
+                break;
+            case userMessage.startsWith('.bmi'):
+                await bmiCommand(sock, chatId, message);
+                commandExecuted = true;
+                break;
+            case userMessage.startsWith('.numberfact') || userMessage.startsWith('.numfact'):
+                await numberfactCommand(sock, chatId, message);
+                commandExecuted = true;
+                break;
+            case userMessage === '.motivate' || userMessage === '.inspire' || userMessage === '.motivation':
+                await motivateCommand(sock, chatId, message);
+                commandExecuted = true;
+                break;
+            case userMessage === '.color' || userMessage === '.colour' || userMessage === '.randomcolor':
+                await colorCommand(sock, chatId, message);
+                commandExecuted = true;
+                break;
+
             default:
                 if (isGroup) {
                     // Handle non-command group messages
