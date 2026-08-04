@@ -43,160 +43,160 @@ async function helpCommand(sock, chatId, message) {
 
 ┌${bar}┐
 🌐  *${toSerifBold('General Commands')}*
-┃  🇰🇪  .help or .menu
-┃  🇰🇪  .ping
-┃  🇰🇪  .alive
-┃  🇰🇪  .tts <text>
-┃  🇰🇪  .owner
-┃  🇰🇪  .joke
-┃  🇰🇪  .quote
-┃  🇰🇪  .fact
-┃  🇰🇪  .weather <city>
-┃  🇰🇪  .news
-┃  🇰🇪  .attp <text>
-┃  🇰🇪  .lyrics <song_title>
-┃  🇰🇪  .8ball <question>
-┃  🇰🇪  .groupinfo
-┃  🇰🇪  .staff or .admins
-┃  🇰🇪  .vv
-┃  🇰🇪  .trt <text> <lang>
-┃  🇰🇪  .ss <link>
-┃  🇰🇪  .jid
+┃  🐯  .help or .menu
+┃  🐯  .ping
+┃  🐯  .alive
+┃  🐯  .tts <text>
+┃  🐯  .owner
+┃  🐯  .joke
+┃  🐯  .quote
+┃  🐯  .fact
+┃  🐯  .weather <city>
+┃  🐯  .news
+┃  🐯  .attp <text>
+┃  🐯  .lyrics <song_title>
+┃  🐯  .8ball <question>
+┃  🐯  .groupinfo
+┃  🐯  .staff or .admins
+┃  🐯  .vv
+┃  🐯  .trt <text> <lang>
+┃  🐯  .ss <link>
+┃  🐯  .jid
 └${bar}┘
 
 ┌${bar}┐
 👮  *${toSerifBold('Admin Commands')}*
-┃  🇰🇪  .ban @user
-┃  🇰🇪  .promote @user
-┃  🇰🇪  .demote @user
-┃  🇰🇪  .mute <minutes>
-┃  🇰🇪  .unmute
-┃  🇰🇪  .delete or .del
-┃  🇰🇪  .kick @user
-┃  🇰🇪  .warn @user
-┃  🇰🇪  .antilink
-┃  🇰🇪  .antibadword
-┃  🇰🇪  .antitag
-┃  🇰🇪  .tag
-┃  🇰🇪  .tagall
-┃  🇰🇪  .hidetag
-┃  🇰🇪  .chatbot
-┃  🇰🇪  .welcome
-┃  🇰🇪  .goodbye
-┃  🇰🇪  .setgname
-┃  🇰🇪  .setgdesc
+┃  🐯  .ban @user
+┃  🐯  .promote @user
+┃  🐯  .demote @user
+┃  🐯  .mute <minutes>
+┃  🐯  .unmute
+┃  🐯  .delete or .del
+┃  🐯  .kick @user
+┃  🐯  .warn @user
+┃  🐯  .antilink
+┃  🐯  .antibadword
+┃  🐯  .antitag
+┃  🐯  .tag
+┃  🐯  .tagall
+┃  🐯  .hidetag
+┃  🐯  .chatbot
+┃  🐯  .welcome
+┃  🐯  .goodbye
+┃  🐯  .setgname
+┃  🐯  .setgdesc
 └${bar}┘
 
 ┌${bar}┐
 🔒  *${toSerifBold('Owner Commands')}*
-┃  🇰🇪  .mode
-┃  🇰🇪  .settings
-┃  🇰🇪  .autostatus
-┃  🇰🇪  .autoreact
-┃  🇰🇪  .autotyping
-┃  🇰🇪  .autoread
-┃  🇰🇪  .anticall
-┃  🇰🇪  .pmblocker
-┃  🇰🇪  .antidelete
+┃  🐯  .mode
+┃  🐯  .settings
+┃  🐯  .autostatus
+┃  🐯  .autoreact
+┃  🐯  .autotyping
+┃  🐯  .autoread
+┃  🐯  .anticall
+┃  🐯  .pmblocker
+┃  🐯  .antidelete
 └${bar}┘
 
 ┌${bar}┐
 🎨  *${toSerifBold('Media & Stickers')}*
-┃  🇰🇪  .sticker
-┃  🇰🇪  .simage
-┃  🇰🇪  .blur
-┃  🇰🇪  .meme
-┃  🇰🇪  .removebg
-┃  🇰🇪  .remini
-┃  🇰🇪  .emojimix
-┃  🇰🇪  .tgsticker
+┃  🐯  .sticker
+┃  🐯  .simage
+┃  🐯  .blur
+┃  🐯  .meme
+┃  🐯  .removebg
+┃  🐯  .remini
+┃  🐯  .emojimix
+┃  🐯  .tgsticker
 └${bar}┘
 
 ┌${bar}┐
 🤖  *${toSerifBold('Artificial Intelligence')}*
-┃  🇰🇪  .gpt
-┃  🇰🇪  .gemini
-┃  🇰🇪  .imagine
-┃  🇰🇪  .flux
-┃  🇰🇪  .sora
+┃  🐯  .gpt
+┃  🐯  .gemini
+┃  🐯  .imagine
+┃  🐯  .flux
+┃  🐯  .sora
 └${bar}┘
 
 ┌${bar}┐
 📥  *${toSerifBold('Downloader')}*
-┃  🇰🇪  .play
-┃  🇰🇪  .song
-┃  🇰🇪  .video
-┃  🇰🇪  .spotify
-┃  🇰🇪  .tiktok
-┃  🇰🇪  .instagram
-┃  🇰🇪  .facebook
+┃  🐯  .play
+┃  🐯  .song
+┃  🐯  .video
+┃  🐯  .spotify
+┃  🐯  .tiktok
+┃  🐯  .instagram
+┃  🐯  .facebook
 └${bar}┘
 
 ┌${bar}┐
 🎮  *${toSerifBold('Games & Fun')}*
-┃  🇰🇪  .tictactoe
-┃  🇰🇪  .truth
-┃  🇰🇪  .dare
-┃  🇰🇪  .trivia
-┃  🇰🇪  .ship
-┃  🇰🇪  .hangman
-┃  🇰🇪  .coin / .flip
-┃  🇰🇪  .dice / .roll
-┃  🇰🇪  .rps <r/p/s>
-┃  🇰🇪  .riddle
-┃  🇰🇪  .wyr
-┃  🇰🇪  .nhie
+┃  🐯  .tictactoe
+┃  🐯  .truth
+┃  🐯  .dare
+┃  🐯  .trivia
+┃  🐯  .ship
+┃  🐯  .hangman
+┃  🐯  .coin / .flip
+┃  🐯  .dice / .roll
+┃  🐯  .rps <r/p/s>
+┃  🐯  .riddle
+┃  🐯  .wyr
+┃  🐯  .nhie
 └${bar}┘
 
 ┌${bar}┐
 ✨  *${toSerifBold('Fancy Fonts')}*
-┃  🇰🇪  .fancyfonts <text>
-┃  🇰🇪  .ff bold <text>
-┃  🇰🇪  .ff italic <text>
-┃  🇰🇪  .ff script <text>
-┃  🇰🇪  .ff boldscript <text>
-┃  🇰🇪  .ff fraktur <text>
-┃  🇰🇪  .ff doublestruck <text>
-┃  🇰🇪  .ff bubble <text>
-┃  🇰🇪  .ff square <text>
-┃  🇰🇪  .ff aesthetic <text>
-┃  🇰🇪  .ff smallcaps <text>
-┃  🇰🇪  .ff upsidedown <text>
-┃  🇰🇪  .ff mock <text>
-┃  🇰🇪  .ff strikethrough <text>
-┃  🇰🇪  .ff underline <text>
+┃  🐯  .fancyfonts <text>
+┃  🐯  .ff bold <text>
+┃  🐯  .ff italic <text>
+┃  🐯  .ff script <text>
+┃  🐯  .ff boldscript <text>
+┃  🐯  .ff fraktur <text>
+┃  🐯  .ff doublestruck <text>
+┃  🐯  .ff bubble <text>
+┃  🐯  .ff square <text>
+┃  🐯  .ff aesthetic <text>
+┃  🐯  .ff smallcaps <text>
+┃  🐯  .ff upsidedown <text>
+┃  🐯  .ff mock <text>
+┃  🐯  .ff strikethrough <text>
+┃  🐯  .ff underline <text>
 └${bar}┘
 
 ┌${bar}┐
 🔤  *${toSerifBold('Text Tools')}*
-┃  🇰🇪  .reverse / .rev <text>
-┃  🇰🇪  .upper <text>
-┃  🇰🇪  .lower <text>
-┃  🇰🇪  .mock <text>
-┃  🇰🇪  .clap <text>
-┃  🇰🇪  .morse <text>
-┃  🇰🇪  .binary <text>
-┃  🇰🇪  .base64 <text>
-┃  🇰🇪  .unbase64 <text>
-┃  🇰🇪  .snake <text>
-┃  🇰🇪  .camel <text>
-┃  🇰🇪  .calc <expression>
-┃  🇰🇪  .password <length>
+┃  🐯  .reverse / .rev <text>
+┃  🐯  .upper <text>
+┃  🐯  .lower <text>
+┃  🐯  .mock <text>
+┃  🐯  .clap <text>
+┃  🐯  .morse <text>
+┃  🐯  .binary <text>
+┃  🐯  .base64 <text>
+┃  🐯  .unbase64 <text>
+┃  🐯  .snake <text>
+┃  🐯  .camel <text>
+┃  🐯  .calc <expression>
+┃  🐯  .password <length>
 └${bar}┘
 
 ┌${bar}┐
 🎲  *${toSerifBold('Fun & Random')}*
-┃  🇰🇪  .pickup
-┃  🇰🇪  .roast
-┃  🇰🇪  .yomama
-┃  🇰🇪  .catfact / .cat
-┃  🇰🇪  .dogfact / .dog
-┃  🇰🇪  .motivate / .inspire
-┃  🇰🇪  .zodiac <dd/mm>
-┃  🇰🇪  .bmi <kg> <cm>
-┃  🇰🇪  .numberfact <n>
-┃  🇰🇪  .color
-┃  🇰🇪  .uptime
+┃  🐯  .pickup
+┃  🐯  .roast
+┃  🐯  .yomama
+┃  🐯  .catfact / .cat
+┃  🐯  .dogfact / .dog
+┃  🐯  .motivate / .inspire
+┃  🐯  .zodiac <dd/mm>
+┃  🐯  .bmi <kg> <cm>
+┃  🐯  .numberfact <n>
+┃  🐯  .color
+┃  🐯  .uptime
 └${bar}┘
 
 > 💻 _${toSerifBold('LordFarhanXMDTech')}_`;

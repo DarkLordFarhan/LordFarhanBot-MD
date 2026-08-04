@@ -143,6 +143,8 @@ const { pmblockerCommand, readState: readPmBlockerState } = require('./commands/
 const settingsCommand = require('./commands/settings');
 const soraCommand = require('./commands/sora');
 const pairCommand = require('./commands/pair');
+const { botimageCommand } = require('./commands/botimage');
+const { prefixToggleCommand, applyPrefixLogic } = require('./commands/prefixtoggle');
 
 // ── New commands ──────────────────────────────────────────────────────────────
 const fancyfontsCommand = require('./commands/fancyfonts');
@@ -306,6 +308,9 @@ async function handleMessages(sock, messageUpdate, printLog) {
             } catch (e) { }
         }
 
+        // Apply prefix logic (custom prefix char / prefix-off mode)
+        userMessage = applyPrefixLogic(userMessage);
+
         // Then check for command prefix
         if (!userMessage.startsWith('.')) {
             // Show typing indicator if autotyping is enabled
@@ -381,6 +386,18 @@ async function handleMessages(sock, messageUpdate, printLog) {
         let commandExecuted = false;
 
         switch (true) {
+            // ── Prefix toggle ────────────────────────────────────────────────
+            case userMessage === '.prefixtoggle' || userMessage.startsWith('.setprefix') || userMessage === '.prefixinfo': {
+                const _pfArgs = userMessage.split(' ').slice(1);
+                await prefixToggleCommand(sock, chatId, message, userMessage.split(' ')[0], _pfArgs, senderId);
+                break;
+            }
+
+            // ── Bot image ────────────────────────────────────────────────────
+            case userMessage === '.setbotpic' || userMessage === '.botpictoggle':
+                await botimageCommand(sock, chatId, message, userMessage.split(' ')[0], senderId);
+                break;
+
             case userMessage === '.simage': {
                 const quotedMessage = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
                 if (quotedMessage?.stickerMessage) {
