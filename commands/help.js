@@ -128,7 +128,9 @@ async function helpCommand(sock, chatId, message) {
 ┃  🐯  .video
 ┃  🐯  .spotify
 ┃  🐯  .tiktok
+┃  🐯  .tiktokstalk <username>
 ┃  🐯  .instagram
+┃  🐯  .igstalk <username>
 ┃  🐯  .facebook
 └${bar}┘
 

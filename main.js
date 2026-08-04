@@ -145,6 +145,9 @@ const soraCommand = require('./commands/sora');
 const pairCommand = require('./commands/pair');
 const { botimageCommand } = require('./commands/botimage');
 const { prefixToggleCommand, applyPrefixLogic } = require('./commands/prefixtoggle');
+const igstalkCommand = require('./commands/igstalk');
+const tiktokstalkCommand = require('./commands/tiktokstalk');
+const gitstalkCommand = require('./commands/gitstalk');
 
 // ── New commands ──────────────────────────────────────────────────────────────
 const fancyfontsCommand = require('./commands/fancyfonts');
@@ -953,6 +956,18 @@ async function handleMessages(sock, messageUpdate, printLog) {
                 break;
             case userMessage.startsWith('.igs'):
                 await igsCommand(sock, chatId, message, false);
+                break;
+            case userMessage.startsWith('.igstalk'):
+                await igstalkCommand(sock, chatId, message);
+                commandExecuted = true;
+                break;
+            case userMessage.startsWith('.tiktokstalk') || userMessage.startsWith('.ttstalk'):
+                await tiktokstalkCommand(sock, chatId, message);
+                commandExecuted = true;
+                break;
+            case userMessage.startsWith('.gitstalk'):
+                await gitstalkCommand(sock, chatId, message);
+                commandExecuted = true;
                 break;
             case userMessage.startsWith('.fb') || userMessage.startsWith('.facebook'):
                 await facebookCommand(sock, chatId, message);
