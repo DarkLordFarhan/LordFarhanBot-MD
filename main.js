@@ -2087,12 +2087,13 @@ async function handleMessages(sock, messageUpdate, printLog) {
         }
     } catch (error) {
         console.error('❌ Error in message handler:', error.message);
-        // Only try to send error message if we have a valid chatId
-        if (chatId) {
-            await sock.sendMessage(chatId, {
+        // chatId may not be in scope if the error occurred early, so derive it safely
+        const _catchChatId = messageUpdate?.messages?.[0]?.key?.remoteJid;
+        if (_catchChatId) {
+            await sock.sendMessage(_catchChatId, {
                 text: '❌ Failed to process command!',
                 ...channelInfo
-            });
+            }).catch(() => {});
         }
     }
 }
