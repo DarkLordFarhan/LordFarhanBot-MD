@@ -199,6 +199,94 @@ async function helpCommand(sock, chatId, message) {
 ┃  🐯  .numberfact <n>
 ┃  🐯  .color
 ┃  🐯  .uptime
+┃  🐯  .bf / .gf / .couple
+┃  🐯  .movie <title> | .trailer <title>
+┃  🐯  .genmusic <prompt> | .genlyrics <topic>
+┃  🐯  .hack <target> | .goodmorning / .gm
+└${bar}┘
+
+┌${bar}┐
+🛡️  *${toSerifBold('Group Management+')}*
+┃  🐯  .add <number> | .leave | .creategroup
+┃  🐯  .promoteall | .demoteall | .kickall
+┃  🐯  .grouplink | .tagadmin | .getgpp
+┃  🐯  .antileave on/off | .gctime
+┃  🐯  .addbadword | .removebadword | .listbadword
+┃  🐯  .approveall | .rejectall | .disp
+┃  🐯  .stickerpack | .fangtrace | .ex
+└${bar}┘
+
+┌${bar}┐
+🤖  *${toSerifBold('Auto-Mod')}*
+┃  🐯  .antisticker | .antiimage | .antivideo
+┃  🐯  .antiaudio | .antimention | .antispam
+┃  🐯  .antigrouplink | .antidemote | .antipromote
+┃  🐯  .antistatusmention | .antigroupcall
+└${bar}┘
+
+┌${bar}┐
+🧠  *${toSerifBold('More AI Models')}*
+┃  🐯  .deepseek | .grok | .blackbox | .copilot
+┃  🐯  .bing | .claudeai | .bard | .groq
+┃  🐯  .metai | .perplexity | .wormgpt
+┃  🐯  .qwenai | .ilama | .venice
+┃  🐯  .wizard | .vicuna | .zephyr | .mixtral
+┃  🐯  .analyze | .humanizer | .summarize
+┃  🐯  .speechwriter | .vision | .totext
+┃  🐯  .aimenu (full list)
+└${bar}┘
+
+┌${bar}┐
+🕵️  *${toSerifBold('Stalker & Info')}*
+┃  🐯  .igstalk | .tiktokstalk | .gitstalk
+┃  🐯  .twitterstalk | .ipstalk | .npmstalk
+┃  🐯  .wachannel | .stalkermenu
+└${bar}┘
+
+┌${bar}┐
+🔐  *${toSerifBold('Security / Hacking')}*
+┃  🐯  .whois | .dnslookup | .subdomain
+┃  🐯  .reverseip | .geoip | .asnlookup
+┃  🐯  .portscan | .nmap | .pinghost
+┃  🐯  .traceroute | .sslcheck | .headers
+┃  🐯  .hashidentify | .hashcheck | .passwordstrength
+┃  🐯  .urlscan | .phishcheck | .techstack
+┃  🐯  .securitymenu (full list)
+└${bar}┘
+
+┌${bar}┐
+🛠️  *${toSerifBold('Utility+')}*
+┃  🐯  .wiki <query> | .define <word>
+┃  🐯  .covid <country> | .country <name>
+┃  🐯  .qr <text> | .shazam | .vcf <name> <num>
+┃  🐯  .remind <time> <text> | .sessioninfo
+┃  🐯  .iplookup | .getip | .platform
+└${bar}┘
+
+┌${bar}┐
+👑  *${toSerifBold('Owner+')}*
+┃  🐯  .setbotname | .resetbotname | .about
+┃  🐯  .setowner | .resetowner | .iamowner
+┃  🐯  .broadcast / .bc | .shutdown | .restart
+┃  🐯  .disk | .hostip | .getsettings
+┃  🐯  .silent | .privacy | .lastseen
+┃  🐯  .setchannel | .setfooter | .test
+└${bar}┘
+
+┌${bar}┐
+🏆  *${toSerifBold('Sports')}*
+┃  🐯  .football | .matchstats | .teamnews
+┃  🐯  .sportsnews | .f1 | .nfl | .mma
+┃  🐯  .baseball | .hockey | .golf
+┃  🐯  .sportsmenu
+└${bar}┘
+
+┌${bar}┐
+🎨  *${toSerifBold('Logo Studio')}*
+┃  🐯  .goldlogo | .silverlogo | .firelogo
+┃  🐯  .neonlogo | .icelogo | .dragonlogo
+┃  🐯  .rainbowlogo | .shadowlogo | .bloodlogo
+┃  🐯  .logomenu (all 29 effects)
 └${bar}┘
 
 > 💻 _${toSerifBold('LordFarhanXMDTech')}_`;

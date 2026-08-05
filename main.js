@@ -149,6 +149,74 @@ const igstalkCommand = require('./commands/igstalk');
 const tiktokstalkCommand = require('./commands/tiktokstalk');
 const gitstalkCommand = require('./commands/gitstalk');
 
+// ── New command modules ───────────────────────────────────────────────────────
+const {
+    addCommand: mgAddCommand, promoteAllCommand, demoteAllCommand, kickAllCommand,
+    exCommand, clearBanListCommand, resetWarnCommand, setWarnCommand,
+    gctimeCommand, antileaveCommand, addBadwordCommand, removeBadwordCommand,
+    listBadwordCommand, leaveCommand, createGroupCommand, groupLinkCommand,
+    tagAdminCommand, getGppCommand, getPpCommand, togStatusCommand,
+    getParticipantsCommand, listOnlineCommand, listInactiveCommand,
+    approveAllCommand, rejectAllCommand, stickerPackCommand, dispCommand,
+    fangtraceCommand,
+} = require('./commands/moregroup');
+const {
+    antiStickerCommand, antiImageCommand, antiVideoCommand, antiAudioCommand,
+    antiMentionCommand, antiStatusMentionCommand, antiGroupLinkCommand,
+    antiDemoteCommand, antiPromoteCommand, antiGroupCallCommand, antiSpamCommand,
+    enforceAutomod,
+} = require('./commands/automod');
+const {
+    subdomainCommand, reverseIpCommand, geoipCommand, portScanCommand,
+    headersCommand, pingHostCommand, tracerouteCommand, asnLookupCommand,
+    sslCheckCommand, hashIdentifyCommand, hashCheckCommand, bcryptCheckCommand,
+    passwordStrengthCommand, urlScanCommand, phishCheckCommand, robotsCheckCommand,
+    sitemapCommand, cmsDetectCommand, techStackCommand, macLookupCommand,
+    securityHeadersCommand, nmapCommand, securityMenuCommand,
+} = require('./commands/security2');
+const {
+    waChannelCommand, twitterStalkCommand, ipStalkCommand,
+    npmStalkCommand, stalkerMenuCommand,
+} = require('./commands/stalker');
+const {
+    deepseekCommand, grokCommand, blackboxCommand, copilotCommand,
+    bingCommand, claudeaiCommand, bardCommand, groqCommand, metaiCommand,
+    perplexityCommand, wormgptCommand, qwenaiCommand, ilamaCommand, veniceCommand,
+    wizardCommand, vicunaCommand, zephyrCommand, mixtralCommand, dolphinCommand,
+    phiCommand, nousCommand, openchatCommand, orcaCommand, codelamaCommand,
+    solarCommand, starcoderCommand, yiCommand, internlmCommand, chatglmCommand,
+    nemotronCommand, neuralCommand, openHermesCommand, commandCommand,
+    tinyLlamaCommand, replitaiCommand,
+    analyzeCommand, humanizerCommand, summarizeCommand, speechwriterCommand,
+    totextCommand, visionCommand, aiMenuCommand,
+} = require('./commands/moreai');
+const {
+    ping2Command, timeCommand, defineCommand, remindCommand,
+    sessionInfoCommand, covidCommand, wikiCommand, ipLookupCommand,
+    getIpCommand, onWhatsappCommand, qrEncodeCommand, fetchCommand,
+    inspectCommand, shazamCommand, vcfCommand, viewVcfCommand,
+    vv2Command, countryCommand, platformCommand,
+} = require('./commands/utility2');
+const {
+    setBotNameCommand, resetBotNameCommand, setOwnerCommand, resetOwnerCommand,
+    iAmOwnerCommand, aboutCommand, blockCommand, unblockCommand,
+    silentCommand, isSilent, broadcastCommand, shutdownCommand, restartCommand,
+    getSettingsCommand, setSettingCommand, diskCommand, hostIpCommand,
+    findCommandsCommand, latestUpdatesCommand, onlineCommand, privacyCommand,
+    lastSeenCommand, setChannelCommand, resetChannelCommand, setFooterCommand, testCommand,
+} = require('./commands/owner2');
+const {
+    matchStatsCommand, sportsNewsCommand, teamNewsCommand,
+    f1Command, nflCommand, mmaCommand, baseballCommand,
+    hockeyCommand, golfCommand, sportsMenuCommand,
+} = require('./commands/sports2');
+const {
+    bfCommand, gfCommand, coupleCommand, gayCommand: gay2Command, deviceCommand,
+    movieCommand, trailerCommand, readSiteCommand, goodMorningCommand,
+    channelStatusCommand, hackCommand, genMusicCommand, genLyricsCommand,
+} = require('./commands/fun2');
+const logoCommands = require('./commands/logo');
+
 // ── New commands ──────────────────────────────────────────────────────────────
 const fancyfontsCommand = require('./commands/fancyfonts');
 const {
@@ -295,6 +363,8 @@ async function handleMessages(sock, messageUpdate, printLog) {
             }
             // Antilink checks message text internally, so run it even if userMessage is empty
             await Antilink(message, sock);
+            // Automod enforcement (antisticker, antiimage, antivideo, antispam, etc.)
+            await enforceAutomod(sock, chatId, senderId, message);
         }
 
         // PM blocker: block non-owner DMs when enabled (do not ban)
@@ -1341,6 +1411,641 @@ async function handleMessages(sock, messageUpdate, printLog) {
             case userMessage === '.color' || userMessage === '.colour' || userMessage === '.randomcolor':
                 await colorCommand(sock, chatId, message);
                 commandExecuted = true;
+                break;
+
+            // ── moregroup commands ─────────────────────────────────────────
+            case userMessage.startsWith('.add '):
+                await mgAddCommand(sock, chatId, senderId, message);
+                break;
+            case userMessage === '.promoteall':
+                await promoteAllCommand(sock, chatId, senderId, message);
+                break;
+            case userMessage === '.demoteall':
+                await demoteAllCommand(sock, chatId, senderId, message);
+                break;
+            case userMessage === '.kickall':
+                await kickAllCommand(sock, chatId, senderId, message);
+                break;
+            case userMessage === '.ex':
+                await exCommand(sock, chatId, senderId, message);
+                break;
+            case userMessage === '.clearbanlist':
+                await clearBanListCommand(sock, chatId, senderId, message);
+                break;
+            case userMessage === '.resetwarn':
+                await resetWarnCommand(sock, chatId, senderId, message);
+                break;
+            case userMessage.startsWith('.setwarn'):
+                await setWarnCommand(sock, chatId, senderId, message);
+                break;
+            case userMessage === '.gctime':
+                await gctimeCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.antileave'):
+                await antileaveCommand(sock, chatId, senderId, message);
+                break;
+            case userMessage.startsWith('.addbadword'):
+                await addBadwordCommand(sock, chatId, senderId, message);
+                break;
+            case userMessage.startsWith('.removebadword'):
+                await removeBadwordCommand(sock, chatId, senderId, message);
+                break;
+            case userMessage === '.listbadword' || userMessage === '.listbadwords':
+                await listBadwordCommand(sock, chatId, message);
+                break;
+            case userMessage === '.leave':
+                await leaveCommand(sock, chatId, senderId, message);
+                break;
+            case userMessage.startsWith('.creategroup') || userMessage.startsWith('.newgroup'):
+                await createGroupCommand(sock, chatId, senderId, message);
+                break;
+            case userMessage === '.grouplink' || userMessage === '.invitelink':
+                await groupLinkCommand(sock, chatId, senderId, message);
+                break;
+            case userMessage === '.tagadmin':
+                await tagAdminCommand(sock, chatId, senderId, message);
+                break;
+            case userMessage === '.getgpp':
+                await getGppCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.getpp'):
+                await getPpCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.togstatus') || userMessage.startsWith('.togglestatus'):
+                await togStatusCommand(sock, chatId, senderId, message);
+                break;
+            case userMessage === '.getparticipants' || userMessage === '.members':
+                await getParticipantsCommand(sock, chatId, message);
+                break;
+            case userMessage === '.listonline':
+                await listOnlineCommand(sock, chatId, message);
+                break;
+            case userMessage === '.listinactive':
+                await listInactiveCommand(sock, chatId, message);
+                break;
+            case userMessage === '.approveall':
+                await approveAllCommand(sock, chatId, senderId, message);
+                break;
+            case userMessage === '.rejectall':
+                await rejectAllCommand(sock, chatId, senderId, message);
+                break;
+            case userMessage === '.stickerpack':
+                await stickerPackCommand(sock, chatId, message);
+                break;
+            case userMessage === '.disp' || userMessage === '.groupsettings':
+                await dispCommand(sock, chatId, message);
+                break;
+            case userMessage === '.fangtrace':
+                await fangtraceCommand(sock, chatId, message);
+                break;
+
+            // ── automod commands ───────────────────────────────────────────
+            case userMessage.startsWith('.antisticker'):
+                await antiStickerCommand(sock, chatId, senderId, message);
+                break;
+            case userMessage.startsWith('.antiimage'):
+                await antiImageCommand(sock, chatId, senderId, message);
+                break;
+            case userMessage.startsWith('.antivideo'):
+                await antiVideoCommand(sock, chatId, senderId, message);
+                break;
+            case userMessage.startsWith('.antiaudio'):
+                await antiAudioCommand(sock, chatId, senderId, message);
+                break;
+            case userMessage.startsWith('.antimention'):
+                await antiMentionCommand(sock, chatId, senderId, message);
+                break;
+            case userMessage.startsWith('.antistatusmention'):
+                await antiStatusMentionCommand(sock, chatId, senderId, message);
+                break;
+            case userMessage.startsWith('.antigrouplink'):
+                await antiGroupLinkCommand(sock, chatId, senderId, message);
+                break;
+            case userMessage.startsWith('.antidemote'):
+                await antiDemoteCommand(sock, chatId, senderId, message);
+                break;
+            case userMessage.startsWith('.antipromote'):
+                await antiPromoteCommand(sock, chatId, senderId, message);
+                break;
+            case userMessage.startsWith('.antigroupcall'):
+                await antiGroupCallCommand(sock, chatId, senderId, message);
+                break;
+            case userMessage.startsWith('.antispam'):
+                await antiSpamCommand(sock, chatId, senderId, message);
+                break;
+
+            // ── security2 commands ─────────────────────────────────────────
+            case userMessage.startsWith('.subdomain'):
+                await subdomainCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.reverseip'):
+                await reverseIpCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.geoip'):
+                await geoipCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.portscan'):
+                await portScanCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.headers'):
+                await headersCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.pinghost'):
+                await pingHostCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.traceroute'):
+                await tracerouteCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.asnlookup'):
+                await asnLookupCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.sslcheck'):
+                await sslCheckCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.hashidentify'):
+                await hashIdentifyCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.hashcheck'):
+                await hashCheckCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.bcryptcheck'):
+                await bcryptCheckCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.passwordstrength'):
+                await passwordStrengthCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.urlscan'):
+                await urlScanCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.phishcheck'):
+                await phishCheckCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.robotscheck'):
+                await robotsCheckCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.sitemap'):
+                await sitemapCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.cmsdetect'):
+                await cmsDetectCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.techstack'):
+                await techStackCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.maclookup'):
+                await macLookupCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.securityheaders'):
+                await securityHeadersCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.nmap'):
+                await nmapCommand(sock, chatId, message);
+                break;
+            case userMessage === '.securitymenu' || userMessage === '.hackermenu' || userMessage === '.ethicalmenu':
+                await securityMenuCommand(sock, chatId, message);
+                break;
+
+            // ── stalker commands ───────────────────────────────────────────
+            case userMessage.startsWith('.wachannel'):
+                await waChannelCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.twitterstalk') || userMessage.startsWith('.xstalk'):
+                await twitterStalkCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.ipstalk'):
+                await ipStalkCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.npmstalk'):
+                await npmStalkCommand(sock, chatId, message);
+                break;
+            case userMessage === '.stalkermenu' || userMessage === '.stalkmenu':
+                await stalkerMenuCommand(sock, chatId, message);
+                break;
+
+            // ── moreai commands ────────────────────────────────────────────
+            case userMessage.startsWith('.deepseek'):
+                await deepseekCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.grok'):
+                await grokCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.blackbox'):
+                await blackboxCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.copilot'):
+                await copilotCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.bing'):
+                await bingCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.claudeai') || userMessage.startsWith('.claude'):
+                await claudeaiCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.bard'):
+                await bardCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.groq'):
+                await groqCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.metai') || userMessage.startsWith('.meta'):
+                await metaiCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.perplexity'):
+                await perplexityCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.wormgpt'):
+                await wormgptCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.qwenai') || userMessage.startsWith('.qwen'):
+                await qwenaiCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.ilama') || userMessage.startsWith('.llama'):
+                await ilamaCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.venice'):
+                await veniceCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.wizard'):
+                await wizardCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.vicuna'):
+                await vicunaCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.zephyr'):
+                await zephyrCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.mixtral'):
+                await mixtralCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.dolphin'):
+                await dolphinCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.phi'):
+                await phiCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.nous'):
+                await nousCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.openchat'):
+                await openchatCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.orca'):
+                await orcaCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.codellama'):
+                await codelamaCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.solar'):
+                await solarCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.starcoder'):
+                await starcoderCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.yi'):
+                await yiCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.internlm'):
+                await internlmCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.chatglm'):
+                await chatglmCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.nemotron'):
+                await nemotronCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.neural'):
+                await neuralCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.openhermes'):
+                await openHermesCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.command ') || userMessage === '.command':
+                await commandCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.tinyllama'):
+                await tinyLlamaCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.replitai'):
+                await replitaiCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.analyze'):
+                await analyzeCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.humanizer'):
+                await humanizerCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.summarize'):
+                await summarizeCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.speechwriter'):
+                await speechwriterCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.totext'):
+                await totextCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.vision'):
+                await visionCommand(sock, chatId, message);
+                break;
+            case userMessage === '.aimenu' || userMessage === '.ailist':
+                await aiMenuCommand(sock, chatId, message);
+                break;
+
+            // ── utility2 commands ──────────────────────────────────────────
+            case userMessage === '.ping2' || userMessage === '.speed':
+                await ping2Command(sock, chatId, message);
+                break;
+            case userMessage === '.time' || userMessage === '.clock':
+                await timeCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.define') || userMessage.startsWith('.meaning'):
+                await defineCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.remind'):
+                await remindCommand(sock, chatId, message);
+                break;
+            case userMessage === '.sessioninfo' || userMessage === '.session':
+                await sessionInfoCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.covid'):
+                await covidCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.wiki') || userMessage.startsWith('.wikipedia'):
+                await wikiCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.iplookup'):
+                await ipLookupCommand(sock, chatId, message);
+                break;
+            case userMessage === '.getip' || userMessage === '.myip':
+                await getIpCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.onwhatsapp') || userMessage.startsWith('.isonwa'):
+                await onWhatsappCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.qrencode') || userMessage.startsWith('.qr ') || userMessage === '.qr':
+                await qrEncodeCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.fetch ') || userMessage === '.fetch':
+                await fetchCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.inspect'):
+                await inspectCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.shazam'):
+                await shazamCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.vcf ') || userMessage === '.vcf':
+                await vcfCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.viewvcf'):
+                await viewVcfCommand(sock, chatId, message);
+                break;
+            case userMessage === '.vv2':
+                await vv2Command(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.country'):
+                await countryCommand(sock, chatId, message);
+                break;
+            case userMessage === '.platform' || userMessage === '.sysinfo':
+                await platformCommand(sock, chatId, message);
+                break;
+
+            // ── owner2 commands ────────────────────────────────────────────
+            case userMessage.startsWith('.setbotname'):
+                await setBotNameCommand(sock, chatId, senderId, message);
+                break;
+            case userMessage === '.resetbotname':
+                await resetBotNameCommand(sock, chatId, senderId, message);
+                break;
+            case userMessage.startsWith('.setowner'):
+                await setOwnerCommand(sock, chatId, senderId, message);
+                break;
+            case userMessage === '.resetowner':
+                await resetOwnerCommand(sock, chatId, senderId, message);
+                break;
+            case userMessage === '.iamowner':
+                await iAmOwnerCommand(sock, chatId, senderId, message);
+                break;
+            case userMessage === '.about' || userMessage === '.aboutbot':
+                await aboutCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.block '):
+                await blockCommand(sock, chatId, senderId, message);
+                break;
+            case userMessage.startsWith('.unblock '):
+                await unblockCommand(sock, chatId, senderId, message);
+                break;
+            case userMessage.startsWith('.silent'):
+                await silentCommand(sock, chatId, senderId, message);
+                break;
+            case userMessage.startsWith('.broadcast') || userMessage.startsWith('.bc '):
+                await broadcastCommand(sock, chatId, senderId, message);
+                break;
+            case userMessage === '.shutdown':
+                await shutdownCommand(sock, chatId, senderId, message);
+                break;
+            case userMessage === '.restart':
+                await restartCommand(sock, chatId, senderId, message);
+                break;
+            case userMessage === '.getsettings':
+                await getSettingsCommand(sock, chatId, senderId, message);
+                break;
+            case userMessage.startsWith('.setsetting'):
+                await setSettingCommand(sock, chatId, senderId, message);
+                break;
+            case userMessage === '.disk' || userMessage === '.storage':
+                await diskCommand(sock, chatId, senderId, message);
+                break;
+            case userMessage === '.hostip':
+                await hostIpCommand(sock, chatId, senderId, message);
+                break;
+            case userMessage.startsWith('.findcommands') || userMessage.startsWith('.search '):
+                await findCommandsCommand(sock, chatId, senderId, message);
+                break;
+            case userMessage === '.latestupdates' || userMessage === '.changelog':
+                await latestUpdatesCommand(sock, chatId, senderId, message);
+                break;
+            case userMessage.startsWith('.online'):
+                await onlineCommand(sock, chatId, senderId, message);
+                break;
+            case userMessage === '.privacy':
+                await privacyCommand(sock, chatId, senderId, message);
+                break;
+            case userMessage.startsWith('.lastseen'):
+                await lastSeenCommand(sock, chatId, senderId, message);
+                break;
+            case userMessage.startsWith('.setchannel'):
+                await setChannelCommand(sock, chatId, senderId, message);
+                break;
+            case userMessage === '.resetchannel':
+                await resetChannelCommand(sock, chatId, senderId, message);
+                break;
+            case userMessage.startsWith('.setfooter'):
+                await setFooterCommand(sock, chatId, senderId, message);
+                break;
+            case userMessage === '.test':
+                await testCommand(sock, chatId, senderId, message);
+                break;
+
+            // ── sports2 commands ───────────────────────────────────────────
+            case userMessage.startsWith('.matchstats'):
+                await matchStatsCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.sportsnews'):
+                await sportsNewsCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.teamnews'):
+                await teamNewsCommand(sock, chatId, message);
+                break;
+            case userMessage === '.f1' || userMessage === '.formula1':
+                await f1Command(sock, chatId, message);
+                break;
+            case userMessage === '.nfl':
+                await nflCommand(sock, chatId, message);
+                break;
+            case userMessage === '.mma' || userMessage === '.ufc':
+                await mmaCommand(sock, chatId, message);
+                break;
+            case userMessage === '.baseball' || userMessage === '.mlb':
+                await baseballCommand(sock, chatId, message);
+                break;
+            case userMessage === '.hockey' || userMessage === '.nhl':
+                await hockeyCommand(sock, chatId, message);
+                break;
+            case userMessage === '.golf' || userMessage === '.pga':
+                await golfCommand(sock, chatId, message);
+                break;
+            case userMessage === '.sportsmenu':
+                await sportsMenuCommand(sock, chatId, message);
+                break;
+
+            // ── fun2 commands ──────────────────────────────────────────────
+            case userMessage === '.bf':
+                await bfCommand(sock, chatId, message);
+                break;
+            case userMessage === '.gf':
+                await gfCommand(sock, chatId, message);
+                break;
+            case userMessage === '.couple':
+                await coupleCommand(sock, chatId, message);
+                break;
+            case userMessage === '.device':
+                await deviceCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.movie ') || userMessage === '.movie':
+                await movieCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.trailer ') || userMessage === '.trailer':
+                await trailerCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.readsite') || userMessage.startsWith('.readweb'):
+                await readSiteCommand(sock, chatId, message);
+                break;
+            case userMessage === '.goodmorning' || userMessage === '.gm':
+                await goodMorningCommand(sock, chatId, message);
+                break;
+            case userMessage === '.channelstatus':
+                await channelStatusCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.hack ') || userMessage === '.hack':
+                await hackCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.genmusic'):
+                await genMusicCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.genlyrics'):
+                await genLyricsCommand(sock, chatId, message);
+                break;
+
+            // ── logo commands ──────────────────────────────────────────────
+            case userMessage.startsWith('.goldlogo'):
+                await logoCommands.goldlogoCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.silverlogo'):
+                await logoCommands.silverlogoCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.firelogo'):
+                await logoCommands.firelogoCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.neonlogo'):
+                await logoCommands.neonlogoCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.icelogo'):
+                await logoCommands.icelogoCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.iceglowlogo'):
+                await logoCommands.iceglowlogoCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.lightninglogo'):
+                await logoCommands.lightninglogoCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.rainbowlogo'):
+                await logoCommands.rainbowlogoCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.shadowlogo'):
+                await logoCommands.shadowlogoCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.smokelogo'):
+                await logoCommands.smokelogoCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.bloodlogo'):
+                await logoCommands.bloodlogoCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.dragonlogo'):
+                await logoCommands.dragonlogoCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.platinumlogo'):
+                await logoCommands.platinumlogoCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.chromelogo'):
+                await logoCommands.chromelogoCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.diamondlogo'):
+                await logoCommands.diamondlogoCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.bronzelogo'):
+                await logoCommands.bronzelogoCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.steelogo') || userMessage.startsWith('.steellogo'):
+                await (logoCommands.steelogoCommand || logoCommands.steellogCommand)(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.copperlogo'):
+                await logoCommands.copperlogoCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.titaniumlogo'):
+                await logoCommands.titaniumlogoCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.sunlogo'):
+                await logoCommands.sunlogoCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.moonlogo'):
+                await logoCommands.moonlogoCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.aqualogo'):
+                await logoCommands.aqualogoCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.phoenixlogo'):
+                await logoCommands.phoenixlogoCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.wizardlogo'):
+                await logoCommands.wizardlogoCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.crystallogo'):
+                await logoCommands.crystallogoCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.darkmagiclogo'):
+                await logoCommands.darkmagiclogoCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.glowlogo'):
+                await logoCommands.glowlogoCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.gradientlogo'):
+                await logoCommands.gradientlogoCommand(sock, chatId, message);
+                break;
+            case userMessage.startsWith('.matrixlogo'):
+                await logoCommands.matrixlogoCommand(sock, chatId, message);
+                break;
+            case userMessage === '.logomenu':
+                await logoCommands.logoMenuCommand(sock, chatId, message);
                 break;
 
             default:
