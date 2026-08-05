@@ -29,7 +29,7 @@ const settings = require('./settings');
 require('./config.js');
 const { isBanned } = require('./lib/isBanned');
 const yts = require('yt-search');
-const { fetchBuffer } = require('./lib/myfunc');
+const { getBuffer: fetchBuffer } = require('./lib/myfunc');
 const fetch = require('node-fetch');
 const ytdl = require('ytdl-core');
 const axios = require('axios');
@@ -296,7 +296,7 @@ async function handleMessages(sock, messageUpdate, printLog) {
             }
         }
 
-        const userMessage = (
+        let userMessage = (
             message.message?.conversation?.trim() ||
             message.message?.extendedTextMessage?.text?.trim() ||
             message.message?.imageMessage?.caption?.trim() ||
@@ -700,7 +700,7 @@ async function handleMessages(sock, messageUpdate, printLog) {
                 if (isNaN(position)) {
                     await sock.sendMessage(chatId, { text: 'Please provide a valid position number for Tic-Tac-Toe move.', ...channelInfo }, { quoted: message });
                 } else {
-                    tictactoeMove(sock, chatId, senderId, position);
+                    handleTicTacToeMove(sock, chatId, senderId, position);
                 }
                 break;
             case userMessage === '.topmembers':
@@ -931,9 +931,6 @@ async function handleMessages(sock, messageUpdate, printLog) {
             case userMessage.startsWith('.autostatus'):
                 const autoStatusArgs = userMessage.split(' ').slice(1);
                 await autoStatusCommand(sock, chatId, message, autoStatusArgs);
-                break;
-            case userMessage.startsWith('.simp'):
-                await simpCommand(sock, chatId, message);
                 break;
             case userMessage.startsWith('.metallic'):
                 await textmakerCommand(sock, chatId, message, userMessage, 'metallic');
