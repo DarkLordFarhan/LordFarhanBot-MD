@@ -467,8 +467,8 @@ async function handleMessages(sock, messageUpdate, printLog) {
             }
 
             // ── Bot image ────────────────────────────────────────────────────
-            case userMessage === '.setbotpic' || userMessage === '.botpictoggle':
-                await botimageCommand(sock, chatId, message, userMessage.split(' ')[0], senderId);
+            case userMessage === '.setbotpic' || userMessage.startsWith('.setbotpic '):
+                await botimageCommand(sock, chatId, message, '.setbotpic', senderId);
                 break;
 
             case userMessage === '.simage': {

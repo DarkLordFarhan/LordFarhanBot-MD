@@ -3,78 +3,73 @@ const fs = require('fs');
 const path = require('path');
 const { downloadContentFromMessage } = require('@whiskeysockets/baileys');
 
-const DATA_DIR = path.join(process.cwd(), 'data');
-const SETTINGS_FILE = path.join(DATA_DIR, 'botsettings.json');
-
-function readSettings() { try { return JSON.parse(fs.readFileSync(SETTINGS_FILE)); } catch (_) { return {}; } }
-function writeSettings(d) { if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true }); fs.writeFileSync(SETTINGS_FILE, JSON.stringify(d, null, 2)); }
-
 /**
- * .setbotpic  – anyone can set the bot profile picture
- * .botpictoggle – owner/sudo only: enable/disable the open setbotpic feature
+ * .setbotpic  – anyone can set the bot's profile picture by replying to any image.
+ *               Owner/sudo can also pass a URL: .setbotpic <url>
  */
 async function botimageCommand(sock, chatId, message, cmd, senderId) {
-    const isOwnerOrSudo = require('../lib/isOwner');
-    const settings = readSettings();
+    if (cmd !== '.setbotpic') return;
 
-    // ── Toggle (owner/sudo only) ─────────────────────────────────────────────
-    if (cmd === '.botpictoggle') {
-        const senderIsOwnerOrSudo = await isOwnerOrSudo(senderId, sock, chatId);
+    const isOwnerOrSudo = require('../lib/isOwner');
+    const senderIsOwnerOrSudo = await isOwnerOrSudo(senderId, sock, chatId);
+
+    // Check for image URL (owner/sudo only shortcut)
+    const text = (
+        message.message?.conversation ||
+        message.message?.extendedTextMessage?.text || ''
+    ).trim();
+    const urlArg = text.split(' ').slice(1).join(' ').trim();
+    if (urlArg && /^https?:\/\//i.test(urlArg)) {
         if (!message.key.fromMe && !senderIsOwnerOrSudo) {
-            return sock.sendMessage(chatId, { text: '❌ Only owner/sudo can toggle this.' }, { quoted: message });
+            return sock.sendMessage(chatId, { text: '❌ Only owner/sudo can set bot pic via URL.' }, { quoted: message });
         }
-        settings.openBotPic = !settings.openBotPic;
-        writeSettings(settings);
+        try {
+            await sock.updateProfilePicture(sock.user.id, { url: urlArg });
+            return sock.sendMessage(chatId, {
+                text: `✅ Bot profile picture updated from URL! 🖼️`
+            }, { quoted: message });
+        } catch (e) {
+            return sock.sendMessage(chatId, { text: `❌ Failed: ${e.message}` }, { quoted: message });
+        }
+    }
+
+    // Grab image from reply or direct image in message
+    const quotedMessage = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
+    const directImage = message.message?.imageMessage;
+    const imageMessage = directImage || quotedMessage?.imageMessage || quotedMessage?.stickerMessage;
+
+    if (!imageMessage) {
         return sock.sendMessage(chatId, {
-            text: `🖼️ *Bot picture* is now open to *${settings.openBotPic ? '🟢 everyone' : '🔴 owner only'}*`
+            text: `🖼️ *Set Bot Picture*\n\n*How to use:*\n1️⃣ Reply to any image with *.setbotpic*\n2️⃣ Or send an image with caption *.setbotpic*\n3️⃣ Owner can also do: *.setbotpic <image url>*\n\n_Anyone can change the bot's profile picture!_`
         }, { quoted: message });
     }
 
-    // ── setbotpic ────────────────────────────────────────────────────────────
-    if (cmd === '.setbotpic') {
-        // If openBotPic is OFF, only owner/sudo can use it
-        if (!settings.openBotPic) {
-            const senderIsOwnerOrSudo = await isOwnerOrSudo(senderId, sock, chatId);
-            if (!message.key.fromMe && !senderIsOwnerOrSudo) {
-                return sock.sendMessage(chatId, {
-                    text: '❌ Bot picture changes are currently restricted to owner/sudo.\nAsk the owner to enable *.botpictoggle*.'
-                }, { quoted: message });
-            }
-        }
+    try {
+        await sock.sendMessage(chatId, { text: '⏳ Updating bot profile picture…' }, { quoted: message });
 
-        const quotedMessage = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
-        const directImage = message.message?.imageMessage;
+        const tmpDir = path.join(process.cwd(), 'tmp');
+        if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir, { recursive: true });
 
-        const imageMessage = directImage || quotedMessage?.imageMessage || quotedMessage?.stickerMessage;
-        if (!imageMessage) {
-            return sock.sendMessage(chatId, {
-                text: '🖼️ *Set Bot Picture*\n\nReply to an image with *.setbotpic* to update the bot\'s profile picture.\n\n_Anyone can use this command!_'
-            }, { quoted: message });
-        }
+        const msgType = quotedMessage?.stickerMessage ? 'sticker' : 'image';
+        const stream = await downloadContentFromMessage(imageMessage, msgType);
+        let buffer = Buffer.from([]);
+        for await (const chunk of stream) buffer = Buffer.concat([buffer, chunk]);
 
-        try {
-            const tmpDir = path.join(process.cwd(), 'tmp');
-            if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir, { recursive: true });
+        const imagePath = path.join(tmpDir, `botpic_${Date.now()}.jpg`);
+        fs.writeFileSync(imagePath, buffer);
 
-            const msgType = directImage ? 'image' : (quotedMessage?.stickerMessage ? 'sticker' : 'image');
-            const stream = await downloadContentFromMessage(imageMessage, msgType === 'sticker' ? 'sticker' : 'image');
-            let buffer = Buffer.from([]);
-            for await (const chunk of stream) buffer = Buffer.concat([buffer, chunk]);
+        await sock.updateProfilePicture(sock.user.id, { url: imagePath });
 
-            const imagePath = path.join(tmpDir, `botpic_${Date.now()}.jpg`);
-            fs.writeFileSync(imagePath, buffer);
+        try { fs.unlinkSync(imagePath); } catch (_) {}
 
-            await sock.updateProfilePicture(sock.user.id, { url: imagePath });
-            try { fs.unlinkSync(imagePath); } catch (_) {}
+        return sock.sendMessage(chatId, {
+            text: `✅ Bot profile picture updated by @${senderId.split('@')[0]}! 🖼️`,
+            mentions: [senderId]
+        }, { quoted: message });
 
-            return sock.sendMessage(chatId, {
-                text: `✅ Bot profile picture updated by @${senderId.split('@')[0]}! 🖼️`,
-                mentions: [senderId]
-            }, { quoted: message });
-        } catch (e) {
-            console.error('setbotpic error:', e.message);
-            return sock.sendMessage(chatId, { text: `❌ Failed to update bot picture: ${e.message}` }, { quoted: message });
-        }
+    } catch (e) {
+        console.error('setbotpic error:', e.message);
+        return sock.sendMessage(chatId, { text: `❌ Failed to update bot picture: ${e.message}` }, { quoted: message });
     }
 }
 
