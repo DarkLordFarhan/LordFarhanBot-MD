@@ -50,23 +50,29 @@ async function reminiCommand(sock, chatId, message, args) {
             }
         }
 
-        // Call the Remini API
-        const apiUrl = `https://api.princetechn.com/api/tools/remini?apikey=prince_tech_api_azfsbshfb&url=${encodeURIComponent(imageUrl)}`;
-        
-        const response = await axios.get(apiUrl, {
-            timeout: 60000, // 60 second timeout (AI processing takes longer)
-            headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-            }
-        });
-
-
-        if (response.data && response.data.success && response.data.result) {
-            const result = response.data.result;
+        // Try multiple public image-enhancement providers.
+        const providers = [
+            () => axios.get(`https://api.princetechn.com/api/tools/remini?apikey=prince_tech_api_azfsbshfb&url=${encodeURIComponent(imageUrl)}`, { timeout: 60000, headers: { 'User-Agent': 'Mozilla/5.0' } }),
+            () => axios.get(`https://api.siputzx.my.id/api/tools/remini?image=${encodeURIComponent(imageUrl)}`, { timeout: 60000, headers: { 'User-Agent': 'Mozilla/5.0' } })
+        ];
+        let result;
+        for (const provider of providers) {
+            try {
+                const response = await provider();
+                const data = response.data;
+                const candidate = data?.result || data?.data || data;
+                if (candidate && (candidate.image_url || candidate.url || candidate.image)) {
+                    result = candidate;
+                    break;
+                }
+            } catch (_) {}
+        }
+        if (result) {
             
-            if (result.image_url) {
+            const enhancedUrl = result.image_url || result.url || result.image;
+            if (enhancedUrl) {
                 // Download the enhanced image
-                const imageResponse = await axios.get(result.image_url, {
+                const imageResponse = await axios.get(enhancedUrl, {
                     responseType: 'arraybuffer',
                     timeout: 30000
                 });
@@ -83,9 +89,7 @@ async function reminiCommand(sock, chatId, message, args) {
             } else {
                 throw new Error(result.message || 'Failed to enhance image');
             }
-        } else {
-            throw new Error('API returned invalid response');
-        }
+        } else throw new Error('All image enhancement providers failed');
 
     } catch (error) {
         console.error('Remini Error:', error.message);

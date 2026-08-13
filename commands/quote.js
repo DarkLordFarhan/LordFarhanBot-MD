@@ -2,15 +2,15 @@ const fetch = require('node-fetch');
 
 module.exports = async function quoteCommand(sock, chatId, message) {
     try {
-        const shizokeys = 'shizo';
-        const res = await fetch(`https://shizoapi.onrender.com/api/texts/quotes?apikey=${shizokeys}`);
-        
-        if (!res.ok) {
-            throw await res.text();
+        let quoteMessage;
+        try {
+            const res = await fetch('https://api.quotable.io/random', { timeout: 12000 });
+            const json = await res.json();
+            if (json.content) quoteMessage = `“${json.content}”\n\n— ${json.author || 'Unknown'}`;
+        } catch (_) {}
+        if (!quoteMessage) {
+            quoteMessage = '“Success is the sum of small efforts, repeated day in and day out.”\n\n— Robert Collier';
         }
-        
-        const json = await res.json();
-        const quoteMessage = json.result;
 
         // Send the quote message
         await sock.sendMessage(chatId, { text: quoteMessage }, { quoted: message });

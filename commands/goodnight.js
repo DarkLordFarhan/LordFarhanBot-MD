@@ -1,16 +1,11 @@
-const fetch = require('node-fetch');
-
 async function goodnightCommand(sock, chatId, message) {
     try {
-        const shizokeys = 'shizo';
-        const res = await fetch(`https://shizoapi.onrender.com/api/texts/lovenight?apikey=${shizokeys}`);
-        
-        if (!res.ok) {
-            throw await res.text();
-        }
-        
-        const json = await res.json();
-        const goodnightMessage = json.result;
+        const messages = [
+            'Good night 🌙 May your dreams be peaceful and your morning bright.',
+            'Sleep well and recharge. Tomorrow is another chance to shine. ✨',
+            'Close your eyes, let the worries go, and have a beautiful night. 😴'
+        ];
+        const goodnightMessage = messages[Math.floor(Math.random() * messages.length)];
 
         // Send the goodnight message
         await sock.sendMessage(chatId, { text: goodnightMessage }, { quoted: message });

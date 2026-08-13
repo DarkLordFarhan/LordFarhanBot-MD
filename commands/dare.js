@@ -1,16 +1,13 @@
-const fetch = require('node-fetch');
-
 async function dareCommand(sock, chatId, message) {
     try {
-        const shizokeys = 'shizo';
-        const res = await fetch(`https://shizoapi.onrender.com/api/texts/dare?apikey=${shizokeys}`);
-        
-        if (!res.ok) {
-            throw await res.text();
-        }
-        
-        const json = await res.json();
-        const dareMessage = json.result;
+        const dares = [
+            'Send a funny voice note using your best celebrity impression.',
+            'Change your profile picture to a cartoon for 10 minutes.',
+            'Compliment the last person you chatted with.',
+            'Send a selfie with your funniest facial expression.',
+            'Type your next message with your eyes closed.'
+        ];
+        const dareMessage = '🎯 *DARE*\n\n' + dares[Math.floor(Math.random() * dares.length)];
 
         // Send the dare message
         await sock.sendMessage(chatId, { text: dareMessage }, { quoted: message });

@@ -14,23 +14,25 @@ function getArg(m, cmd) {
 }
 
 async function getSportsNews(category) {
+    // BBC sports RSS is keyless and avoids the expired NewsAPI demo key.
     try {
-        const res = await fetch(`https://newsapi.org/v2/top-headlines?category=sports&q=${encodeURIComponent(category)}&pageSize=5&language=en&apiKey=demo`, {
-            headers: { 'User-Agent': 'Mozilla/5.0' }
-        });
-        const d = await res.json();
-        if (d.articles?.length) return d.articles;
-    } catch {}
-    // Fallback: BBC sports RSS
-    try {
-        const rssUrl = `https://feeds.bbci.co.uk/sport/${category.toLowerCase()}/rss.xml`;
+        const sport = category.toLowerCase().replace(/[^a-z]/g, '') || 'football';
+        const rssUrl = `https://feeds.bbci.co.uk/sport/${sport}/rss.xml`;
         const res = await fetch(rssUrl, { headers: { 'User-Agent': 'Mozilla/5.0' } });
         const xml = await res.text();
         const items = [...xml.matchAll(/<item>([\s\S]*?)<\/item>/g)].slice(0, 5);
-        return items.map(m => ({
+        const parsed = items.map(m => ({
             title: (m[1].match(/<title><!\[CDATA\[(.*?)\]\]><\/title>/) || m[1].match(/<title>(.*?)<\/title>/))?.[1] || 'N/A',
             description: (m[1].match(/<description><!\[CDATA\[(.*?)\]\]><\/description>/) || [])[1]?.replace(/<[^>]*>/g, '').slice(0, 100) || '',
             url: (m[1].match(/<link>(.*?)<\/link>/))?.[1] || '',
+        }));
+        if (parsed.length) return parsed;
+        const fallback = await fetch('https://feeds.bbci.co.uk/sport/rss.xml');
+        const xml2 = await fallback.text();
+        return [...xml2.matchAll(/<item>([\s\S]*?)<\/item>/g)].slice(0, 5).map(m => ({
+            title: (m[1].match(/<title><!\[CDATA\[(.*?)\]\]><\/title>/) || [])[1] || 'Sports news',
+            description: '',
+            url: (m[1].match(/<link>(.*?)<\/link>/) || [])[1] || ''
         }));
     } catch {
         return [];

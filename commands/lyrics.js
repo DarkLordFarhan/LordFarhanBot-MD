@@ -9,18 +9,27 @@ async function lyricsCommand(sock, chatId, songTitle, message) {
     }
 
     try {
-        // Use lyricsapi.fly.dev and return only the raw lyrics text
-        const apiUrl = `https://lyricsapi.fly.dev/api/lyrics?q=${encodeURIComponent(songTitle)}`;
-        const res = await fetch(apiUrl);
-        
-        if (!res.ok) {
-            const errText = await res.text();
-            throw errText;
+        let lyrics = null;
+        // lyrics.ovh requires separate artist/title values.
+        const parts = songTitle.split(/\s+-\s+/, 2);
+        if (parts.length === 2) {
+            try {
+                const res = await fetch(`https://api.lyrics.ovh/v1/${encodeURIComponent(parts[0])}/${encodeURIComponent(parts[1])}`, { timeout: 20000 });
+                const data = await res.json();
+                if (data.lyrics) lyrics = data.lyrics;
+            } catch (_) {}
         }
-        
-        const data = await res.json();
-
-        const lyrics = data && data.result && data.result.lyrics ? data.result.lyrics : null;
+        // For a title-only query, use the keyless suggestion endpoint first.
+        if (!lyrics) {
+            const suggest = await fetch(`https://api.lyrics.ovh/suggest/${encodeURIComponent(songTitle)}`, { timeout: 20000 });
+            const data = await suggest.json();
+            const track = data?.data?.find(t => t?.artist?.name && t?.title);
+            if (track) {
+                const res = await fetch(`https://api.lyrics.ovh/v1/${encodeURIComponent(track.artist.name)}/${encodeURIComponent(track.title)}`, { timeout: 20000 });
+                const lyricData = await res.json();
+                lyrics = lyricData.lyrics || null;
+            }
+        }
         if (!lyrics) {
             await sock.sendMessage(chatId, {
                 text: `❌ Sorry, I couldn't find any lyrics for "${songTitle}".`

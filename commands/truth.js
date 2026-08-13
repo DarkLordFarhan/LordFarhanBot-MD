@@ -1,16 +1,13 @@
-const fetch = require('node-fetch');
-
 async function truthCommand(sock, chatId, message) {
     try {
-        const shizokeys = 'shizo';
-        const res = await fetch(`https://shizoapi.onrender.com/api/texts/truth?apikey=${shizokeys}`);
-        
-        if (!res.ok) {
-            throw await res.text();
-        }
-        
-        const json = await res.json();
-        const truthMessage = json.result;
+        const truths = [
+            'What is the most embarrassing thing you have done recently?',
+            'Who was the last person you searched for online?',
+            'What is one secret talent you have?',
+            'What is the strangest dream you remember?',
+            'What is one thing you would change about yourself?'
+        ];
+        const truthMessage = '💬 *TRUTH*\n\n' + truths[Math.floor(Math.random() * truths.length)];
 
         // Send the truth message
         await sock.sendMessage(chatId, { text: truthMessage }, { quoted: message });

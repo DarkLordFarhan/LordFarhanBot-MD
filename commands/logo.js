@@ -94,7 +94,7 @@ function makeLogoCommand(cmd, style, emoji, styleName) {
         } catch (e) {
             // Final fallback: rich text message
             await sock.sendMessage(chatId, {
-                text: `${emoji} *${styleName} Logo — "${text}"*\n\n🎨 Logo image generation is temporarily unavailable.\nTry: https://textpro.me\n\n_Type your text on the website to download the ${styleName} effect._`
+                text: `${emoji} *${styleName} Logo — "${text}"*\n\n🎨 Logo image providers are temporarily unavailable. Please try again shortly.`
             }, { quoted: message });
         }
     };

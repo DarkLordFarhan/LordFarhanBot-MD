@@ -2,12 +2,12 @@ const fetch = require('node-fetch');
 
 async function shayariCommand(sock, chatId, message) {
     try {
-        const response = await fetch('https://shizoapi.onrender.com/api/texts/shayari?apikey=shizo');
-        const data = await response.json();
-        
-        if (!data || !data.result) {
-            throw new Error('Invalid response from API');
-        }
+        const verses = [
+            'रात की खामोशी में भी एक आवाज़ आती है,\nतेरी याद हर पल मेरे पास आती है।',
+            'कुछ रिश्ते बारिश की बूंदों जैसे होते हैं,\nछूते ही दिल को सुकून दे जाते हैं।',
+            'मंज़िल उन्हीं को मिलती है जिनके सपनों में जान होती है।'
+        ];
+        const data = { result: verses[Math.floor(Math.random() * verses.length)] };
 
         const buttons = [
             { buttonId: '.shayari', buttonText: { displayText: 'Shayari 🪄' }, type: 1 },

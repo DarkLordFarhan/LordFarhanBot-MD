@@ -1,16 +1,11 @@
-const fetch = require('node-fetch');
-
 async function rosedayCommand(sock, chatId, message) {
     try {
-        
-        const res = await fetch(`https://api.princetechn.com/api/fun/roseday?apikey=prince`);
-        
-        if (!res.ok) {
-            throw await res.text();
-        }
-        
-        const json = await res.json();
-        const rosedayMessage = json.result;
+        const messages = [
+            '🌹 A rose for someone who makes every day brighter.',
+            '🌹 Love grows when it is shared. Happy Rose Day!',
+            '🌹 May your life always be filled with the fragrance of happiness.'
+        ];
+        const rosedayMessage = messages[Math.floor(Math.random() * messages.length)];
 
         // Send the roseday message
         await sock.sendMessage(chatId, { text: rosedayMessage }, { quoted: message });

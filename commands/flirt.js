@@ -1,16 +1,12 @@
-const fetch = require('node-fetch');
-
 async function flirtCommand(sock, chatId, message) {
     try {
-        const shizokeys = 'shizo';
-        const res = await fetch(`https://shizoapi.onrender.com/api/texts/flirt?apikey=${shizokeys}`);
-        
-        if (!res.ok) {
-            throw await res.text();
-        }
-        
-        const json = await res.json();
-        const flirtMessage = json.result;
+        const lines = [
+            'Are you a magician? Whenever I see you, everyone else disappears. 😉',
+            'I was going to send a clever pickup line, but your smile distracted me. 😊',
+            'You must be Wi‑Fi, because I am feeling a connection. ✨',
+            'If compliments were stars, you would have your own galaxy. 🌟'
+        ];
+        const flirtMessage = lines[Math.floor(Math.random() * lines.length)];
 
         // Send the flirt message
         await sock.sendMessage(chatId, { text: flirtMessage }, { quoted: message });

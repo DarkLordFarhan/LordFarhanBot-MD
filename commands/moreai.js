@@ -98,9 +98,10 @@ const bardCommand = makeAICommand('bard', 'Google Bard/Gemini', '✨',
 
 const groqCommand = makeAICommand('groq', 'Groq AI', '⚡',
     async q => {
+        if (!process.env.GROQ_API_KEY) return fetchAI('gpt', q).catch(() => fetchXteam('/gpt', q));
         const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', Authorization: 'Bearer gsk_free' },
+            headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${process.env.GROQ_API_KEY}` },
             body: JSON.stringify({ model: 'llama3-8b-8192', messages: [{ role: 'user', content: q }] }),
             timeout: 20000
         });

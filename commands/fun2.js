@@ -92,13 +92,13 @@ async function movieCommand(sock, chatId, message) {
     if (!title) return sock.sendMessage(chatId, { text: 'Usage: .movie <title>\nExample: .movie Avengers' }, { quoted: message });
     await sock.sendMessage(chatId, { text: '🎬 Searching movie…' }, { quoted: message });
     try {
-        const res = await fetch(`https://www.omdbapi.com/?apikey=trilogy&t=${encodeURIComponent(title)}&type=movie`);
-        const d = await res.json();
-        if (d.Response === 'False' || !d.Title) throw new Error('Not found');
-        const text = `🎬 *${d.Title}* (${d.Year})\n\n⭐ IMDB: ${d.imdbRating}/10\n🏆 Genre: ${d.Genre}\n🎭 Director: ${d.Director}\n🎪 Cast: ${d.Actors?.slice(0, 60)}\n⏱ Runtime: ${d.Runtime}\n🌍 Country: ${d.Country}\n📝 Plot: ${d.Plot?.slice(0, 200)}`;
-        if (d.Poster && d.Poster !== 'N/A') {
+        const res = await fetch(`https://api.tvmaze.com/search/shows?q=${encodeURIComponent(title)}`);
+        const d = (await res.json())?.[0]?.show;
+        if (!d?.name) throw new Error('Not found');
+        const text = `🎬 *${d.name}* (${d.premiered?.slice(0, 4) || 'N/A'})\n\n⭐ Rating: ${d.rating?.average || 'N/A'}/10\n🏆 Genre: ${(d.genres || []).join(', ') || 'N/A'}\n🌍 Country: ${d.network?.country?.name || d.webChannel?.country?.name || 'N/A'}\n📝 Plot: ${(d.summary || 'No plot available').replace(/<[^>]+>/g, '').slice(0, 300)}`;
+        if (d.image?.medium) {
             try {
-                await sock.sendMessage(chatId, { image: { url: d.Poster }, caption: text }, { quoted: message });
+                await sock.sendMessage(chatId, { image: { url: d.image.medium }, caption: text }, { quoted: message });
                 return;
             } catch {}
         }
