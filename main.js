@@ -249,9 +249,13 @@ const channelInfo = {
 async function handleMessages(sock, messageUpdate, printLog) {
     try {
         const { messages, type } = messageUpdate;
-        if (type !== 'notify') return;
+        const message = messages?.[0];
+        // Baileys emits messages sent from the bot's linked device as `append`
+        // instead of `notify`. Process those only when they are fromMe so
+        // commands sent into another person's DM are not silently ignored,
+        // while avoiding processing unrelated history-sync messages.
+        if (type !== 'notify' && !(type === 'append' && message?.key?.fromMe)) return;
 
-        const message = messages[0];
         if (!message?.message) return;
 
         // Handle autoread functionality
