@@ -20,12 +20,21 @@ async function soraCommand(sock, chatId, message) {
             return;
         }
 
-        const apiUrl = `https://okatsu-rolezapiiz.vercel.app/ai/txt2video?text=${encodeURIComponent(input)}`;
-        const { data } = await axios.get(apiUrl, { timeout: 60000, headers: { 'user-agent': 'Mozilla/5.0' } });
-
-        const videoUrl = data?.videoUrl || data?.result || data?.data?.videoUrl;
+        let videoUrl;
+        for (const url of [
+            `https://okatsu-rolezapiiz.vercel.app/ai/txt2video?text=${encodeURIComponent(input)}`,
+            `https://api.ryzendesu.vip/api/ai/txt2video?text=${encodeURIComponent(input)}`
+        ]) {
+            try {
+                const { data } = await axios.get(url, { timeout: 60000, headers: { 'user-agent': 'Mozilla/5.0' } });
+                videoUrl = data?.videoUrl || data?.result || data?.data?.videoUrl || data?.url;
+                if (videoUrl) break;
+            } catch (_) {}
+        }
         if (!videoUrl) {
-            throw new Error('No videoUrl in API response');
+            await sock.sendMessage(chatId, { text: '⚠️ Video providers are unavailable; generating a preview image instead…' }, { quoted: message });
+            const image = await axios.get(`https://image.pollinations.ai/prompt/${encodeURIComponent(input + ', cinematic motion scene, high quality') }?width=1280&height=720&nologo=true&model=flux`, { responseType: 'arraybuffer', timeout: 90000 });
+            return sock.sendMessage(chatId, { image: Buffer.from(image.data), caption: `🎨 Sora preview for: ${input}` }, { quoted: message });
         }
 
         await sock.sendMessage(chatId, {

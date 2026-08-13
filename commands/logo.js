@@ -13,69 +13,72 @@ function getArg(m, cmd) {
     return getText(m).replace(new RegExp(`^\\.${cmd}\\s*`, 'i'), '').trim();
 }
 
-// TextPro API (free, many effects)
-const TEXTPRO = 'https://textpro.me';
+// ephoto360 effect IDs used by the public ephoto wrappers.
 
 // Logo effect data: [id/style, emoji, desc]
 const LOGO_EFFECTS = {
-    goldlogo:       ['gold-text-effect-online',       '🟡', 'Gold'],
-    silverlogo:     ['chrome-text-effect',            '⚪', 'Silver'],
-    platinumlogo:   ['platinum-logo-effect',          '🔘', 'Platinum'],
-    chromelogo:     ['chrome-text-effect',            '💿', 'Chrome'],
-    diamondlogo:    ['diamond-text-effect-online',    '💎', 'Diamond'],
-    bronzelogo:     ['bronze-logo-text-effect-online','🟫', 'Bronze'],
-    steelogo:       ['steel-logo-text-effect-online', '🔩', 'Steel'],
-    copperlogo:     ['copper-logo-text-effect',       '🔶', 'Copper'],
-    titaniumlogo:   ['titanium-text-effect',          '⚙️', 'Titanium'],
-    firelogo:       ['fire-text-effect-online',       '🔥', 'Fire'],
-    icelogo:        ['ice-text-effect-online',        '🧊', 'Ice'],
-    iceglowlogo:    ['ice-glow-text',                 '❄️', 'Ice Glow'],
-    lightninglogo:  ['lightning-text-effect',         '⚡', 'Lightning'],
-    rainbowlogo:    ['rainbow-text-effect-online',    '🌈', 'Rainbow'],
-    sunlogo:        ['sun-text-effect',               '☀️', 'Sun'],
-    moonlogo:       ['moon-text-effect',              '🌙', 'Moon'],
-    dragonlogo:     ['dragon-text-effect',            '🐉', 'Dragon'],
-    phoenixlogo:    ['phoenix-text-effect-online',    '🦅', 'Phoenix'],
-    wizardlogo:     ['wizard-text-effect-online',     '🧙', 'Wizard'],
-    crystallogo:    ['crystal-text-effect',           '🔮', 'Crystal'],
-    darkmagiclogo:  ['dark-magic-text-effect',        '🪄', 'Dark Magic'],
-    shadowlogo:     ['shadow-text-effect-online',     '🌑', 'Shadow'],
-    smokelogo:      ['smoke-text-effect-online',      '💨', 'Smoke'],
-    bloodlogo:      ['blood-text-effect-online',      '🩸', 'Blood'],
-    neonlogo:       ['neon-text-effect-online',       '💡', 'Neon'],
-    glowlogo:       ['glow-text-effect-online',       '✨', 'Glow'],
-    gradientlogo:   ['gradient-text-effect',          '🎨', 'Gradient'],
-    matrixlogo:     ['matrix-text-effect',            '🖥️', 'Matrix'],
-    aqualogo:       ['water-text-effect-online',      '💧', 'Aqua'],
+    goldlogo:       [38, '🟡', 'Gold'],
+    silverlogo:     [52, '⚪', 'Silver'],
+    platinumlogo:   [52, '🔘', 'Platinum'],
+    chromelogo:     [52, '💿', 'Chrome'],
+    diamondlogo:    [55, '💎', 'Diamond'],
+    bronzelogo:     [38, '🟫', 'Bronze'],
+    steelogo:       [52, '🔩', 'Steel'],
+    copperlogo:     [38, '🔶', 'Copper'],
+    titaniumlogo:   [52, '⚙️', 'Titanium'],
+    firelogo:       [4, '🔥', 'Fire'],
+    icelogo:        [171, '🧊', 'Ice'],
+    iceglowlogo:    [171, '❄️', 'Ice Glow'],
+    lightninglogo:  [88, '⚡', 'Lightning'],
+    rainbowlogo:    [147, '🌈', 'Rainbow'],
+    sunlogo:        [6, '☀️', 'Sun'],
+    moonlogo:       [37, '🌙', 'Moon'],
+    dragonlogo:     [110, '🐉', 'Dragon'],
+    phoenixlogo:    [4, '🦅', 'Phoenix'],
+    wizardlogo:     [95, '🧙', 'Wizard'],
+    crystallogo:    [55, '🔮', 'Crystal'],
+    darkmagiclogo:  [95, '🪄', 'Dark Magic'],
+    shadowlogo:     [65, '🌑', 'Shadow'],
+    smokelogo:      [27, '💨', 'Smoke'],
+    bloodlogo:      [79, '🩸', 'Blood'],
+    neonlogo:       [48, '💡', 'Neon'],
+    glowlogo:       [48, '✨', 'Glow'],
+    gradientlogo:   [1, '🎨', 'Gradient'],
+    matrixlogo:     [59, '🖥️', 'Matrix'],
+    aqualogo:       [171, '💧', 'Aqua'],
 };
 
 // Generic logo generator using TextPro/alternative API
 async function generateLogo(text, style) {
-    // Try textpro style API
-    const url = `https://textpro.me/api/text-effect/${style}?text=${encodeURIComponent(text)}&font=default`;
-    const res = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0' }, timeout: 15000 });
-    if (res.ok) {
-        const buf = await res.buffer();
-        if (buf.length > 1000) return buf;
+    const q = encodeURIComponent(text);
+    const urls = [
+        `https://api.giftedtech.my.id/api/text/ephoto360?apikey=gifted&text=${q}&id=${style}`,
+        `https://api.siputzx.my.id/api/m/ephoto360?text=${q}&id=${style}`
+    ];
+    for (const url of urls) {
+        try {
+            const res = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0' }, timeout: 30000 });
+            if (!res.ok) continue;
+            const type = res.headers.get('content-type') || '';
+            if (type.includes('image')) return await res.buffer();
+            const d = await res.json();
+            const imageUrl = d?.result || d?.data?.url || d?.data?.imageUrl || d?.url || d?.image;
+            if (imageUrl) {
+                const image = await fetch(imageUrl, { timeout: 30000 });
+                const buf = await image.buffer();
+                if (buf.length > 500) return buf;
+            }
+        } catch (_) {}
     }
-    throw new Error('API returned no image');
+    throw new Error('ephoto360 providers unavailable');
 }
 
 // Fallback: use API endpoint for image generation
 async function generateLogoFallback(text, styleName) {
-    const apiUrl = `https://api.picsart.io/tools/1.0/text-to-image`;
-    // Use a simple text image API
-    const encText = encodeURIComponent(text);
-    const url = `https://api.lolhuman.xyz/api/teksgan?apikey=85faf717d0545d14074659ad&text=${encText}&style=${encodeURIComponent(styleName)}`;
-    const res = await fetch(url, { timeout: 15000 });
-    if (res.ok) {
-        const d = await res.json();
-        if (d.result) {
-            const imgRes = await fetch(d.result);
-            return await imgRes.buffer();
-        }
-    }
-    throw new Error('Fallback failed');
+    const res = await fetch(`https://image.pollinations.ai/prompt/${encodeURIComponent(`${styleName} text logo saying ${text}, professional, high quality`)}?width=1024&height=512&nologo=true&model=flux`, { timeout: 90000 });
+    const buf = await res.buffer();
+    if (buf.length > 500) return buf;
+    throw new Error('AI fallback failed');
 }
 
 function makeLogoCommand(cmd, style, emoji, styleName) {

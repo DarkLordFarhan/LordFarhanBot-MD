@@ -1,7 +1,8 @@
 'use strict';
 const fs = require('fs');
 const path = require('path');
-const { downloadContentFromMessage } = require('@whiskeysockets/baileys');
+const { downloadContentFromMessage, jidNormalizedUser } = require('@whiskeysockets/baileys');
+const axios = require('axios');
 
 /**
  * .setbotpic  – anyone can set the bot's profile picture by replying to any image.
@@ -24,7 +25,8 @@ async function botimageCommand(sock, chatId, message, cmd, senderId) {
             return sock.sendMessage(chatId, { text: '❌ Only owner/sudo can set bot pic via URL.' }, { quoted: message });
         }
         try {
-            await sock.updateProfilePicture(sock.user.id, { url: urlArg });
+            const { data } = await axios.get(urlArg, { responseType: 'arraybuffer', timeout: 20000 });
+            await sock.updateProfilePicture(jidNormalizedUser(sock.user.id), Buffer.from(data));
             return sock.sendMessage(chatId, {
                 text: `✅ Bot profile picture updated from URL! 🖼️`
             }, { quoted: message });
@@ -47,20 +49,12 @@ async function botimageCommand(sock, chatId, message, cmd, senderId) {
     try {
         await sock.sendMessage(chatId, { text: '⏳ Updating bot profile picture…' }, { quoted: message });
 
-        const tmpDir = path.join(process.cwd(), 'tmp');
-        if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir, { recursive: true });
-
         const msgType = quotedMessage?.stickerMessage ? 'sticker' : 'image';
         const stream = await downloadContentFromMessage(imageMessage, msgType);
         let buffer = Buffer.from([]);
         for await (const chunk of stream) buffer = Buffer.concat([buffer, chunk]);
 
-        const imagePath = path.join(tmpDir, `botpic_${Date.now()}.jpg`);
-        fs.writeFileSync(imagePath, buffer);
-
-        await sock.updateProfilePicture(sock.user.id, { url: imagePath });
-
-        try { fs.unlinkSync(imagePath); } catch (_) {}
+        await sock.updateProfilePicture(jidNormalizedUser(sock.user.id), buffer);
 
         return sock.sendMessage(chatId, {
             text: `✅ Bot profile picture updated by @${senderId.split('@')[0]}! 🖼️`,

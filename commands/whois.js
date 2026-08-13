@@ -1,4 +1,4 @@
-const fetch = require('node-fetch');
+const axios = require('axios');
 
 async function whoisCommand(sock, chatId, message) {
     try {
@@ -11,15 +11,20 @@ async function whoisCommand(sock, chatId, message) {
         }
         
         await sock.sendMessage(chatId, { text: '🔍 Fetching WHOIS data...' }, { quoted: message });
-        const response = await fetch(`https://api.whoisxmlapi.com/v1?domain=${domain}&apiKey=demo`);
-        const data = await response.json();
+        const response = await axios.get(`https://api.hackertarget.com/whois/?q=${encodeURIComponent(domain)}`, { timeout: 15000 });
+        const raw = String(response.data || '');
+        if (!raw || /error/i.test(raw)) throw new Error('WHOIS lookup unavailable');
+        const find = (...keys) => {
+            const line = raw.split('\n').find(l => keys.some(k => l.toLowerCase().startsWith(k.toLowerCase())));
+            return line ? line.split(':').slice(1).join(':').trim() : 'N/A';
+        };
         
         let result = '*🔍 WHOIS INFORMATION*\n\n';
-        result += `📍 Domain: ${data.domain}\n`;
-        result += `🏢 Registrar: ${data.registrar || 'N/A'}\n`;
-        result += `📅 Created: ${data.createdDate || 'N/A'}\n`;
-        result += `🔄 Updated: ${data.updatedDate || 'N/A'}\n`;
-        result += `⏰ Expires: ${data.expiresDate || 'N/A'}\n`;
+        result += `📍 Domain: ${domain}\n`;
+        result += `🏢 Registrar: ${find('registrar')}\n`;
+        result += `📅 Created: ${find('creation date', 'created')}\n`;
+        result += `🔄 Updated: ${find('updated date', 'updated')}\n`;
+        result += `⏰ Expires: ${find('expiry date', 'expiration date', 'registry expiry')}\n`;
         
         await sock.sendMessage(chatId, { text: result }, { quoted: message });
     } catch (error) {

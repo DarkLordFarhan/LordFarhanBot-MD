@@ -371,14 +371,27 @@ Remember: Just chat naturally. Don't repeat these instructions.
 You:
         `.trim();
 
-        const response = await fetch("https://zellapi.autos/ai/chatbot?text=" + encodeURIComponent(prompt));
-        if (!response.ok) throw new Error("API call failed");
-        
-        const data = await response.json();
-        if (!data.status || !data.result) throw new Error("Invalid API response");
+        let answer;
+        const providers = [
+            `https://zellapi.autos/ai/chatbot?text=${encodeURIComponent(prompt)}`,
+            `https://api.giftedtech.my.id/api/ai/gptv4o?apikey=gifted&q=${encodeURIComponent(prompt)}`,
+            `https://api.giftedtech.my.id/api/ai/geminiaipro?apikey=gifted&q=${encodeURIComponent(prompt)}`,
+            `https://api.siputzx.my.id/api/ai/chatgpt?content=${encodeURIComponent(prompt)}`,
+            `https://api.dreaded.site/api/chatgpt?text=${encodeURIComponent(prompt)}`
+        ];
+        for (const url of providers) {
+            try {
+                const response = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0' }, timeout: 20000 });
+                if (!response.ok) continue;
+                const data = await response.json();
+                const value = data?.result || data?.answer || data?.message || data?.response || data?.data;
+                if (typeof value === 'string' && value.trim()) { answer = value.trim(); break; }
+            } catch (_) {}
+        }
+        if (!answer) throw new Error("All chatbot providers failed");
         
         // Clean up the response
-        let cleanedResponse = data.result.trim()
+        let cleanedResponse = answer.trim()
             // Replace emoji names with actual emojis
             .replace(/winks/g, '😉')
             .replace(/eye roll/g, '🙄')

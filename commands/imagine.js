@@ -1,14 +1,11 @@
 const axios = require('axios');
-const { fetchBuffer } = require('../lib/myfunc');
 
 async function imagineCommand(sock, chatId, message) {
     try {
         // Get the prompt from the message
-        const prompt = message.message?.conversation?.trim() || 
-                      message.message?.extendedTextMessage?.text?.trim() || '';
-        
-        // Remove the command prefix and trim
-        const imagePrompt = prompt.slice(8).trim();
+        const prompt = message.message?.conversation?.trim() ||
+            message.message?.extendedTextMessage?.text?.trim() || '';
+        const imagePrompt = prompt.replace(/^\.(imagine|flux|dalle)\s*/i, '').trim();
         
         if (!imagePrompt) {
             await sock.sendMessage(chatId, {
@@ -29,13 +26,20 @@ async function imagineCommand(sock, chatId, message) {
         // Enhance the prompt with quality keywords
         const enhancedPrompt = enhancePrompt(imagePrompt);
 
-        // Make API request
-        const response = await axios.get(`https://shizoapi.onrender.com/api/ai/imagine?apikey=shizo&query=${encodeURIComponent(enhancedPrompt)}`, {
-            responseType: 'arraybuffer'
-        });
-
-        // Convert response to buffer
-        const imageBuffer = Buffer.from(response.data);
+        let imageBuffer;
+        for (const model of ['flux', 'turbo']) {
+            try {
+                const response = await axios.get(
+                    `https://image.pollinations.ai/prompt/${encodeURIComponent(enhancedPrompt)}?width=1024&height=1024&nologo=true&model=${model}`,
+                    { responseType: 'arraybuffer', timeout: 90000 }
+                );
+                if (response.data?.length > 500) {
+                    imageBuffer = Buffer.from(response.data);
+                    break;
+                }
+            } catch (_) {}
+        }
+        if (!imageBuffer) throw new Error('Pollinations image providers failed');
 
         // Send the generated image
         await sock.sendMessage(chatId, {

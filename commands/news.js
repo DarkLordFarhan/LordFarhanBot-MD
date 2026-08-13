@@ -1,15 +1,25 @@
 const axios = require('axios');
 
-module.exports = async function (sock, chatId) {
+module.exports = async function (sock, chatId, message) {
     try {
-        const apiKey = 'dcd720a6f1914e2d9dba9790c188c08c';  // Replace with your NewsAPI key
-        const response = await axios.get(`https://newsapi.org/v2/top-headlines?country=us&apiKey=${apiKey}`);
-        const articles = response.data.articles.slice(0, 5); // Get top 5 articles
-        let newsMessage = '📰 *Latest News*:\n\n';
+        const feeds = [
+            'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Ffeeds.bbci.co.uk%2Fnews%2Fworld%2Frss.xml&count=7',
+            'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Ffeeds.bbci.co.uk%2Fnews%2Frss.xml&count=7'
+        ];
+        let articles;
+        for (const feed of feeds) {
+            try {
+                const r = await axios.get(feed, { timeout: 15000 });
+                if (r.data?.status === 'ok' && r.data.items?.length) { articles = r.data.items.slice(0, 7); break; }
+            } catch (_) {}
+        }
+        if (!articles?.length) throw new Error('No RSS feed available');
+        let newsMessage = '📰 *WORLD NEWS*\n\n';
         articles.forEach((article, index) => {
-            newsMessage += `${index + 1}. *${article.title}*\n${article.description}\n\n`;
+            const desc = (article.description || '').replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').slice(0, 120);
+            newsMessage += `${index + 1}. *${article.title}*\n${desc}${desc.length === 120 ? '…' : ''}\n\n`;
         });
-        await sock.sendMessage(chatId, { text: newsMessage });
+        await sock.sendMessage(chatId, { text: newsMessage + '> Source: BBC World News' }, { quoted: message });
     } catch (error) {
         console.error('Error fetching news:', error);
         await sock.sendMessage(chatId, { text: 'Sorry, I could not fetch news right now.' });

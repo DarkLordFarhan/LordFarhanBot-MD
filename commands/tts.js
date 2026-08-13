@@ -3,13 +3,12 @@ const fs = require('fs');
 const path = require('path');
 
 async function ttsCommand(sock, chatId, text, message, language = 'en') {
-    if (!text) {
-        await sock.sendMessage(chatId, { text: 'Please provide the text for TTS conversion.' });
-        return;
-    }
+    if (!text?.trim()) return sock.sendMessage(chatId, { text: 'Usage: .tts <text>' }, { quoted: message });
 
     const fileName = `tts-${Date.now()}.mp3`;
-    const filePath = path.join(__dirname, '..', 'assets', fileName);
+    const tempDir = path.join(process.cwd(), 'temp');
+    fs.mkdirSync(tempDir, { recursive: true });
+    const filePath = path.join(tempDir, fileName);
 
     const gtts = new gTTS(text, language);
     gtts.save(filePath, async function (err) {
@@ -19,7 +18,7 @@ async function ttsCommand(sock, chatId, text, message, language = 'en') {
         }
 
         await sock.sendMessage(chatId, {
-            audio: { url: filePath },
+            audio: fs.readFileSync(filePath),
             mimetype: 'audio/mpeg'
         }, { quoted: message });
 
