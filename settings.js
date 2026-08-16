@@ -1,9 +1,9 @@
 const settings = {
   packname: 'LordFarhan Bot',
   author: '‎',
-  botName: "LordFarhan Bot",
+  botName: "🌑༒𓆩『𝕃𝕆ℝ𝔻 𝔽𝔸ℝℍ𝔸ℕ 𝕄𝔻』𓆪༒☠️",
   botOwner: 'DarkLord Farhan',
-  ownerNumber: '254108817832', // Kenya country code + number
+  ownerNumber: '254795463911', // Kenya country code + number
   giphyApiKey: 'qnl7ssQChTdPjsKta2Ax2LMaGXz303tq',
   commandMode: "public",
   maxStoreMessages: 20,
