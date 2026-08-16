@@ -43,250 +43,250 @@ async function helpCommand(sock, chatId, message) {
 
 ┌${bar}┐
 🌐  *${toSerifBold('General Commands')}*
-┃  🐯  .help or .menu
-┃  🐯  .ping
-┃  🐯  .alive
-┃  🐯  .tts <text>
-┃  🐯  .owner
-┃  🐯  .joke
-┃  🐯  .quote
-┃  🐯  .fact
-┃  🐯  .weather <city>
-┃  🐯  .news
-┃  🐯  .attp <text>
-┃  🐯  .lyrics <song_title>
-┃  🐯  .8ball <question>
-┃  🐯  .groupinfo
-┃  🐯  .staff or .admins
-┃  🐯  .vv
-┃  🐯  .trt <text> <lang>
-┃  🐯  .ss <link>
-┃  🐯  .jid
+┃  🔹  .help or .menu
+┃  🔹  .ping
+┃  🔹  .alive
+┃  🔹  .tts <text>
+┃  🔹  .owner
+┃  🔹  .joke
+┃  🔹  .quote
+┃  🔹  .fact
+┃  🔹  .weather <city>
+┃  🔹  .news
+┃  🔹  .attp <text>
+┃  🔹  .lyrics <song_title>
+┃  🔹  .8ball <question>
+┃  🔹  .groupinfo
+┃  🔹  .staff or .admins
+┃  🔹  .vv
+┃  🔹  .trt <text> <lang>
+┃  🔹  .ss <link>
+┃  🔹  .jid
 └${bar}┘
 
 ┌${bar}┐
 👮  *${toSerifBold('Admin Commands')}*
-┃  🐯  .ban @user
-┃  🐯  .promote @user
-┃  🐯  .demote @user
-┃  🐯  .mute <minutes>
-┃  🐯  .unmute
-┃  🐯  .delete or .del
-┃  🐯  .kick @user
-┃  🐯  .warn @user
-┃  🐯  .antilink
-┃  🐯  .antibadword
-┃  🐯  .antitag
-┃  🐯  .tag
-┃  🐯  .tagall
-┃  🐯  .hidetag
-┃  🐯  .chatbot
-┃  🐯  .welcome
-┃  🐯  .goodbye
-┃  🐯  .setgname
-┃  🐯  .setgdesc
+┃  🔹  .ban @user
+┃  🔹  .promote @user
+┃  🔹  .demote @user
+┃  🔹  .mute <minutes>
+┃  🔹  .unmute
+┃  🔹  .delete or .del
+┃  🔹  .kick @user
+┃  🔹  .warn @user
+┃  🔹  .antilink
+┃  🔹  .antibadword
+┃  🔹  .antitag
+┃  🔹  .tag
+┃  🔹  .tagall
+┃  🔹  .hidetag
+┃  🔹  .chatbot
+┃  🔹  .welcome
+┃  🔹  .goodbye
+┃  🔹  .setgname
+┃  🔹  .setgdesc
 └${bar}┘
 
 ┌${bar}┐
 🔒  *${toSerifBold('Owner Commands')}*
-┃  🐯  .mode
-┃  🐯  .settings
-┃  🐯  .autostatus
-┃  🐯  .autoreact
-┃  🐯  .autotyping
-┃  🐯  .autoread
-┃  🐯  .anticall
-┃  🐯  .pmblocker
-┃  🐯  .antidelete
+┃  🔹  .mode
+┃  🔹  .settings
+┃  🔹  .autostatus
+┃  🔹  .autoreact
+┃  🔹  .autotyping
+┃  🔹  .autoread
+┃  🔹  .anticall
+┃  🔹  .pmblocker
+┃  🔹  .antidelete
 └${bar}┘
 
 ┌${bar}┐
 🎨  *${toSerifBold('Media & Stickers')}*
-┃  🐯  .sticker
-┃  🐯  .simage
-┃  🐯  .blur
-┃  🐯  .meme
-┃  🐯  .removebg
-┃  🐯  .remini
-┃  🐯  .emojimix
-┃  🐯  .tgsticker
+┃  🔹  .sticker
+┃  🔹  .simage
+┃  🔹  .blur
+┃  🔹  .meme
+┃  🔹  .removebg
+┃  🔹  .remini
+┃  🔹  .emojimix
+┃  🔹  .tgsticker
 └${bar}┘
 
 ┌${bar}┐
 🤖  *${toSerifBold('Artificial Intelligence')}*
-┃  🐯  .gpt
-┃  🐯  .gemini
-┃  🐯  .imagine
-┃  🐯  .flux
-┃  🐯  .sora
+┃  🔹  .gpt
+┃  🔹  .gemini
+┃  🔹  .imagine
+┃  🔹  .flux
+┃  🔹  .sora
 └${bar}┘
 
 ┌${bar}┐
 📥  *${toSerifBold('Downloader')}*
-┃  🐯  .play
-┃  🐯  .song
-┃  🐯  .video
-┃  🐯  .spotify
-┃  🐯  .tiktok
-┃  🐯  .tiktokstalk <username>
-┃  🐯  .instagram
-┃  🐯  .igstalk <username>
-┃  🐯  .facebook
+┃  🔹  .play
+┃  🔹  .song
+┃  🔹  .video
+┃  🔹  .spotify
+┃  🔹  .tiktok
+┃  🔹  .tiktokstalk <username>
+┃  🔹  .instagram
+┃  🔹  .igstalk <username>
+┃  🔹  .facebook
 └${bar}┘
 
 ┌${bar}┐
 🎮  *${toSerifBold('Games & Fun')}*
-┃  🐯  .tictactoe
-┃  🐯  .truth
-┃  🐯  .dare
-┃  🐯  .trivia
-┃  🐯  .ship
-┃  🐯  .hangman
-┃  🐯  .coin / .flip
-┃  🐯  .dice / .roll
-┃  🐯  .rps <r/p/s>
-┃  🐯  .riddle
-┃  🐯  .wyr
-┃  🐯  .nhie
+┃  🔹  .tictactoe
+┃  🔹  .truth
+┃  🔹  .dare
+┃  🔹  .trivia
+┃  🔹  .ship
+┃  🔹  .hangman
+┃  🔹  .coin / .flip
+┃  🔹  .dice / .roll
+┃  🔹  .rps <r/p/s>
+┃  🔹  .riddle
+┃  🔹  .wyr
+┃  🔹  .nhie
 └${bar}┘
 
 ┌${bar}┐
 ✨  *${toSerifBold('Fancy Fonts')}*
-┃  🐯  .fancyfonts <text>
-┃  🐯  .ff bold <text>
-┃  🐯  .ff italic <text>
-┃  🐯  .ff script <text>
-┃  🐯  .ff boldscript <text>
-┃  🐯  .ff fraktur <text>
-┃  🐯  .ff doublestruck <text>
-┃  🐯  .ff bubble <text>
-┃  🐯  .ff square <text>
-┃  🐯  .ff aesthetic <text>
-┃  🐯  .ff smallcaps <text>
-┃  🐯  .ff upsidedown <text>
-┃  🐯  .ff mock <text>
-┃  🐯  .ff strikethrough <text>
-┃  🐯  .ff underline <text>
+┃  🔹  .fancyfonts <text>
+┃  🔹  .ff bold <text>
+┃  🔹  .ff italic <text>
+┃  🔹  .ff script <text>
+┃  🔹  .ff boldscript <text>
+┃  🔹  .ff fraktur <text>
+┃  🔹  .ff doublestruck <text>
+┃  🔹  .ff bubble <text>
+┃  🔹  .ff square <text>
+┃  🔹  .ff aesthetic <text>
+┃  🔹  .ff smallcaps <text>
+┃  🔹  .ff upsidedown <text>
+┃  🔹  .ff mock <text>
+┃  🔹  .ff strikethrough <text>
+┃  🔹  .ff underline <text>
 └${bar}┘
 
 ┌${bar}┐
 🔤  *${toSerifBold('Text Tools')}*
-┃  🐯  .reverse / .rev <text>
-┃  🐯  .upper <text>
-┃  🐯  .lower <text>
-┃  🐯  .mock <text>
-┃  🐯  .clap <text>
-┃  🐯  .morse <text>
-┃  🐯  .binary <text>
-┃  🐯  .base64 <text>
-┃  🐯  .unbase64 <text>
-┃  🐯  .snake <text>
-┃  🐯  .camel <text>
-┃  🐯  .calc <expression>
-┃  🐯  .password <length>
+┃  🔹  .reverse / .rev <text>
+┃  🔹  .upper <text>
+┃  🔹  .lower <text>
+┃  🔹  .mock <text>
+┃  🔹  .clap <text>
+┃  🔹  .morse <text>
+┃  🔹  .binary <text>
+┃  🔹  .base64 <text>
+┃  🔹  .unbase64 <text>
+┃  🔹  .snake <text>
+┃  🔹  .camel <text>
+┃  🔹  .calc <expression>
+┃  🔹  .password <length>
 └${bar}┘
 
 ┌${bar}┐
 🎲  *${toSerifBold('Fun & Random')}*
-┃  🐯  .pickup
-┃  🐯  .roast
-┃  🐯  .yomama
-┃  🐯  .catfact / .cat
-┃  🐯  .dogfact / .dog
-┃  🐯  .motivate / .inspire
-┃  🐯  .zodiac <dd/mm>
-┃  🐯  .bmi <kg> <cm>
-┃  🐯  .numberfact <n>
-┃  🐯  .color
-┃  🐯  .uptime
-┃  🐯  .bf / .gf / .couple
-┃  🐯  .movie <title> | .trailer <title>
-┃  🐯  .genmusic <prompt> | .genlyrics <topic>
-┃  🐯  .hack <target> | .goodmorning / .gm
+┃  🔹  .pickup
+┃  🔹  .roast
+┃  🔹  .yomama
+┃  🔹  .catfact / .cat
+┃  🔹  .dogfact / .dog
+┃  🔹  .motivate / .inspire
+┃  🔹  .zodiac <dd/mm>
+┃  🔹  .bmi <kg> <cm>
+┃  🔹  .numberfact <n>
+┃  🔹  .color
+┃  🔹  .uptime
+┃  🔹  .bf / .gf / .couple
+┃  🔹  .movie <title> | .trailer <title>
+┃  🔹  .genmusic <prompt> | .genlyrics <topic>
+┃  🔹  .hack <target> | .goodmorning / .gm
 └${bar}┘
 
 ┌${bar}┐
 🛡️  *${toSerifBold('Group Management+')}*
-┃  🐯  .add <number> | .leave | .creategroup
-┃  🐯  .promoteall | .demoteall | .kickall
-┃  🐯  .grouplink | .tagadmin | .getgpp
-┃  🐯  .antileave on/off | .gctime
-┃  🐯  .addbadword | .removebadword | .listbadword
-┃  🐯  .approveall | .rejectall | .disp
-┃  🐯  .stickerpack | .fangtrace | .ex
+┃  🔹  .add <number> | .leave | .creategroup
+┃  🔹  .promoteall | .demoteall | .kickall
+┃  🔹  .grouplink | .tagadmin | .getgpp
+┃  🔹  .antileave on/off | .gctime
+┃  🔹  .addbadword | .removebadword | .listbadword
+┃  🔹  .approveall | .rejectall | .disp
+┃  🔹  .stickerpack | .fangtrace | .ex
 └${bar}┘
 
 ┌${bar}┐
 🤖  *${toSerifBold('Auto-Mod')}*
-┃  🐯  .antisticker | .antiimage | .antivideo
-┃  🐯  .antiaudio | .antimention | .antispam
-┃  🐯  .antigrouplink | .antidemote | .antipromote
-┃  🐯  .antistatusmention | .antigroupcall
+┃  🔹  .antisticker | .antiimage | .antivideo
+┃  🔹  .antiaudio | .antimention | .antispam
+┃  🔹  .antigrouplink | .antidemote | .antipromote
+┃  🔹  .antistatusmention | .antigroupcall
 └${bar}┘
 
 ┌${bar}┐
 🧠  *${toSerifBold('More AI Models')}*
-┃  🐯  .deepseek | .grok | .blackbox | .copilot
-┃  🐯  .bing | .claudeai | .bard | .groq
-┃  🐯  .metai | .perplexity | .wormgpt
-┃  🐯  .qwenai | .ilama | .venice
-┃  🐯  .wizard | .vicuna | .zephyr | .mixtral
-┃  🐯  .analyze | .humanizer | .summarize
-┃  🐯  .speechwriter | .vision | .totext
-┃  🐯  .aimenu (full list)
+┃  🔹  .deepseek | .grok | .blackbox | .copilot
+┃  🔹  .bing | .claudeai | .bard | .groq
+┃  🔹  .metai | .perplexity | .wormgpt
+┃  🔹  .qwenai | .ilama | .venice
+┃  🔹  .wizard | .vicuna | .zephyr | .mixtral
+┃  🔹  .analyze | .humanizer | .summarize
+┃  🔹  .speechwriter | .vision | .totext
+┃  🔹  .aimenu (full list)
 └${bar}┘
 
 ┌${bar}┐
 🕵️  *${toSerifBold('Stalker & Info')}*
-┃  🐯  .igstalk | .tiktokstalk | .gitstalk
-┃  🐯  .twitterstalk | .ipstalk | .npmstalk
-┃  🐯  .wachannel | .stalkermenu
+┃  🔹  .igstalk | .tiktokstalk | .gitstalk
+┃  🔹  .twitterstalk | .ipstalk | .npmstalk
+┃  🔹  .wachannel | .stalkermenu
 └${bar}┘
 
 ┌${bar}┐
 🔐  *${toSerifBold('Security / Hacking')}*
-┃  🐯  .whois | .dnslookup | .subdomain
-┃  🐯  .reverseip | .geoip | .asnlookup
-┃  🐯  .portscan | .nmap | .pinghost
-┃  🐯  .traceroute | .sslcheck | .headers
-┃  🐯  .hashidentify | .hashcheck | .passwordstrength
-┃  🐯  .urlscan | .phishcheck | .techstack
-┃  🐯  .securitymenu (full list)
+┃  🔹  .whois | .dnslookup | .subdomain
+┃  🔹  .reverseip | .geoip | .asnlookup
+┃  🔹  .portscan | .nmap | .pinghost
+┃  🔹  .traceroute | .sslcheck | .headers
+┃  🔹  .hashidentify | .hashcheck | .passwordstrength
+┃  🔹  .urlscan | .phishcheck | .techstack
+┃  🔹  .securitymenu (full list)
 └${bar}┘
 
 ┌${bar}┐
 🛠️  *${toSerifBold('Utility+')}*
-┃  🐯  .wiki <query> | .define <word>
-┃  🐯  .covid <country> | .country <name>
-┃  🐯  .qr <text> | .shazam | .vcf <name> <num>
-┃  🐯  .remind <time> <text> | .sessioninfo
-┃  🐯  .iplookup | .getip | .platform
+┃  🔹  .wiki <query> | .define <word>
+┃  🔹  .covid <country> | .country <name>
+┃  🔹  .qr <text> | .shazam | .vcf <name> <num>
+┃  🔹  .remind <time> <text> | .sessioninfo
+┃  🔹  .iplookup | .getip | .platform
 └${bar}┘
 
 ┌${bar}┐
 👑  *${toSerifBold('Owner+')}*
-┃  🐯  .setbotname | .resetbotname | .about
-┃  🐯  .setowner | .resetowner | .iamowner
-┃  🐯  .broadcast / .bc | .shutdown | .restart
-┃  🐯  .disk | .hostip | .getsettings
-┃  🐯  .silent | .privacy | .lastseen
-┃  🐯  .setchannel | .setfooter | .test
+┃  🔹  .setbotname | .resetbotname | .about
+┃  🔹  .setowner | .resetowner | .iamowner
+┃  🔹  .broadcast / .bc | .shutdown | .restart
+┃  🔹  .disk | .hostip | .getsettings
+┃  🔹  .silent | .privacy | .lastseen
+┃  🔹  .setchannel | .setfooter | .test
 └${bar}┘
 
 ┌${bar}┐
 🏆  *${toSerifBold('Sports')}*
-┃  🐯  .football | .matchstats | .teamnews
-┃  🐯  .sportsnews | .f1 | .nfl | .mma
-┃  🐯  .baseball | .hockey | .golf
-┃  🐯  .sportsmenu
+┃  🔹  .football | .matchstats | .teamnews
+┃  🔹  .sportsnews | .f1 | .nfl | .mma
+┃  🔹  .baseball | .hockey | .golf
+┃  🔹  .sportsmenu
 └${bar}┘
 
 ┌${bar}┐
 🎨  *${toSerifBold('Logo Studio')}*
-┃  🐯  .goldlogo | .silverlogo | .firelogo
-┃  🐯  .neonlogo | .icelogo | .dragonlogo
-┃  🐯  .rainbowlogo | .shadowlogo | .bloodlogo
-┃  🐯  .logomenu (all 29 effects)
+┃  🔹  .goldlogo | .silverlogo | .firelogo
+┃  🔹  .neonlogo | .icelogo | .dragonlogo
+┃  🔹  .rainbowlogo | .shadowlogo | .bloodlogo
+┃  🔹  .logomenu (all 29 effects)
 └${bar}┘
 
 > 💻 _${toSerifBold('LordFarhanXMDTech')}_`;
