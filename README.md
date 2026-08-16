@@ -59,11 +59,11 @@ You need a SESSION_ID to connect the bot to your WhatsApp without scanning a QR 
 
 <div align="center">
 
-[![Pair Code](https://img.shields.io/badge/🔑%20GET%20SESSION%20ID-Pair%20Site-blueviolet?style=for-the-badge&logo=whatsapp&logoColor=white)](https://lordfarhanbot-production.up.railway.app/)
+[![Pair Code](https://img.shields.io/badge/🔑%20GET%20SESSION%20ID-Pair%20Site-blueviolet?style=for-the-badge&logo=whatsapp&logoColor=white)](https://lordfarhan-xmd-production.up.railway.app/pair)
 
 </div>
 
-> 🔗 **Pair Site:** https://lordfarhanbot-production.up.railway.app/
+> 🔗 **Pair Site:** https://lordfarhan-xmd-production.up.railway.app/pair
 
 ```
 ╔══════════════════════════════════════════════╗
