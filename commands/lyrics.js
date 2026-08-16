@@ -1,145 +1,148 @@
 const fetch = require('node-fetch');
 
-async function getJson(url) {
-    const res = await fetch(url, {
+async function requestJSON(url) {
+    const response = await fetch(url, {
         timeout: 20000,
         headers: {
             'User-Agent': 'LordFarhan-MD/1.0'
         }
     });
 
-    if (!res.ok) {
-        throw new Error(`HTTP ${res.status}`);
+    if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
     }
 
-    return await res.json();
+    return await response.json();
+}
+
+async function searchLRCLIB(query) {
+    try {
+        const results = await requestJSON(
+            `https://lrclib.net/api/search?q=${encodeURIComponent(query)}`
+        );
+
+        if (!Array.isArray(results)) return null;
+
+        const track = results.find(item =>
+            item &&
+            (item.plainLyrics || item.syncedLyrics)
+        );
+
+        if (!track) return null;
+
+        return {
+            lyrics: track.plainLyrics || null,
+            title: track.trackName || query,
+            artist: track.artistName || ''
+        };
+    } catch (error) {
+        console.log('LRCLIB search error:', error.message);
+        return null;
+    }
+}
+
+async function directLRCLIB(artist, title) {
+    try {
+        const data = await requestJSON(
+            `https://lrclib.net/api/get?artist_name=${encodeURIComponent(artist)}&track_name=${encodeURIComponent(title)}`
+        );
+
+        if (!data?.plainLyrics && !data?.syncedLyrics) return null;
+
+        return {
+            lyrics: data.plainLyrics || null,
+            title: data.trackName || title,
+            artist: data.artistName || artist
+        };
+    } catch (error) {
+        return null;
+    }
+}
+
+async function lyricsOVH(artist, title) {
+    try {
+        const data = await requestJSON(
+            `https://api.lyrics.ovh/v1/${encodeURIComponent(artist)}/${encodeURIComponent(title)}`
+        );
+
+        if (!data?.lyrics) return null;
+
+        return {
+            lyrics: data.lyrics,
+            title,
+            artist
+        };
+    } catch (error) {
+        return null;
+    }
 }
 
 async function lyricsCommand(sock, chatId, songTitle, message) {
     if (!songTitle || !songTitle.trim()) {
         return sock.sendMessage(chatId, {
-            text: '🔍 Please enter the song name.\n\nExample:\n*.lyrics Perfect Ed Sheeran*'
+            text:
+                '🔍 *LYRICS SEARCH*\n\n' +
+                'Use:\n' +
+                '*.lyrics <song name>*\n\n' +
+                'Example:\n' +
+                '*.lyrics Die With A Smile*\n' +
+                '*.lyrics Perfect Ed Sheeran*'
         }, { quoted: message });
     }
 
     const query = songTitle.trim();
 
     try {
-        let lyrics = null;
-        let title = query;
-        let artist = '';
+        let result = null;
 
-        // -------------------------------------------------
-        // 1. LRCLIB search
-        // -------------------------------------------------
-        try {
-            const searchUrl =
-                `https://lrclib.net/api/search?q=${encodeURIComponent(query)}`;
+        // 1. Search any song using LRCLIB
+        result = await searchLRCLIB(query);
 
-            const results = await getJson(searchUrl);
+        // 2. If user supplied "Artist - Song", try direct lookup
+        if (!result && query.includes(' - ')) {
+            const parts = query.split(/\s+-\s+/);
 
-            if (Array.isArray(results) && results.length > 0) {
-                // Prefer an exact title/artist match when possible
-                const track =
-                    results.find(x =>
-                        x?.plainLyrics ||
-                        x?.syncedLyrics
-                    );
+            const artist = parts.shift().trim();
+            const title = parts.join(' - ').trim();
 
-                if (track) {
-                    lyrics = track.plainLyrics || null;
-                    title = track.trackName || title;
-                    artist = track.artistName || '';
-                }
-            }
-        } catch (error) {
-            console.log('LRCLIB search failed:', error.message);
-        }
+            result = await directLRCLIB(artist, title);
 
-        // -------------------------------------------------
-        // 2. LRCLIB direct get
-        // Supports: Artist - Song
-        // -------------------------------------------------
-        if (!lyrics && query.includes(' - ')) {
-            try {
-                const parts = query.split(/\s+-\s+/);
-
-                const directArtist = parts[0].trim();
-                const directTitle = parts.slice(1).join(' - ').trim();
-
-                const url =
-                    `https://lrclib.net/api/get?artist_name=${encodeURIComponent(directArtist)}&track_name=${encodeURIComponent(directTitle)}`;
-
-                const data = await getJson(url);
-
-                if (data?.plainLyrics) {
-                    lyrics = data.plainLyrics;
-                    title = data.trackName || directTitle;
-                    artist = data.artistName || directArtist;
-                }
-            } catch (error) {
-                console.log('LRCLIB direct lookup failed:', error.message);
+            // 3. lyrics.ovh fallback
+            if (!result) {
+                result = await lyricsOVH(artist, title);
             }
         }
 
-        // -------------------------------------------------
-        // 3. lyrics.ovh fallback
-        // -------------------------------------------------
-        if (!lyrics && query.includes(' - ')) {
-            try {
-                const parts = query.split(/\s+-\s+/);
-
-                const fallbackArtist = parts[0].trim();
-                const fallbackTitle = parts.slice(1).join(' - ').trim();
-
-                const url =
-                    `https://api.lyrics.ovh/v1/${encodeURIComponent(fallbackArtist)}/${encodeURIComponent(fallbackTitle)}`;
-
-                const data = await getJson(url);
-
-                if (data?.lyrics) {
-                    lyrics = data.lyrics;
-                    title = fallbackTitle;
-                    artist = fallbackArtist;
-                }
-            } catch (error) {
-                console.log('lyrics.ovh failed:', error.message);
-            }
-        }
-
-        // -------------------------------------------------
-        // No lyrics found
-        // -------------------------------------------------
-        if (!lyrics || !lyrics.trim()) {
+        if (!result || !result.lyrics) {
             return sock.sendMessage(chatId, {
                 text:
-                    `❌ I couldn't find lyrics for:\n` +
-                    `🎵 *${query}*\n\n` +
-                    `💡 Try:\n` +
-                    `*.lyrics Artist - Song Name*`
+                    `❌ *Lyrics not found*\n\n` +
+                    `🎵 Search: *${query}*\n\n` +
+                    `Try the song title together with the artist name.`
             }, { quoted: message });
         }
 
-        // -------------------------------------------------
-        // WhatsApp message limit
-        // -------------------------------------------------
-        const maxChars = 6000;
+        let lyrics = result.lyrics.trim();
 
-        let output = lyrics.trim();
+        // Remove excessive blank lines
+        lyrics = lyrics.replace(/\n{4,}/g, '\n\n');
 
-        if (output.length > maxChars) {
-            output =
-                output.slice(0, maxChars - 100) +
-                '\n\n... ✂️ Lyrics truncated.';
+        // WhatsApp-friendly limit
+        const MAX_LENGTH = 6000;
+
+        if (lyrics.length > MAX_LENGTH) {
+            lyrics =
+                lyrics.substring(0, MAX_LENGTH - 120) +
+                '\n\n... ✂️ *Lyrics shortened because the message is too long.*';
         }
 
         const header =
-            `🎵 *${title}*` +
-            (artist ? `\n👤 *${artist}*` : '') +
+            `🎵 *${result.title}*` +
+            (result.artist ? `\n👤 *${result.artist}*` : '') +
             `\n\n`;
 
         await sock.sendMessage(chatId, {
-            text: header + output
+            text: header + lyrics
         }, { quoted: message });
 
     } catch (error) {
@@ -147,10 +150,9 @@ async function lyricsCommand(sock, chatId, songTitle, message) {
 
         await sock.sendMessage(chatId, {
             text:
-                `❌ Failed to fetch lyrics for:\n` +
+                `❌ Unable to search lyrics right now.\n\n` +
                 `🎵 *${query}*\n\n` +
-                `Please try again or use:\n` +
-                `*.lyrics Artist - Song Name*`
+                `Please try again shortly.`
         }, { quoted: message });
     }
 }
