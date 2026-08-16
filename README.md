@@ -20,7 +20,7 @@ This is a WhatsApp bot built using the Baileys library for group management, inc
 ---
 <div>
   <a href="Wagan wadau" target="_blank">
-    <" alt="DarkLord" width="100%" />
+    
   </a>
 </div>
 
