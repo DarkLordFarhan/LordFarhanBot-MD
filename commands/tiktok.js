@@ -120,7 +120,7 @@ async function tiktokCommand(sock, chatId, message) {
             }, { quoted: message });
         }
 
-        const caption = `🎵 *${info.title}*\n👤 ${info.author}${info.likes ? `\n❤️ ${Number(info.likes).toLocaleString()} likes` : ''}\n\n🤖 _LordFarhan Bot_`;
+        const caption = `🎵 *${info.title}*\n👤 ${info.author}${info.likes ? `\n❤️ ${Number(info.likes).toLocaleString()} likes` : ''}\n\n🤖 _🌑༒𓆩『𝕃𝕆ℝ𝔻 𝔽𝔸ℝℍ𝔸ℕ 𝕄𝔻』𓆪༒☠️_`;
 
         // Download & send video
         try {

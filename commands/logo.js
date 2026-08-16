@@ -110,7 +110,7 @@ for (const [cmd, [style, emoji, name]] of Object.entries(LOGO_EFFECTS)) {
 async function logoMenuCommand(sock, chatId, message) {
     const bar = '─'.repeat(28);
     await sock.sendMessage(chatId, {
-        text: `🎨 *LOGO DESIGN STUDIO*\n\n┌${bar}┐\n💰 *Metal Effects*\n┃  .goldlogo  .silverlogo\n┃  .platinumlogo  .chromelogo\n┃  .diamondlogo  .bronzelogo\n┃  .steelogo  .copperlogo\n┃  .titaniumlogo\n└${bar}┘\n\n┌${bar}┐\n🔥 *Elemental Effects*\n┃  .firelogo  .icelogo\n┃  .iceglowlogo  .lightninglogo\n┃  .rainbowlogo  .sunlogo\n┃  .moonlogo  .aqualogo\n└${bar}┘\n\n┌${bar}┐\n🐉 *Fantasy Effects*\n┃  .dragonlogo  .phoenixlogo\n┃  .wizardlogo  .crystallogo\n┃  .darkmagiclogo\n└${bar}┘\n\n┌${bar}┐\n✨ *Modern Effects*\n┃  .shadowlogo  .smokelogo\n┃  .bloodlogo  .neonlogo\n┃  .glowlogo  .gradientlogo\n┃  .matrixlogo\n└${bar}┘\n\nUsage: .goldlogo <your text>\n\n> 🤖 _LordFarhan Bot_`
+        text: `🎨 *LOGO DESIGN STUDIO*\n\n┌${bar}┐\n💰 *Metal Effects*\n┃  .goldlogo  .silverlogo\n┃  .platinumlogo  .chromelogo\n┃  .diamondlogo  .bronzelogo\n┃  .steelogo  .copperlogo\n┃  .titaniumlogo\n└${bar}┘\n\n┌${bar}┐\n🔥 *Elemental Effects*\n┃  .firelogo  .icelogo\n┃  .iceglowlogo  .lightninglogo\n┃  .rainbowlogo  .sunlogo\n┃  .moonlogo  .aqualogo\n└${bar}┘\n\n┌${bar}┐\n🐉 *Fantasy Effects*\n┃  .dragonlogo  .phoenixlogo\n┃  .wizardlogo  .crystallogo\n┃  .darkmagiclogo\n└${bar}┘\n\n┌${bar}┐\n✨ *Modern Effects*\n┃  .shadowlogo  .smokelogo\n┃  .bloodlogo  .neonlogo\n┃  .glowlogo  .gradientlogo\n┃  .matrixlogo\n└${bar}┘\n\nUsage: .goldlogo <your text>\n\n> 🤖 _🌑༒𓆩『𝕃𝕆ℝ𝔻 𝔽𝔸ℝℍ𝔸ℕ 𝕄𝔻』𓆪༒☠️_`
     }, { quoted: message });
 }
 commands.logoMenuCommand = logoMenuCommand;

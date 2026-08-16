@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * LordFarhan Bot — Telegram Pairing Bot
+ * 🌑༒𓆩『𝕃𝕆ℝ𝔻 𝔽𝔸ℝℍ𝔸ℕ 𝕄𝔻』𓆪༒☠️ — Telegram Pairing Bot
  *
  * People DM this Telegram bot their WhatsApp number,
  * get an 8-digit pairing code, enter it in WhatsApp,
@@ -63,8 +63,8 @@ const pairingInProgress = new Set();
 bot.start(async ctx => {
     userState.set(ctx.chat.id, { step: 'waiting_number' });
     await ctx.reply(
-        `🕷️ *Welcome to LordFarhan Bot Pairing!*\n\n` +
-        `This bot links your WhatsApp number to *LordFarhan Bot*.\n\n` +
+        `🕷️ *Welcome to 🌑༒𓆩『𝕃𝕆ℝ𝔻 𝔽𝔸ℝℍ𝔸ℕ 𝕄𝔻』𓆪༒☠️ Pairing!*\n\n` +
+        `This bot links your WhatsApp number to *🌑༒𓆩『𝕃𝕆ℝ𝔻 𝔽𝔸ℝℍ𝔸ℕ 𝕄𝔻』𓆪༒☠️*.\n\n` +
         `📲 Send me your WhatsApp number with country code.\n` +
         `Example: \`254712345678\`\n\n` +
         `_No + sign needed — just digits._`,
@@ -75,7 +75,7 @@ bot.start(async ctx => {
 // ─── /help ────────────────────────────────────────────────────────────────────
 bot.help(async ctx => {
     await ctx.reply(
-        `🕷️ *LordFarhan Bot Pairing Help*\n\n` +
+        `🕷️ *🌑༒𓆩『𝕃𝕆ℝ𝔻 𝔽𝔸ℝℍ𝔸ℕ 𝕄𝔻』𓆪༒☠️ Pairing Help*\n\n` +
         `1️⃣ Send /start\n` +
         `2️⃣ Enter your WhatsApp number (with country code)\n` +
         `3️⃣ Copy the 8-digit code I send you\n` +
@@ -206,7 +206,7 @@ async function generatePairingCode(number, telegramChatId, statusMsgId) {
                     telegramChatId,
                     `🎉 *Linked successfully!*\n\n` +
                     `✅ Your WhatsApp bot is now starting up...\n` +
-                    `🕷️ *LordFarhan Bot* will be ready in a few seconds.\n\n` +
+                    `🕷️ *🌑༒𓆩『𝕃𝕆ℝ𝔻 𝔽𝔸ℝℍ𝔸ℕ 𝕄𝔻』𓆪༒☠️* will be ready in a few seconds.\n\n` +
                     `_Send .help in any WhatsApp chat to see all commands._`,
                     { parse_mode: 'Markdown' }
                 );
@@ -352,7 +352,7 @@ async function startUserBot(number, sessionDir, telegramChatId) {
                 const botJid = sock.user.id.split(':')[0] + '@s.whatsapp.net';
                 try {
                     const imagePath = path.join(__dirname, 'assets', 'bot_image.jpg');
-                    const caption = `🕷️ *LordFarhan Bot Connected!*\n\n` +
+                    const caption = `🕷️ *🌑༒𓆩『𝕃𝕆ℝ𝔻 𝔽𝔸ℝℍ𝔸ℕ 𝕄𝔻』𓆪༒☠️ Connected!*\n\n` +
                         `✅ Your bot is now live.\n` +
                         `📌 Send *.help* to see all commands.`;
                     if (fs.existsSync(imagePath)) {

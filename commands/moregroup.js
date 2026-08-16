@@ -515,7 +515,7 @@ async function rejectAllCommand(sock, chatId, senderId, message) {
 async function stickerPackCommand(sock, chatId, message) {
     const settings = require('../settings');
     await sock.sendMessage(chatId, {
-        text: `📦 *Sticker Pack Info*\n\n🏷 Pack: ${settings.packname || 'LordFarhan Bot'}\n👤 Author: ${settings.author || 'DarkLord Farhan'}\n\nSend any image/video with .sticker to create a sticker!`
+        text: `📦 *Sticker Pack Info*\n\n🏷 Pack: ${settings.packname || '🌑༒𓆩『𝕃𝕆ℝ𝔻 𝔽𝔸ℝℍ𝔸ℕ 𝕄𝔻』𓆪༒☠️'}\n👤 Author: ${settings.author || '🌑༒ 𝕷𝖔𝖗𝖉 𝕱𝖆𝖗𝖍𝖆𝖓 ༒🌑'}\n\nSend any image/video with .sticker to create a sticker!`
     }, { quoted: message });
 }
 

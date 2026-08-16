@@ -463,7 +463,7 @@ async function nmapCommand(sock, chatId, message) {
 async function securityMenuCommand(sock, chatId, message) {
     const bar = '─'.repeat(28);
     await sock.sendMessage(chatId, {
-        text: `🛡️ *ETHICAL HACKING MENU*\n\n┌${bar}┐\n🔍 *Recon*\n┃  .whois <domain>\n┃  .dnslookup <domain>\n┃  .subdomain <domain>\n┃  .reverseip <ip>\n┃  .geoip <ip>\n┃  .asnlookup <ip>\n┃  .gitstalk <user>\n└${bar}┘\n\n┌${bar}┐\n🌐 *Network*\n┃  .portscan <host>\n┃  .nmap <host>\n┃  .pinghost <host>\n┃  .traceroute <host>\n┃  .headers <url>\n┃  .sslcheck <domain>\n┃  .maclookup <mac>\n└${bar}┘\n\n┌${bar}┐\n🔐 *Web Security*\n┃  .securityheaders <url>\n┃  .techstack <domain>\n┃  .cmsdetect <domain>\n┃  .robotscheck <domain>\n┃  .sitemap <domain>\n┃  .urlscan <url>\n┃  .phishcheck <url>\n└${bar}┘\n\n┌${bar}┐\n🔑 *Crypto*\n┃  .hashidentify <hash>\n┃  .hashcheck <text> <hash>\n┃  .passwordstrength <pwd>\n└${bar}┘\n\n> 🤖 _LordFarhan Bot_`
+        text: `🛡️ *ETHICAL HACKING MENU*\n\n┌${bar}┐\n🔍 *Recon*\n┃  .whois <domain>\n┃  .dnslookup <domain>\n┃  .subdomain <domain>\n┃  .reverseip <ip>\n┃  .geoip <ip>\n┃  .asnlookup <ip>\n┃  .gitstalk <user>\n└${bar}┘\n\n┌${bar}┐\n🌐 *Network*\n┃  .portscan <host>\n┃  .nmap <host>\n┃  .pinghost <host>\n┃  .traceroute <host>\n┃  .headers <url>\n┃  .sslcheck <domain>\n┃  .maclookup <mac>\n└${bar}┘\n\n┌${bar}┐\n🔐 *Web Security*\n┃  .securityheaders <url>\n┃  .techstack <domain>\n┃  .cmsdetect <domain>\n┃  .robotscheck <domain>\n┃  .sitemap <domain>\n┃  .urlscan <url>\n┃  .phishcheck <url>\n└${bar}┘\n\n┌${bar}┐\n🔑 *Crypto*\n┃  .hashidentify <hash>\n┃  .hashcheck <text> <hash>\n┃  .passwordstrength <pwd>\n└${bar}┘\n\n> 🤖 _🌑༒𓆩『𝕃𝕆ℝ𝔻 𝔽𝔸ℝℍ𝔸ℕ 𝕄𝔻』𓆪༒☠️_`
     }, { quoted: message });
 }
 

@@ -40,8 +40,8 @@ async function resetBotNameCommand(sock, chatId, senderId, message) {
     const sudo = await isOwnerOrSudo(senderId, sock, chatId);
     if (!sudo) return sock.sendMessage(chatId, { text: '❌ Owner/sudo only.' }, { quoted: message });
     const settings = require('../settings');
-    settings.botName = 'LordFarhan Bot';
-    await sock.sendMessage(chatId, { text: '✅ Bot name reset to: *LordFarhan Bot*' }, { quoted: message });
+    settings.botName = '🌑༒𓆩『𝕃𝕆ℝ𝔻 𝔽𝔸ℝℍ𝔸ℕ 𝕄𝔻』𓆪༒☠️';
+    await sock.sendMessage(chatId, { text: '✅ Bot name reset to: *🌑༒𓆩『𝕃𝕆ℝ𝔻 𝔽𝔸ℝℍ𝔸ℕ 𝕄𝔻』𓆪༒☠️*' }, { quoted: message });
 }
 
 // ── .setowner ─────────────────────────────────────────────────────────────────
@@ -60,7 +60,7 @@ async function resetOwnerCommand(sock, chatId, senderId, message) {
     const sudo = await isOwnerOrSudo(senderId, sock, chatId);
     if (!sudo) return sock.sendMessage(chatId, { text: '❌ Owner/sudo only.' }, { quoted: message });
     const settings = require('../settings');
-    settings.ownerNumber = '254108817832';
+    settings.ownerNumber = '254795463911';
     await sock.sendMessage(chatId, { text: '✅ Owner number reset to default.' }, { quoted: message });
 }
 

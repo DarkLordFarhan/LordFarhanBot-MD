@@ -61,7 +61,7 @@ async function twitterStalkCommand(sock, chatId, message) {
         const img = (xml.match(/<url>(https?:\/\/[^<]+)<\/url>/) || [])[1] || null;
         const postCount = (xml.match(/<item>/g) || []).length;
 
-        const result = `🐦 *TWITTER/X PROFILE*\n${'─'.repeat(28)}\n👤 Username: @${username}\n📝 Name: ${name}\n📖 Bio: ${bio.slice(0, 200)}\n📷 Recent posts: ${postCount}\n🔗 Profile: https://x.com/${username}\n${'─'.repeat(28)}\n> 🤖 _LordFarhan Bot_`;
+        const result = `🐦 *TWITTER/X PROFILE*\n${'─'.repeat(28)}\n👤 Username: @${username}\n📝 Name: ${name}\n📖 Bio: ${bio.slice(0, 200)}\n📷 Recent posts: ${postCount}\n🔗 Profile: https://x.com/${username}\n${'─'.repeat(28)}\n> 🤖 _🌑༒𓆩『𝕃𝕆ℝ𝔻 𝔽𝔸ℝℍ𝔸ℕ 𝕄𝔻』𓆪༒☠️_`;
 
         if (img) {
             try {
@@ -97,7 +97,7 @@ async function ipStalkCommand(sock, chatId, message) {
         if (geo.error) throw new Error(geo.reason || 'IP not found');
 
         await sock.sendMessage(chatId, {
-            text: `🕵️ *IP STALK: ${ip}*\n${'─'.repeat(28)}\n🌍 Country: ${geo.country_name || 'N/A'} (${geo.country_code || '?'})\n🏙 City: ${geo.city || 'N/A'}\n🗺 Region: ${geo.region || 'N/A'}\n📮 Postal: ${geo.postal || 'N/A'}\n🌐 ISP/Org: ${geo.org || 'N/A'}\n⏰ Timezone: ${geo.timezone || 'N/A'}\n📍 Lat: ${geo.latitude || 'N/A'}, Lon: ${geo.longitude || 'N/A'}\n🔢 AS Number: ${geo.asn || 'N/A'}\n${'─'.repeat(28)}\n> 🤖 _LordFarhan Bot_`
+            text: `🕵️ *IP STALK: ${ip}*\n${'─'.repeat(28)}\n🌍 Country: ${geo.country_name || 'N/A'} (${geo.country_code || '?'})\n🏙 City: ${geo.city || 'N/A'}\n🗺 Region: ${geo.region || 'N/A'}\n📮 Postal: ${geo.postal || 'N/A'}\n🌐 ISP/Org: ${geo.org || 'N/A'}\n⏰ Timezone: ${geo.timezone || 'N/A'}\n📍 Lat: ${geo.latitude || 'N/A'}, Lon: ${geo.longitude || 'N/A'}\n🔢 AS Number: ${geo.asn || 'N/A'}\n${'─'.repeat(28)}\n> 🤖 _🌑༒𓆩『𝕃𝕆ℝ𝔻 𝔽𝔸ℝℍ𝔸ℕ 𝕄𝔻』𓆪༒☠️_`
         }, { quoted: message });
     } catch (e) {
         await sock.sendMessage(chatId, { text: `❌ IP stalk failed: ${e.message}` }, { quoted: message });
@@ -124,7 +124,7 @@ async function npmStalkCommand(sock, chatId, message) {
         const numFmt = n => typeof n === 'number' ? n.toLocaleString() : n;
 
         await sock.sendMessage(chatId, {
-            text: `📦 *NPM PACKAGE: ${d.name}*\n${'─'.repeat(28)}\n📝 Description: ${d.description || 'N/A'}\n🏷 Latest: v${latest}\n👤 Author: ${typeof d.author === 'string' ? d.author : d.author?.name || 'N/A'}\n📥 Monthly downloads: ${numFmt(downloads)}\n📅 Created: ${new Date(d.time?.created).toDateString()}\n🔄 Updated: ${new Date(d.time?.modified).toDateString()}\n🔗 Repo: ${ver?.repository?.url || d.homepage || 'N/A'}\n📜 License: ${ver?.license || d.license || 'N/A'}\n🌐 Homepage: ${d.homepage || 'N/A'}\n\n🔗 https://npmjs.com/package/${d.name}\n${'─'.repeat(28)}\n> 🤖 _LordFarhan Bot_`
+            text: `📦 *NPM PACKAGE: ${d.name}*\n${'─'.repeat(28)}\n📝 Description: ${d.description || 'N/A'}\n🏷 Latest: v${latest}\n👤 Author: ${typeof d.author === 'string' ? d.author : d.author?.name || 'N/A'}\n📥 Monthly downloads: ${numFmt(downloads)}\n📅 Created: ${new Date(d.time?.created).toDateString()}\n🔄 Updated: ${new Date(d.time?.modified).toDateString()}\n🔗 Repo: ${ver?.repository?.url || d.homepage || 'N/A'}\n📜 License: ${ver?.license || d.license || 'N/A'}\n🌐 Homepage: ${d.homepage || 'N/A'}\n\n🔗 https://npmjs.com/package/${d.name}\n${'─'.repeat(28)}\n> 🤖 _🌑༒𓆩『𝕃𝕆ℝ𝔻 𝔽𝔸ℝℍ𝔸ℕ 𝕄𝔻』𓆪༒☠️_`
         }, { quoted: message });
     } catch (e) {
         await sock.sendMessage(chatId, { text: `❌ NPM stalk failed: ${e.message}` }, { quoted: message });
@@ -134,7 +134,7 @@ async function npmStalkCommand(sock, chatId, message) {
 // ── Stalker Menu ──────────────────────────────────────────────────────────────
 async function stalkerMenuCommand(sock, chatId, message) {
     await sock.sendMessage(chatId, {
-        text: `🕵️ *STALKER MENU*\n\n${'─'.repeat(28)}\n\n🐦 *.twitterstalk* <username>\n   Fetch Twitter/X profile info\n\n📸 *.igstalk* <username>\n   Fetch Instagram profile info\n\n🎵 *.tiktokstalk* <username>\n   Fetch TikTok profile info\n\n💻 *.gitstalk* <username>\n   Fetch GitHub profile info\n\n📦 *.npmstalk* <package>\n   Fetch NPM package info\n\n📢 *.wachannel* <handle>\n   Search WhatsApp channel\n\n🌐 *.ipstalk* <ip>\n   Get IP address details\n\n${'─'.repeat(28)}\n> 🤖 _LordFarhan Bot_`
+        text: `🕵️ *STALKER MENU*\n\n${'─'.repeat(28)}\n\n🐦 *.twitterstalk* <username>\n   Fetch Twitter/X profile info\n\n📸 *.igstalk* <username>\n   Fetch Instagram profile info\n\n🎵 *.tiktokstalk* <username>\n   Fetch TikTok profile info\n\n💻 *.gitstalk* <username>\n   Fetch GitHub profile info\n\n📦 *.npmstalk* <package>\n   Fetch NPM package info\n\n📢 *.wachannel* <handle>\n   Search WhatsApp channel\n\n🌐 *.ipstalk* <ip>\n   Get IP address details\n\n${'─'.repeat(28)}\n> 🤖 _🌑༒𓆩『𝕃𝕆ℝ𝔻 𝔽𝔸ℝℍ𝔸ℕ 𝕄𝔻』𓆪༒☠️_`
     }, { quoted: message });
 }
 

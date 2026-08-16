@@ -94,7 +94,7 @@ async function igstalkCommand(sock, chatId, message) {
             `🔗 *Link:* ${user.external_url || 'N/A'}\n` +
             `🌐 *Profile:* https://www.instagram.com/${user.username || username}/\n` +
             `${'─'.repeat(28)}\n` +
-            `> 🤖 _LordFarhan Bot_`;
+            `> 🤖 _🌑༒𓆩『𝕃𝕆ℝ𝔻 𝔽𝔸ℝℍ𝔸ℕ 𝕄𝔻』𓆪༒☠️_`;
 
         // Try to send with profile picture
         const picUrl = user.profile_pic_url_hd || user.profile_pic_url;

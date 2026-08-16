@@ -1,5 +1,5 @@
 /**
- * LordFarhan Bot — Web pair/QR server
+ * 🌑༒𓆩『𝕃𝕆ℝ𝔻 𝔽𝔸ℝℍ𝔸ℕ 𝕄𝔻』𓆪༒☠️ — Web pair/QR server
  *
  * Bug fixes vs the previous Railway version:
  *  1. CODE SPAM FIX  — codes are cached 55 s per number. Repeat clicks return
@@ -113,7 +113,7 @@ async function generateCode(number) {
                     const jid = number + '@s.whatsapp.net';
                     await sock.sendMessage(jid, {
                         text:
-                            '✅ *LordFarhan Bot — Pairing Successful!*\n\n' +
+                            '✅ *🌑༒𓆩『𝕃𝕆ℝ𝔻 𝔽𝔸ℝℍ𝔸ℕ 𝕄𝔻』𓆪༒☠️ — Pairing Successful!*\n\n' +
                             'Your SESSION_ID is below. Copy the full string and paste it into your Railway (or panel) environment variable named *SESSION_ID*, then restart the bot.\n\n' +
                             '```' + sessionId + '```\n\n' +
                             '⚠️ _Keep this private — it gives full access to your bot session._',

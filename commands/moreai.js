@@ -245,7 +245,7 @@ async function visionCommand(sock, chatId, message) {
 async function aiMenuCommand(sock, chatId, message) {
     const bar = '─'.repeat(28);
     await sock.sendMessage(chatId, {
-        text: `🤖 *AI COMMANDS MENU*\n\n┌${bar}┐\n💬 *Major Models*\n┃  .gpt / .gemini / .chatgpt\n┃  .deepseek  .grok  .blackbox\n┃  .copilot   .bing  .claudeai\n┃  .bard      .groq  .metai\n┃  .perplexity .wormgpt\n┃  .qwenai    .ilama .venice\n└${bar}┘\n\n┌${bar}┐\n🧠 *Open Source*\n┃  .wizard  .vicuna  .zephyr\n┃  .mixtral .dolphin .phi\n┃  .nous    .openchat .orca\n┃  .codellama .solar .starcoder\n┃  .yi .internlm .chatglm\n┃  .nemotron .neural .openhermes\n┃  .command .tinyllama .replitai\n└${bar}┘\n\n┌${bar}┐\n🛠️ *AI Tools*\n┃  .analyze <text/reply>\n┃  .humanizer <text>\n┃  .summarize <text/reply>\n┃  .speechwriter <topic>\n┃  .vision <question>\n┃  .imagine <prompt>\n┃  .flux <prompt>\n┃  .removebg (reply to image)\n└${bar}┘\n\n> 🤖 _LordFarhan Bot_`
+        text: `🤖 *AI COMMANDS MENU*\n\n┌${bar}┐\n💬 *Major Models*\n┃  .gpt / .gemini / .chatgpt\n┃  .deepseek  .grok  .blackbox\n┃  .copilot   .bing  .claudeai\n┃  .bard      .groq  .metai\n┃  .perplexity .wormgpt\n┃  .qwenai    .ilama .venice\n└${bar}┘\n\n┌${bar}┐\n🧠 *Open Source*\n┃  .wizard  .vicuna  .zephyr\n┃  .mixtral .dolphin .phi\n┃  .nous    .openchat .orca\n┃  .codellama .solar .starcoder\n┃  .yi .internlm .chatglm\n┃  .nemotron .neural .openhermes\n┃  .command .tinyllama .replitai\n└${bar}┘\n\n┌${bar}┐\n🛠️ *AI Tools*\n┃  .analyze <text/reply>\n┃  .humanizer <text>\n┃  .summarize <text/reply>\n┃  .speechwriter <topic>\n┃  .vision <question>\n┃  .imagine <prompt>\n┃  .flux <prompt>\n┃  .removebg (reply to image)\n└${bar}┘\n\n> 🤖 _🌑༒𓆩『𝕃𝕆ℝ𝔻 𝔽𝔸ℝℍ𝔸ℕ 𝕄𝔻』𓆪༒☠️_`
     }, { quoted: message });
 }
 

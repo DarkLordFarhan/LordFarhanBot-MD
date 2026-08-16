@@ -8,8 +8,8 @@ async function aliveCommand(sock, chatId, message) {
         const dateStr = now.format('ddd, DD MMM YYYY');
 
         const message1 =
-            '✅ *LordFarhan Bot is Online!*\n\n' +
-            '> 🤖 *Bot:* ' + (settings.botName || 'LordFarhan Bot') + '\n' +
+            '✅ *🌑༒𓆩『𝕃𝕆ℝ𝔻 𝔽𝔸ℝℍ𝔸ℕ 𝕄𝔻』𓆪༒☠️ is Online!*\n\n' +
+            '> 🤖 *Bot:* ' + (settings.botName || '🌑༒𓆩『𝕃𝕆ℝ𝔻 𝔽𝔸ℝℍ𝔸ℕ 𝕄𝔻』𓆪༒☠️') + '\n' +
             '> ⚡ *Version:* ' + settings.version + '\n' +
             '> 🟢 *Status:* Active\n' +
             '> 🌐 *Mode:* ' + ((settings.commandMode || 'public') === 'public' ? 'Public' : 'Private') + '\n' +

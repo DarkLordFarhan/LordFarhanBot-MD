@@ -123,7 +123,7 @@ async function fancyfontsCommand(sock, chatId, message) {
 `  .fancyfonts <text>         → all styles\n` +
 `  .ff <style> <text>         → one style\n\n` +
 `*Available styles:*\n${styleList}\n\n` +
-`*Example:*\n  .ff bold Hello World\n  .fancyfonts LordFarhan Bot`
+`*Example:*\n  .ff bold Hello World\n  .fancyfonts 🌑༒𓆩『𝕃𝕆ℝ𝔻 𝔽𝔸ℝℍ𝔸ℕ 𝕄𝔻』𓆪༒☠️`
             }, { quoted: message });
         }
 

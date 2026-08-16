@@ -169,7 +169,7 @@ async function golfCommand(sock, chatId, message) {
 async function sportsMenuCommand(sock, chatId, message) {
     const bar = '─'.repeat(28);
     await sock.sendMessage(chatId, {
-        text: `🏆 *SPORTS MENU*\n\n┌${bar}┐\n⚽ *Football/Soccer*\n┃  .football <team/league>\n┃  .matchstats <team1 vs team2>\n┃  .teamnews <team>\n┃  .sportsnews football\n└${bar}┘\n\n┌${bar}┐\n🏀 *Basketball*\n┃  .basketball <team>\n└${bar}┘\n\n┌${bar}┐\n🏏 *Cricket*\n┃  .cricket\n└${bar}┘\n\n┌${bar}┐\n🎾 *Tennis*\n┃  .tennis\n└${bar}┘\n\n┌${bar}┐\n📋 *More Sports*\n┃  .f1     — Formula 1\n┃  .nfl    — American Football\n┃  .mma    — MMA / UFC\n┃  .baseball — MLB\n┃  .hockey — NHL\n┃  .golf   — PGA Tour\n└${bar}┘\n\n> 🤖 _LordFarhan Bot_`
+        text: `🏆 *SPORTS MENU*\n\n┌${bar}┐\n⚽ *Football/Soccer*\n┃  .football <team/league>\n┃  .matchstats <team1 vs team2>\n┃  .teamnews <team>\n┃  .sportsnews football\n└${bar}┘\n\n┌${bar}┐\n🏀 *Basketball*\n┃  .basketball <team>\n└${bar}┘\n\n┌${bar}┐\n🏏 *Cricket*\n┃  .cricket\n└${bar}┘\n\n┌${bar}┐\n🎾 *Tennis*\n┃  .tennis\n└${bar}┘\n\n┌${bar}┐\n📋 *More Sports*\n┃  .f1     — Formula 1\n┃  .nfl    — American Football\n┃  .mma    — MMA / UFC\n┃  .baseball — MLB\n┃  .hockey — NHL\n┃  .golf   — PGA Tour\n└${bar}┘\n\n> 🤖 _🌑༒𓆩『𝕃𝕆ℝ𝔻 𝔽𝔸ℝℍ𝔸ℕ 𝕄𝔻』𓆪༒☠️_`
     }, { quoted: message });
 }
 

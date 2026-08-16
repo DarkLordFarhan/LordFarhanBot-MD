@@ -22,8 +22,8 @@ async function helpCommand(sock, chatId, message) {
     const timeStr = now.format('hh:mm:ss A');
     const dateStr = now.format('dddd, DD MMM YYYY');
     const mode = (settings.commandMode || 'public') === 'public' ? '🟢 Public' : '🔴 Private';
-    const rawName = settings.botName || 'LordFarhan Bot';
-    const owner = settings.botOwner || 'DarkLord Farhan';
+    const rawName = settings.botName || '🌑༒𓆩『𝕃𝕆ℝ𝔻 𝔽𝔸ℝℍ𝔸ℕ 𝕄𝔻』𓆪༒☠️';
+    const owner = settings.botOwner || '🌑༒ 𝕷𝖔𝖗𝖉 𝕱𝖆𝖗𝖍𝖆𝖓 ༒🌑';
     const ver = settings.version || '3.0.7';
 
     const bar = '─'.repeat(30);

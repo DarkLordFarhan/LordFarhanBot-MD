@@ -1,5 +1,5 @@
 /**
- * LordFarhan Bot - A WhatsApp Bot
+ * 🌑༒𓆩『𝕃𝕆ℝ𝔻 𝔽𝔸ℝℍ𝔸ℕ 𝕄𝔻』𓆪༒☠️ - A WhatsApp Bot
  * Copyright (c) 2026 DarkLord
  *
  * Credits:
@@ -59,7 +59,7 @@ setInterval(() => {
 
 // ─── STARTUP ──────────────────────────────────────────────────────────────────
 console.log('='.repeat(55));
-console.log('  LordFarhan Bot — Starting up...');
+console.log('  🌑༒𓆩『𝕃𝕆ℝ𝔻 𝔽𝔸ℝℍ𝔸ℕ 𝕄𝔻』𓆪༒☠️ — Starting up...');
 console.log('  .env location : ' + path.join(__dirname, '.env'));
 console.log('  SESSION_ID set: ' + (!!process.env.SESSION_ID));
 console.log('='.repeat(55));
@@ -102,7 +102,7 @@ const sessionLoaded = loadSessionFromEnv();
 let owner = ['0108817832'];
 try { owner = JSON.parse(fs.readFileSync('./data/owner.json')); } catch (e) { console.log('⚠️  owner.json missing, using default owner'); }
 
-global.botname = 'LordFarhan Bot';
+global.botname = '🌑༒𓆩『𝕃𝕆ℝ𝔻 𝔽𝔸ℝℍ𝔸ℕ 𝕄𝔻』𓆪༒☠️';
 global.themeemoji = '•';
 
 const channelInfo = {
@@ -232,7 +232,7 @@ async function startXeonBotInc() {
                 console.log(chalk.green('Connected! => ' + JSON.stringify(XeonBotInc.user, null, 2)));
                 try {
                     const botNumber = XeonBotInc.user.id.split(':')[0] + '@s.whatsapp.net';
-                    const caption = toSerifFont('LordFarhan Bot Connected!') +
+                    const caption = toSerifFont('🌑༒𓆩『𝕃𝕆ℝ𝔻 𝔽𝔸ℝℍ𝔸ℕ 𝕄𝔻』𓆪༒☠️ Connected!') +
                         '\n\n' + toSerifFont('Status: Online') +
                         '\n' + toSerifFont('Powered by DarkLordFarhanXMDTech');
                     const imagePath = path.join(__dirname, 'assets', 'bot_image.jpg');
@@ -247,7 +247,7 @@ async function startXeonBotInc() {
                     }
                 } catch (e) { console.error('Error sending connect message:', e.message); }
                 await delay(1999);
-                console.log(chalk.bold.blue('[ LordFarhan Bot ]'));
+                console.log(chalk.bold.blue('[ 🌑༒𓆩『𝕃𝕆ℝ𝔻 𝔽𝔸ℝℍ𝔸ℕ 𝕄𝔻』𓆪༒☠️ ]'));
                 console.log(chalk.green('Bot Connected Successfully! Version: ' + settings.version));
             }
 
