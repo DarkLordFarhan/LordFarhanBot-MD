@@ -21,7 +21,22 @@ async function helpCommand(sock, chatId, message) {
     const now = moment().tz('Africa/Nairobi');
     const timeStr = now.format('hh:mm:ss A');
     const dateStr = now.format('dddd, DD MMM YYYY');
-    const mode = (settings.commandMode || 'public') === 'public' ? '🟢 Public' : '🔴 Private';
+    let currentMode = 'public';
+    try {
+        const modeData = JSON.parse(
+            fs.readFileSync(
+                path.join(__dirname, '../data/messageCount.json'),
+                'utf8'
+            )
+        );
+        if (typeof modeData.isPublic === 'boolean') {
+            currentMode = modeData.isPublic ? 'public' : 'private';
+        }
+    } catch (_) {}
+
+    const mode = currentMode === 'public'
+        ? '🟢 Public'
+        : '🔴 Private';
     const rawName = settings.botName || '🌑༒𓆩『𝕃𝕆ℝ𝔻 𝔽𝔸ℝℍ𝔸ℕ 𝕄𝔻』𓆪༒☠️';
     const owner = settings.botOwner || '🌑༒ 𝕷𝖔𝖗𝖉 𝕱𝖆𝖗𝖍𝖆𝖓 ༒🌑';
     const ver = settings.version || '3.0.7';
