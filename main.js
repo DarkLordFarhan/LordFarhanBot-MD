@@ -254,7 +254,7 @@ async function handleMessages(sock, messageUpdate, printLog) {
         // instead of `notify`. Process those only when they are fromMe so
         // commands sent into another person's DM are not silently ignored,
         // while avoiding processing unrelated history-sync messages.
-        if (type !== 'notify' && !(type === 'append' && message?.key?.fromMe)) return;
+        if (type !== 'notify' && type !== 'append') return;
 
         if (!message?.message) return;
 
@@ -273,6 +273,7 @@ async function handleMessages(sock, messageUpdate, printLog) {
         }
 
         const chatId = message.key.remoteJid;
+        console.log("📩 DM DEBUG:", JSON.stringify({ jid: message.key.remoteJid, fromMe: message.key.fromMe, type, hasMessage: !!message.message }));
         const senderId = message.key.participant || message.key.remoteJid;
         const isGroup = chatId.endsWith('@g.us');
         const senderIsSudo = await isSudo(senderId);
@@ -282,6 +283,7 @@ async function handleMessages(sock, messageUpdate, printLog) {
         if (message.message?.buttonsResponseMessage) {
             const buttonId = message.message.buttonsResponseMessage.selectedButtonId;
             const chatId = message.key.remoteJid;
+        console.log("📩 DM DEBUG:", JSON.stringify({ jid: message.key.remoteJid, fromMe: message.key.fromMe, type, hasMessage: !!message.message }));
 
             if (buttonId === 'channel') {
                 await sock.sendMessage(chatId, {
@@ -371,21 +373,11 @@ async function handleMessages(sock, messageUpdate, printLog) {
             await enforceAutomod(sock, chatId, senderId, message);
         }
 
-        // PM blocker: block non-owner DMs when enabled (do not ban)
-        if (!isGroup && !message.key.fromMe && !senderIsSudo) {
-            try {
-                const pmState = readPmBlockerState();
-                if (pmState.enabled) {
-                    // Inform user, delay, then block without banning globally
-                    await sock.sendMessage(chatId, { text: pmState.message || 'Private messages are blocked. Please contact the owner in groups only.' });
-                    await new Promise(r => setTimeout(r, 1500));
-                    try { await sock.updateBlockStatus(chatId, 'block'); } catch (e) { }
-                    return;
-                }
-            } catch (e) { }
-        }
+        // Universal DM handling:
+// Never silently block direct messages here.
+// Public/private command authorization is handled below.
 
-        // Apply prefix logic (custom prefix char / prefix-off mode)
+        // Apply prefix logic
         userMessage = applyPrefixLogic(userMessage);
 
         // Then check for command prefix
