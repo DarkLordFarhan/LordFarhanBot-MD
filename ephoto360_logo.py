@@ -2,12 +2,11 @@ import sys
 import json
 from Ephoto360 import Ephoto360
 
-style = sys.argv[1].strip() if len(sys.argv) > 1 else ""
-text = " ".join(sys.argv[2:]).strip() if len(sys.argv) > 2 else ""
-
-if not text:
-    print(json.dumps({"ok": False, "error": "No logo text supplied"}))
+if len(sys.argv) < 2:
+    print(json.dumps({"ok": False, "error": "Missing text"}))
     raise SystemExit
+
+text = " ".join(sys.argv[1:]).strip()
 
 try:
     api = Ephoto360(
@@ -16,48 +15,57 @@ try:
         timeout=60
     )
 
-    matches = api.search(style) if style else []
-    result = None
-    selected = None
+    # Search Ephoto360 using the requested text/style
+    results = api.search(text)
 
-    for effect in matches[:10]:
+    generated = None
+    effect_name = None
+
+    # Try matching effects
+    for effect in results[:15]:
         try:
-            generated = api.create(
+            r = api.create(
                 slug=effect.slug,
                 texts=[text],
                 random_style=True
             )
 
-            if generated.ok and generated.url:
-                result = generated
-                selected = effect
+            if r.ok and r.url:
+                generated = r
+                effect_name = effect.name
                 break
         except Exception:
             continue
 
-    if result is None:
-        effect = api.random_effect(require_radio=False)
+    # If no matching effect works, try random compatible effects
+    if generated is None:
+        for _ in range(5):
+            try:
+                effect = api.random_effect(require_radio=False)
 
-        generated = api.create(
-            slug=effect.slug,
-            texts=[text],
-            random_style=True
-        )
+                r = api.create(
+                    slug=effect.slug,
+                    texts=[text],
+                    random_style=True
+                )
 
-        if generated.ok and generated.url:
-            result = generated
-            selected = effect
+                if r.ok and r.url:
+                    generated = r
+                    effect_name = effect.name
+                    break
+            except Exception:
+                continue
 
-    if result:
+    if generated is None:
         print(json.dumps({
-            "ok": True,
-            "url": result.url,
-            "effect": selected.name if selected else style
+            "ok": False,
+            "error": "No compatible Ephoto360 effect found"
         }))
     else:
         print(json.dumps({
-            "ok": False,
-            "error": "Ephoto360 returned no compatible effect"
+            "ok": True,
+            "url": generated.url,
+            "effect": effect_name or "Ephoto360"
         }))
 
 except Exception as e:
