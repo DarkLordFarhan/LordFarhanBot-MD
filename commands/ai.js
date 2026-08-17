@@ -1,123 +1,265 @@
-'use strict';
-const fetch = require('node-fetch');
+const axios = require('axios');
+require('dotenv').config();
 
-const TIMEOUT = 15000;
+const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
 
-async function tryFetch(url, timeout = TIMEOUT) {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), timeout);
-    try {
-        const res = await fetch(url, { signal: controller.signal });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        return await res.json();
-    } finally {
-        clearTimeout(timer);
+/*
+ * Models confirmed available from this Groq API key.
+ *
+ * Audio / guard models are intentionally NOT used as normal chat models.
+ */
+const MODELS = {
+    'gptoss120': 'openai/gpt-oss-120b',
+    'gptoss20': 'openai/gpt-oss-20b',
+    'qwen': 'qwen/qwen3.6-27b',
+    'compound': 'groq/compound',
+    'compoundmini': 'groq/compound-mini',
+    'llama2': 'llama-2-7b',
+};
+
+const ALIASES = {
+    ai: 'openai/gpt-oss-120b',
+    ask: 'openai/gpt-oss-120b',
+    gpt: 'openai/gpt-oss-120b',
+    gpt4: 'openai/gpt-oss-120b',
+    gpt4o: 'openai/gpt-oss-120b',
+    gemini: 'qwen/qwen3.6-27b',
+
+    gptoss120: 'openai/gpt-oss-120b',
+    gptoss20: 'openai/gpt-oss-20b',
+    qwen: 'qwen/qwen3.6-27b',
+    compound: 'groq/compound',
+    compoundmini: 'groq/compound-mini',
+    llama2: 'llama-2-7b'
+};
+
+const memory = new Map();
+
+const SYSTEM_PROMPT =
+    'You are a friendly, intelligent general-purpose AI assistant inside a WhatsApp bot. ' +
+    'Answer naturally and clearly. Help with education, general knowledge, coding, writing, ' +
+    'calculations, explanations, translations, ideas and everyday questions. ' +
+    'Be conversational and helpful. When the user asks a follow-up question, use the conversation context. ' +
+    'Never pretend to be ChatGPT or Gemini.';
+
+function getUserId(message) {
+    return message.key.participant || message.key.remoteJid;
+}
+
+function getModelFromCommand(command) {
+    return ALIASES[command.toLowerCase()];
+}
+
+function trimMemory(history) {
+    if (history.length > 12) {
+        return history.slice(-12);
     }
+    return history;
 }
 
-function extractText(data) {
-    if (!data) return null;
-    // Handle nested structures
-    if (typeof data.result === 'string' && data.result.trim()) return data.result.trim();
-    if (typeof data.answer === 'string' && data.answer.trim()) return data.answer.trim();
-    if (typeof data.message === 'string' && data.message.trim()) return data.message.trim();
-    if (typeof data.response === 'string' && data.response.trim()) return data.response.trim();
-    if (typeof data.text === 'string' && data.text.trim()) return data.text.trim();
-    if (typeof data.output === 'string' && data.output.trim()) return data.output.trim();
-    if (typeof data.content === 'string' && data.content.trim()) return data.content.trim();
-    if (typeof data.data === 'string' && data.data.trim()) return data.data.trim();
-    // OpenAI-compatible shape
-    if (data.choices?.[0]?.message?.content) return data.choices[0].message.content.trim();
-    if (data.choices?.[0]?.text) return data.choices[0].text.trim();
-    return null;
-}
-
-// ── GPT fallback chain ─────────────────────────────────────────────────────────
-async function askGPT(query) {
-    const q = encodeURIComponent(query);
-    const apis = [
-        `https://api.giftedtech.my.id/api/ai/gptv4o?apikey=gifted&q=${q}`,
-        `https://api.giftedtech.my.id/api/ai/geminiaipro?apikey=gifted&q=${q}`,
-        `https://api.ryzendesu.vip/api/ai/chatgpt?text=${q}`,
-        `https://vapis.my.id/api/chatgpt?q=${q}`,
-        `https://zellapi.autos/ai/chatbot?text=${q}`,
-        `https://api.siputzx.my.id/api/ai/chatgpt?content=${q}`,
-        `https://api.dreaded.site/api/chatgpt?text=${q}`,
-        `https://fastrestapis.fasturl.cloud/ai/gpt-4o?ask=${q}`,
-    ];
-    for (const url of apis) {
-        try {
-            const data = await tryFetch(url);
-            const text = extractText(data);
-            if (text && text.length > 0) return text;
-        } catch (_) { /* try next */ }
+async function askGroq(model, userId, question) {
+    if (!process.env.GROQ_API_KEY) {
+        throw new Error('GROQ_API_KEY is missing');
     }
-    throw new Error('All GPT APIs are currently unavailable. Please try again later.');
-}
 
-// ── Gemini fallback chain ──────────────────────────────────────────────────────
-async function askGemini(query) {
-    const q = encodeURIComponent(query);
-    const apis = [
-        `https://api.giftedtech.my.id/api/ai/geminiaipro?apikey=gifted&q=${q}`,
-        `https://api.giftedtech.my.id/api/ai/geminiai?apikey=gifted&q=${q}`,
-        `https://vapis.my.id/api/gemini?q=${q}`,
-        `https://api.siputzx.my.id/api/ai/gemini-pro?content=${q}`,
-        `https://api.ryzendesu.vip/api/ai/gemini?text=${q}`,
-        `https://zellapi.autos/ai/chatbot?text=${q}`,
-        `https://api.dreaded.site/api/gemini?text=${q}`,
-        `https://fastrestapis.fasturl.cloud/ai/gemini?ask=${q}`,
-    ];
-    for (const url of apis) {
-        try {
-            const data = await tryFetch(url);
-            const text = extractText(data);
-            if (text && text.length > 0) return text;
-        } catch (_) { /* try next */ }
-    }
-    throw new Error('All Gemini APIs are currently unavailable. Please try again later.');
-}
+    let history = memory.get(`${userId}:${model}`) || [];
 
-// ── Main command handler ───────────────────────────────────────────────────────
-async function aiCommand(sock, chatId, message) {
-    try {
-        const text =
-            message.message?.conversation?.trim() ||
-            message.message?.extendedTextMessage?.text?.trim() || '';
+    history.push({
+        role: 'user',
+        content: question
+    });
 
-        const parts = text.split(/\s+/);
-        const command = parts[0].toLowerCase();
-        const query = parts.slice(1).join(' ').trim();
+    history = trimMemory(history);
 
-        if (!query) {
-            return await sock.sendMessage(chatId, {
-                text: `🤖 Please provide a question.\n\nExamples:\n  ${command} explain quantum physics\n  ${command} write a poem about Kenya`
-            }, { quoted: message });
+    const response = await axios.post(
+        GROQ_URL,
+        {
+            model,
+            messages: [
+                {
+                    role: 'system',
+                    content: SYSTEM_PROMPT
+                },
+                ...history
+            ],
+            temperature: 0.7,
+            max_tokens: 4096
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
+                'Content-Type': 'application/json'
+            },
+            timeout: 90000
         }
+    );
 
-        // React to show processing
-        await sock.sendMessage(chatId, { react: { text: '🤖', key: message.key } });
+    const answer =
+        response.data?.choices?.[0]?.message?.content?.trim();
+
+    if (!answer) {
+        throw new Error('Groq returned an empty response');
+    }
+
+    history.push({
+        role: 'assistant',
+        content: answer
+    });
+
+    memory.set(`${userId}:${model}`, trimMemory(history));
+
+    return answer;
+}
+
+function menuText() {
+    return (
+        '🤖 *GROQ AI MODEL MENU*\n\n' +
+
+        '🧠 *General AI*\n' +
+        '• `.ai <question>`\n' +
+        '• `.ask <question>`\n\n' +
+
+        '🚀 *GPT-OSS*\n' +
+        '• `.gptoss120 <question>`\n' +
+        '• `.gptoss20 <question>`\n\n' +
+
+        '🧩 *Qwen*\n' +
+        '• `.qwen <question>`\n\n' +
+
+        '⚡ *Groq Compound*\n' +
+        '• `.compound <question>`\n' +
+        '• `.compoundmini <question>`\n\n' +
+
+        '🦙 *Llama*\n' +
+        '• `.llama2 <question>`\n\n' +
+
+        '🔄 *Compatibility aliases*\n' +
+        '• `.gpt <question>`\n' +
+        '• `.gpt4 <question>`\n' +
+        '• `.gpt4o <question>`\n' +
+        '• `.gemini <question>`\n\n' +
+
+        '💡 *Example*\n' +
+        '`.ai explain diabetes simply`'
+    );
+}
+
+async function execute(sock, message, args) {
+    const command =
+        (message.body || '')
+            .trim()
+            .split(/\s+/)[0]
+            .replace(/^[.!]/, '')
+            .toLowerCase();
+
+    const jid = message.key.remoteJid;
+
+    if (command === 'aimenu') {
+        return sock.sendMessage(
+            jid,
+            { text: menuText() },
+            { quoted: message }
+        );
+    }
+
+    const model = getModelFromCommand(command);
+
+    if (!model) {
+        return;
+    }
+
+    const question = args.join(' ').trim();
+
+    if (!question) {
+        return sock.sendMessage(
+            jid,
+            {
+                text:
+                    '🤖 *AI Assistant*\n\n' +
+                    'Ask me anything.\n\n' +
+                    'Example:\n' +
+                    '`.ai explain photosynthesis`'
+            },
+            { quoted: message }
+        );
+    }
+
+    try {
+        await sock.sendMessage(
+            jid,
+            { text: '🤖 Thinking...' },
+            { quoted: message }
+        );
+
+        const userId = getUserId(message);
 
         let answer;
-        if (command === '.gpt') {
-            answer = await askGPT(query);
-        } else if (command === '.gemini') {
-            answer = await askGemini(query);
-        } else {
-            return;
+
+        try {
+            answer = await askGroq(model, userId, question);
+        } catch (primaryError) {
+            console.error(
+                `Primary model ${model} failed:`,
+                primaryError.response?.data || primaryError.message
+            );
+
+            /*
+             * Strong fallback.
+             * GPT-OSS 120B is currently supported by Groq and is
+             * intended for high-capability reasoning/chat use.
+             */
+            if (model !== 'openai/gpt-oss-120b') {
+                answer = await askGroq(
+                    'openai/gpt-oss-120b',
+                    userId,
+                    question
+                );
+            } else {
+                throw primaryError;
+            }
         }
 
-        await sock.sendMessage(chatId, { text: answer }, { quoted: message });
-        // Success reaction
-        await sock.sendMessage(chatId, { react: { text: '✅', key: message.key } });
+        await sock.sendMessage(
+            jid,
+            { text: answer },
+            { quoted: message }
+        );
 
     } catch (error) {
-        console.error('[AI] error:', error.message);
-        await sock.sendMessage(chatId, { react: { text: '❌', key: message.key } });
-        await sock.sendMessage(chatId, {
-            text: `❌ ${error.message || 'Failed to get a response. Please try again in a moment.'}`
-        }, { quoted: message });
+        console.error(
+            'Groq AI error:',
+            error.response?.data || error.message
+        );
+
+        await sock.sendMessage(
+            jid,
+            {
+                text:
+                    '❌ *AI failed to respond.*\n\n' +
+                    'The selected model may be temporarily unavailable. ' +
+                    'Try `.ai` again.'
+            },
+            { quoted: message }
+        );
     }
 }
 
-module.exports = aiCommand;
+module.exports = {
+    name: 'ai',
+    aliases: [
+        'ai',
+        'ask',
+        'gpt',
+        'gpt4',
+        'gpt4o',
+        'gemini',
+        'gptoss120',
+        'gptoss20',
+        'qwen',
+        'compound',
+        'compoundmini',
+        'llama2',
+        'aimenu'
+    ],
+    execute
+};
