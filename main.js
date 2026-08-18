@@ -1050,8 +1050,17 @@ async function handleMessages(sock, messageUpdate, printLog) {
             case userMessage.startsWith('.tiktok') || userMessage.startsWith('.tt'):
                 await tiktokCommand(sock, chatId, message);
                 break;
-            case userMessage.startsWith('.gpt') || userMessage.startsWith('.gemini'):
+            case userMessage.startsWith('.ai') ||
+                 userMessage.startsWith('.ask') ||
+                 userMessage.startsWith('.gpt') ||
+                 userMessage.startsWith('.gemini') ||
+                 userMessage.startsWith('.qwen') ||
+                 userMessage.startsWith('.compound') ||
+                 userMessage.startsWith('.llama2') ||
+                 userMessage === '.aimenu' ||
+                 userMessage === '.ailist':
                 await aiCommand(sock, chatId, message);
+                commandExecuted = true;
                 break;
             case userMessage.startsWith('.translate') || userMessage.startsWith('.trt'):
                 const commandLength = userMessage.startsWith('.translate') ? 10 : 4;
