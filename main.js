@@ -1052,13 +1052,11 @@ async function handleMessages(sock, messageUpdate, printLog) {
                 break;
             case userMessage.startsWith('.ai') ||
                  userMessage.startsWith('.ask') ||
+                 userMessage.startsWith('.chat') ||
                  userMessage.startsWith('.gpt') ||
-                 userMessage.startsWith('.gemini') ||
-                 userMessage.startsWith('.qwen') ||
-                 userMessage.startsWith('.compound') ||
-                 userMessage.startsWith('.llama2') ||
+                 userMessage.startsWith('.groq') ||
                  userMessage === '.aimenu' ||
-                 userMessage === '.ailist':
+                 userMessage === '.aireset':
                 await aiCommand(sock, chatId, message);
                 commandExecuted = true;
                 break;
@@ -1622,134 +1620,6 @@ async function handleMessages(sock, messageUpdate, printLog) {
                 break;
             case userMessage === '.stalkermenu' || userMessage === '.stalkmenu':
                 await stalkerMenuCommand(sock, chatId, message);
-                break;
-
-            // ── moreai commands ────────────────────────────────────────────
-            case userMessage.startsWith('.deepseek'):
-                await deepseekCommand(sock, chatId, message);
-                break;
-            case userMessage.startsWith('.grok'):
-                await grokCommand(sock, chatId, message);
-                break;
-            case userMessage.startsWith('.blackbox'):
-                await blackboxCommand(sock, chatId, message);
-                break;
-            case userMessage.startsWith('.copilot'):
-                await copilotCommand(sock, chatId, message);
-                break;
-            case userMessage.startsWith('.bing'):
-                await bingCommand(sock, chatId, message);
-                break;
-            case userMessage.startsWith('.claudeai') || userMessage.startsWith('.claude'):
-                await claudeaiCommand(sock, chatId, message);
-                break;
-            case userMessage.startsWith('.bard'):
-                await bardCommand(sock, chatId, message);
-                break;
-            case userMessage.startsWith('.groq'):
-                await groqCommand(sock, chatId, message);
-                break;
-            case userMessage.startsWith('.metai') || userMessage.startsWith('.meta'):
-                await metaiCommand(sock, chatId, message);
-                break;
-            case userMessage.startsWith('.perplexity'):
-                await perplexityCommand(sock, chatId, message);
-                break;
-            case userMessage.startsWith('.wormgpt'):
-                await wormgptCommand(sock, chatId, message);
-                break;
-            case userMessage.startsWith('.qwenai') || userMessage.startsWith('.qwen'):
-                await qwenaiCommand(sock, chatId, message);
-                break;
-            case userMessage.startsWith('.ilama') || userMessage.startsWith('.llama'):
-                await ilamaCommand(sock, chatId, message);
-                break;
-            case userMessage.startsWith('.venice'):
-                await veniceCommand(sock, chatId, message);
-                break;
-            case userMessage.startsWith('.wizard'):
-                await wizardCommand(sock, chatId, message);
-                break;
-            case userMessage.startsWith('.vicuna'):
-                await vicunaCommand(sock, chatId, message);
-                break;
-            case userMessage.startsWith('.zephyr'):
-                await zephyrCommand(sock, chatId, message);
-                break;
-            case userMessage.startsWith('.mixtral'):
-                await mixtralCommand(sock, chatId, message);
-                break;
-            case userMessage.startsWith('.dolphin'):
-                await dolphinCommand(sock, chatId, message);
-                break;
-            case userMessage.startsWith('.phi'):
-                await phiCommand(sock, chatId, message);
-                break;
-            case userMessage.startsWith('.nous'):
-                await nousCommand(sock, chatId, message);
-                break;
-            case userMessage.startsWith('.openchat'):
-                await openchatCommand(sock, chatId, message);
-                break;
-            case userMessage.startsWith('.orca'):
-                await orcaCommand(sock, chatId, message);
-                break;
-            case userMessage.startsWith('.codellama'):
-                await codelamaCommand(sock, chatId, message);
-                break;
-            case userMessage.startsWith('.solar'):
-                await solarCommand(sock, chatId, message);
-                break;
-            case userMessage.startsWith('.starcoder'):
-                await starcoderCommand(sock, chatId, message);
-                break;
-            case userMessage.startsWith('.yi'):
-                await yiCommand(sock, chatId, message);
-                break;
-            case userMessage.startsWith('.internlm'):
-                await internlmCommand(sock, chatId, message);
-                break;
-            case userMessage.startsWith('.chatglm'):
-                await chatglmCommand(sock, chatId, message);
-                break;
-            case userMessage.startsWith('.nemotron'):
-                await nemotronCommand(sock, chatId, message);
-                break;
-            case userMessage.startsWith('.neural'):
-                await neuralCommand(sock, chatId, message);
-                break;
-            case userMessage.startsWith('.openhermes'):
-                await openHermesCommand(sock, chatId, message);
-                break;
-            case userMessage.startsWith('.command ') || userMessage === '.command':
-                await commandCommand(sock, chatId, message);
-                break;
-            case userMessage.startsWith('.tinyllama'):
-                await tinyLlamaCommand(sock, chatId, message);
-                break;
-            case userMessage.startsWith('.replitai'):
-                await replitaiCommand(sock, chatId, message);
-                break;
-            case userMessage.startsWith('.analyze'):
-                await analyzeCommand(sock, chatId, message);
-                break;
-            case userMessage.startsWith('.humanizer'):
-                await humanizerCommand(sock, chatId, message);
-                break;
-            case userMessage.startsWith('.summarize'):
-                await summarizeCommand(sock, chatId, message);
-                break;
-            case userMessage.startsWith('.speechwriter'):
-                await speechwriterCommand(sock, chatId, message);
-                break;
-            case userMessage.startsWith('.totext'):
-                await totextCommand(sock, chatId, message);
-                break;
-            case userMessage.startsWith('.vision'):
-                await visionCommand(sock, chatId, message);
-                break;
-            case userMessage === '.aimenu' || userMessage === '.ailist':
-                await aiMenuCommand(sock, chatId, message);
                 break;
 
             // ── utility2 commands ──────────────────────────────────────────

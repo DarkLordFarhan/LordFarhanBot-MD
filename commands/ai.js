@@ -3,20 +3,14 @@
 const axios = require('axios');
 require('dotenv').config();
 
-const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
+const GROQ_URL =
+    'https://api.groq.com/openai/v1/chat/completions';
 
-const MODELS = {
-    gpt: 'openai/gpt-oss-120b',
-    gptoss120: 'openai/gpt-oss-120b',
-    gptoss20: 'openai/gpt-oss-20b',
-    gemini: 'qwen/qwen3.6-27b',
-    qwen: 'qwen/qwen3.6-27b',
-    compound: 'groq/compound',
-    compoundmini: 'groq/compound-mini',
-    llama2: 'llama-2-7b'
-};
+const MODEL =
+    process.env.GROQ_MODEL ||
+    'openai/gpt-oss-120b';
 
-const memory = new Map();
+const conversations = new Map();
 
 function getText(message) {
     return (
@@ -29,109 +23,111 @@ function getText(message) {
 }
 
 function getCommand(text) {
-    return (text.split(/\s+/)[0] || '')
-        .replace(/^\./, '')
+    return (
+        text
+            .trim()
+            .split(/\s+/)[0] ||
+        ''
+    )
+        .replace(/^[.!#]/, '')
         .toLowerCase();
 }
 
 function getQuestion(text) {
-    return text.replace(/^\.[^\s]+\s*/i, '').trim();
+    return text
+        .trim()
+        .replace(/^[.!#][^\s]+\s*/i, '')
+        .trim();
 }
 
 function getUserId(message, chatId) {
-    return message?.key?.participant ||
-           message?.key?.remoteJid ||
-           chatId;
+    return (
+        message?.key?.participant ||
+        message?.key?.remoteJid ||
+        chatId
+    );
 }
 
-function getModel(command) {
-    if (
-        command === 'gpt' ||
-        command === 'gpt4' ||
-        command === 'gpt4o' ||
-        command === 'gptoss120'
-    ) {
-        return MODELS.gpt;
+function clearMemory(userId) {
+    for (const key of conversations.keys()) {
+        if (key.startsWith(`${userId}:`)) {
+            conversations.delete(key);
+        }
     }
-
-    if (command === 'gptoss20') {
-        return MODELS.gptoss20;
-    }
-
-    if (
-        command === 'gemini' ||
-        command === 'qwen'
-    ) {
-        return MODELS.qwen;
-    }
-
-    if (command === 'compound') {
-        return MODELS.compound;
-    }
-
-    if (command === 'compoundmini') {
-        return MODELS.compoundmini;
-    }
-
-    if (command === 'llama2') {
-        return MODELS.llama2;
-    }
-
-    return null;
 }
 
-async function askGroq(model, userId, question) {
+async function askAI(userId, question) {
 
     if (!process.env.GROQ_API_KEY) {
-        throw new Error('GROQ_API_KEY is missing');
+        throw new Error(
+            'GROQ_API_KEY is not configured'
+        );
     }
 
-    const memoryKey = `${userId}:${model}`;
+    const memoryKey =
+        `${userId}:groq`;
 
-    let history = memory.get(memoryKey) || [];
+    let history =
+        conversations.get(memoryKey) || [];
 
     history.push({
         role: 'user',
         content: question
     });
 
-    history = history.slice(-12);
+    // Keep conversations small and stable
+    history = history.slice(-10);
 
     const response = await axios.post(
         GROQ_URL,
         {
-            model,
+            model: MODEL,
+
             messages: [
                 {
                     role: 'system',
                     content:
-                        "You are Lord Farhan MD's friendly general AI assistant. " +
-                        "Answer naturally, accurately and clearly. " +
-                        "Help with general knowledge, education, coding, writing, " +
-                        "translations, explanations, ideas and everyday questions. " +
-                        "Be conversational and helpful. " +
-                        "Use previous messages as context when appropriate. " +
-                        "Do not claim to be ChatGPT or Gemini."
+                        'You are Lord Farhan MD AI, a friendly ' +
+                        'general-purpose WhatsApp AI assistant. ' +
+                        'Answer questions naturally and accurately. ' +
+                        'Help with education, general knowledge, ' +
+                        'coding, mathematics, writing, translation, ' +
+                        'explanations, ideas and everyday questions. ' +
+                        'Be conversational and helpful. ' +
+                        'Do not claim to be ChatGPT or Gemini.'
                 },
                 ...history
             ],
+
             temperature: 0.7,
             max_tokens: 4096
         },
+
         {
             headers: {
-                Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
-                'Content-Type': 'application/json'
+                Authorization:
+                    `Bearer ${process.env.GROQ_API_KEY}`,
+
+                'Content-Type':
+                    'application/json'
             },
+
             timeout: 90000
         }
     );
 
     const answer =
-        response.data?.choices?.[0]?.message?.content?.trim();
+        response.data
+            ?.choices
+            ?. [0]
+            ?.message
+            ?.content
+            ?.trim();
 
     if (!answer) {
-        throw new Error('Groq returned an empty response');
+        throw new Error(
+            'AI returned an empty response'
+        );
     }
 
     history.push({
@@ -139,70 +135,120 @@ async function askGroq(model, userId, question) {
         content: answer
     });
 
-    memory.set(
+    conversations.set(
         memoryKey,
-        history.slice(-12)
+        history.slice(-10)
     );
 
     return answer;
 }
 
-function aiMenu() {
-    return `🤖 *LORD FARHAN AI*
+function menu() {
+    return `
+╭━━━〔 🤖 LORD FARHAN AI 〕━━━╮
 
-🧠 *General AI*
+🧠 *GENERAL AI*
+
 • .ai <question>
 • .ask <question>
+• .chat <question>
 
-🚀 *GPT-OSS*
+🚀 *GROQ AI*
+
 • .gpt <question>
-• .gptoss120 <question>
-• .gptoss20 <question>
+• .groq <question>
 
-🧩 *Qwen*
-• .qwen <question>
+🧹 *AI MEMORY*
 
-🔄 *Gemini alias*
-• .gemini <question>
+• .aireset
 
-⚡ *Groq Compound*
-• .compound <question>
-• .compoundmini <question>
+📌 *Example*
 
-🦙 *Llama*
-• .llama2 <question>
+.ai explain photosynthesis
+.ai who discovered electricity?
+.ai write me a love message
+.ai help me with JavaScript
 
-💡 Example:
-.ai explain photosynthesis simply`;
+╰━━━━━━━━━━━━━━━━━━━━╯
+`;
 }
 
-async function aiCommand(sock, chatId, message) {
+async function aiCommand(
+    sock,
+    chatId,
+    message
+) {
 
-    const text = getText(message);
-    const command = getCommand(text);
+    const text =
+        getText(message);
 
+    const command =
+        getCommand(text);
+
+    // AI menu
     if (
-        command === 'aimenu' ||
-        command === 'ailist'
+        command === 'aimenu'
     ) {
+
         await sock.sendMessage(
             chatId,
-            { text: aiMenu() },
-            { quoted: message }
+            {
+                text: menu()
+            },
+            {
+                quoted: message
+            }
         );
 
         return true;
     }
 
-    const model = getModel(command);
+    // Clear AI memory
+    if (
+        command === 'aireset'
+    ) {
 
-    if (!model) {
+        clearMemory(
+            getUserId(
+                message,
+                chatId
+            )
+        );
+
+        await sock.sendMessage(
+            chatId,
+            {
+                text:
+                    '🧹 *AI memory cleared successfully.*'
+            },
+            {
+                quoted: message
+            }
+        );
+
+        return true;
+    }
+
+    // Only these commands belong to the new AI
+    const allowed = [
+        'ai',
+        'ask',
+        'chat',
+        'gpt',
+        'groq'
+    ];
+
+    if (
+        !allowed.includes(command)
+    ) {
         return false;
     }
 
-    const question = getQuestion(text);
+    const question =
+        getQuestion(text);
 
     if (!question) {
+
         await sock.sendMessage(
             chatId,
             {
@@ -210,9 +256,11 @@ async function aiCommand(sock, chatId, message) {
                     '🤖 *LORD FARHAN AI*\n\n' +
                     'Ask me anything.\n\n' +
                     'Example:\n' +
-                    '.ai explain diabetes'
+                    '.ai explain photosynthesis'
             },
-            { quoted: message }
+            {
+                quoted: message
+            }
         );
 
         return true;
@@ -220,54 +268,38 @@ async function aiCommand(sock, chatId, message) {
 
     try {
 
+        const userId =
+            getUserId(
+                message,
+                chatId
+            );
+
         await sock.sendMessage(
             chatId,
-            { text: '🤖 Thinking...' },
-            { quoted: message }
+            {
+                text:
+                    '🤖 Thinking...'
+            },
+            {
+                quoted: message
+            }
         );
 
-        const userId = getUserId(
-            message,
-            chatId
-        );
-
-        let answer;
-
-        try {
-
-            answer = await askGroq(
-                model,
+        const answer =
+            await askAI(
                 userId,
                 question
             );
 
-        } catch (primaryError) {
-
-            console.error(
-                `Groq model ${model} failed:`,
-                primaryError.response?.data ||
-                primaryError.message
-            );
-
-            // GPT-OSS 120B is the model we already
-            // confirmed works with your key.
-            if (model !== MODELS.gpt) {
-
-                answer = await askGroq(
-                    MODELS.gpt,
-                    userId,
-                    question
-                );
-
-            } else {
-                throw primaryError;
-            }
-        }
-
         await sock.sendMessage(
             chatId,
-            { text: answer },
-            { quoted: message }
+            {
+                text:
+                    `🤖 *LORD FARHAN AI*\n\n${answer}`
+            },
+            {
+                quoted: message
+            }
         );
 
         return true;
@@ -275,7 +307,7 @@ async function aiCommand(sock, chatId, message) {
     } catch (error) {
 
         console.error(
-            '❌ Groq AI error:',
+            '❌ GROQ AI ERROR:',
             error.response?.data ||
             error.message
         );
@@ -285,9 +317,11 @@ async function aiCommand(sock, chatId, message) {
             {
                 text:
                     '❌ *AI failed to respond.*\n\n' +
-                    'Please try `.ai` again.'
+                    'Please try again.'
             },
-            { quoted: message }
+            {
+                quoted: message
+            }
         );
 
         return true;
