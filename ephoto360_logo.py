@@ -2,74 +2,106 @@ import sys
 import json
 from Ephoto360 import Ephoto360
 
-if len(sys.argv) < 2:
-    print(json.dumps({"ok": False, "error": "Missing text"}))
+EFFECTS = {
+    "neon": "/create-blue-neon-logo-online-507.html",
+    "silver": "/create-glossy-silver-3d-text-effect-online-802.html",
+    "blackpink": "/create-a-blackpink-style-logo-with-members-signatures-810.html",
+    "naruto": "/naruto-shippuden-logo-style-text-effect-online-808.html",
+    "glitch": "/create-digital-glitch-text-effects-online-767.html",
+    "gaming": "/free-gaming-logo-maker-for-fps-game-team-546.html",
+    "luxury": "/free-luxury-logo-maker-create-logo-online-458.html",
+    "dragon": "/dragon-fire-text-effect-111.html",
+    "angelwing": "/create-colorful-angel-wing-avatars-731.html",
+    "gold": "/create-avatar-gold-online-303.html",
+    "underwater": "/3d-underwater-text-effect-online-682.html",
+    "firework": "/text-firework-effect-356.html",
+    "zodiac": "/free-zodiac-online-logo-maker-491.html",
+    "typography": "/make-typography-text-online-338.html",
+    "team": "/make-team-logo-online-free-432.html"
+}
+
+# Curated fallback order.
+# If one effect is temporarily unavailable, another known effect is tried.
+FALLBACKS = [
+    "neon",
+    "silver",
+    "glitch",
+    "gaming",
+    "luxury",
+    "dragon",
+    "gold",
+    "underwater",
+    "firework",
+    "typography",
+    "team",
+    "blackpink",
+    "naruto",
+    "angelwing",
+    "zodiac"
+]
+
+def output(ok=False, url=None, effect=None, error=None):
+    print(json.dumps({
+        "ok": ok,
+        "url": url,
+        "effect": effect,
+        "error": error
+    }))
     raise SystemExit
 
-text = " ".join(sys.argv[1:]).strip()
+if len(sys.argv) < 3:
+    output(False, error="Usage: ephoto360_logo.py <style> <text>")
+
+style = sys.argv[1].strip().lower()
+text = " ".join(sys.argv[2:]).strip()
+
+if not text:
+    output(False, error="Text is required")
 
 try:
-    api = Ephoto360(
+    client = Ephoto360(
         retry_count=3,
         retry_delay=2,
         timeout=60
     )
 
-    # Search Ephoto360 using the requested text/style
-    results = api.search(text)
+    # Random working logo
+    if style == "random":
+        styles = FALLBACKS[:]
+    else:
+        styles = [style] + [x for x in FALLBACKS if x != style]
 
-    generated = None
-    effect_name = None
+    for current in styles:
+        slug = EFFECTS.get(current)
 
-    # Try matching effects
-    for effect in results[:15]:
+        if not slug:
+            continue
+
         try:
-            r = api.create(
-                slug=effect.slug,
+            result = client.create(
+                slug=slug,
                 texts=[text],
                 random_style=True
             )
 
-            if r.ok and r.url:
-                generated = r
-                effect_name = effect.name
-                break
-        except Exception:
-            continue
-
-    # If no matching effect works, try random compatible effects
-    if generated is None:
-        for _ in range(5):
-            try:
-                effect = api.random_effect(require_radio=False)
-
-                r = api.create(
-                    slug=effect.slug,
-                    texts=[text],
-                    random_style=True
+            if result.ok and result.url:
+                output(
+                    True,
+                    result.url,
+                    current
                 )
 
-                if r.ok and r.url:
-                    generated = r
-                    effect_name = effect.name
-                    break
-            except Exception:
-                continue
+        except Exception as e:
+            print(
+                f"Ephoto effect {current} failed: {e}",
+                file=sys.stderr
+            )
+            continue
 
-    if generated is None:
-        print(json.dumps({
-            "ok": False,
-            "error": "No compatible Ephoto360 effect found"
-        }))
-    else:
-        print(json.dumps({
-            "ok": True,
-            "url": generated.url,
-            "effect": effect_name or "Ephoto360"
-        }))
+    output(
+        False,
+        error="No working Ephoto360 effect was available right now"
+    )
 
 except Exception as e:
-    print(json.dumps({
-        "ok": False,
-        "error": str(e)
-    }))
+    output(False, error=str(e))

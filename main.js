@@ -1050,6 +1050,94 @@ async function handleMessages(sock, messageUpdate, printLog) {
             case userMessage.startsWith('.tiktok') || userMessage.startsWith('.tt'):
                 await tiktokCommand(sock, chatId, message);
                 break;
+            // ── Working Ephoto360 logos ─────────────────────────────
+            case userMessage.startsWith('.logo'):
+                await logoCommands.logoCommand(sock, chatId, message);
+                commandExecuted = true;
+                break;
+
+            case userMessage === '.logomenu' ||
+                 userMessage === '.ephotomenu' ||
+                 userMessage === '.ephoto360menu':
+                await logoCommands.logoMenuCommand(sock, chatId, message);
+                commandExecuted = true;
+                break;
+
+            case userMessage.startsWith('.neonlogo'):
+                await logoCommands.neonlogoCommand(sock, chatId, message);
+                commandExecuted = true;
+                break;
+
+            case userMessage.startsWith('.silverlogo'):
+                await logoCommands.silverlogoCommand(sock, chatId, message);
+                commandExecuted = true;
+                break;
+
+            case userMessage.startsWith('.blackpinklogo'):
+                await logoCommands.blackpinklogoCommand(sock, chatId, message);
+                commandExecuted = true;
+                break;
+
+            case userMessage.startsWith('.narutologo'):
+                await logoCommands.narutologoCommand(sock, chatId, message);
+                commandExecuted = true;
+                break;
+
+            case userMessage.startsWith('.glitchlogo'):
+                await logoCommands.glitchlogoCommand(sock, chatId, message);
+                commandExecuted = true;
+                break;
+
+            case userMessage.startsWith('.gaminglogo'):
+                await logoCommands.gaminglogoCommand(sock, chatId, message);
+                commandExecuted = true;
+                break;
+
+            case userMessage.startsWith('.luxurylogo'):
+                await logoCommands.luxurylogoCommand(sock, chatId, message);
+                commandExecuted = true;
+                break;
+
+            case userMessage.startsWith('.dragonlogo'):
+                await logoCommands.dragonlogoCommand(sock, chatId, message);
+                commandExecuted = true;
+                break;
+
+            case userMessage.startsWith('.angelwinglogo'):
+                await logoCommands.angelwinglogoCommand(sock, chatId, message);
+                commandExecuted = true;
+                break;
+
+            case userMessage.startsWith('.goldlogo'):
+                await logoCommands.goldlogoCommand(sock, chatId, message);
+                commandExecuted = true;
+                break;
+
+            case userMessage.startsWith('.underwaterlogo'):
+                await logoCommands.underwaterlogoCommand(sock, chatId, message);
+                commandExecuted = true;
+                break;
+
+            case userMessage.startsWith('.fireworklogo'):
+                await logoCommands.fireworklogoCommand(sock, chatId, message);
+                commandExecuted = true;
+                break;
+
+            case userMessage.startsWith('.zodiaclogo'):
+                await logoCommands.zodiaclogoCommand(sock, chatId, message);
+                commandExecuted = true;
+                break;
+
+            case userMessage.startsWith('.typographylogo'):
+                await logoCommands.typographylogoCommand(sock, chatId, message);
+                commandExecuted = true;
+                break;
+
+            case userMessage.startsWith('.teamlogo'):
+                await logoCommands.teamlogoCommand(sock, chatId, message);
+                commandExecuted = true;
+                break;
+
             case userMessage.startsWith('.ai') ||
                  userMessage.startsWith('.ask') ||
                  userMessage.startsWith('.chat') ||
