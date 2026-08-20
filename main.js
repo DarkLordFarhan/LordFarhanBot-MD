@@ -1138,6 +1138,26 @@ async function handleMessages(sock, messageUpdate, printLog) {
                 commandExecuted = true;
                 break;
 
+            case userMessage.startsWith('.hackerlogo'):
+                await logoCommands.hackerlogoCommand(sock, chatId, message);
+                commandExecuted = true;
+                break;
+            case userMessage.startsWith('.scifilogo'):
+                await logoCommands.scifilogoCommand(sock, chatId, message);
+                commandExecuted = true;
+                break;
+            case userMessage.startsWith('.mascotlogo'):
+                await logoCommands.mascotlogoCommand(sock, chatId, message);
+                commandExecuted = true;
+                break;
+            case userMessage.startsWith('.circlelogo'):
+                await logoCommands.circlelogoCommand(sock, chatId, message);
+                commandExecuted = true;
+                break;
+            case userMessage.startsWith('.textlogo'):
+                await logoCommands.textlogoCommand(sock, chatId, message);
+                commandExecuted = true;
+                break;
             case userMessage.startsWith('.ai') ||
                  userMessage.startsWith('.ask') ||
                  userMessage.startsWith('.chat') ||
