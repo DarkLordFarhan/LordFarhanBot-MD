@@ -319,7 +319,7 @@ async function handleMessages(sock, messageUpdate, printLog) {
             '';
 
         // Only log command usage
-        if (userMessage.startsWith('.')) {
+        if (userMessage.startsWith(global.prefix || settings.prefixChar || '.')) {
             console.log(`📝 Command used in ${isGroup ? 'group' : 'private'}: ${userMessage}`);
         }
         // Read bot mode once; don't early-return so moderation can still run in private mode
@@ -381,7 +381,7 @@ async function handleMessages(sock, messageUpdate, printLog) {
         userMessage = applyPrefixLogic(userMessage);
 
         // Then check for command prefix
-        if (!userMessage.startsWith('.')) {
+        if (!userMessage.startsWith(global.prefix || settings.prefixChar || '.')) {
             // Show typing indicator if autotyping is enabled
             await handleAutotypingForMessage(sock, chatId, userMessage);
 
@@ -2064,7 +2064,7 @@ async function handleMessages(sock, messageUpdate, printLog) {
             });
         }
 
-        if (userMessage.startsWith('.')) {
+        if (userMessage.startsWith(global.prefix || settings.prefixChar || '.')) {
             // After command is processed successfully
             await addCommandReaction(sock, message);
         }
