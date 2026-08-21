@@ -100,7 +100,9 @@ async function askAI(userId, question) {
             ],
 
             temperature: 0.7,
-            max_tokens: 4096
+            max_completion_tokens: 4096,
+            reasoning_effort: 'low',
+            include_reasoning: false
         },
 
         {
