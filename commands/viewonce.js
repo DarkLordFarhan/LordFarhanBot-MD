@@ -1,60 +1,155 @@
-const { downloadContentFromMessage } = require('@whiskeysockets/baileys');
+'use strict';
 
-async function viewonceCommand(sock, chatId, message) {
-    // Get the bot's own WhatsApp JID
-    const botJid = sock.user?.id;
+const {
+    downloadContentFromMessage,
+    jidNormalizedUser
+} = require('@whiskeysockets/baileys');
 
-    if (!botJid) {
-        return await sock.sendMessage(chatId, {
-            text: '❌ Bot WhatsApp ID is not available.'
-        }, { quoted: message });
+/*
+ * Unwrap WhatsApp message containers until we reach
+ * the actual imageMessage/videoMessage.
+ */
+function unwrapMessage(msg) {
+    let current = msg;
+
+    for (let i = 0; i < 8 && current; i++) {
+
+        if (current.viewOnceMessage?.message) {
+            current = current.viewOnceMessage.message;
+            continue;
+        }
+
+        if (current.viewOnceMessageV2?.message) {
+            current = current.viewOnceMessageV2.message;
+            continue;
+        }
+
+        if (current.viewOnceMessageV2Extension?.message) {
+            current = current.viewOnceMessageV2Extension.message;
+            continue;
+        }
+
+        if (current.ephemeralMessage?.message) {
+            current = current.ephemeralMessage.message;
+            continue;
+        }
+
+        if (current.documentWithCaptionMessage?.message) {
+            current = current.documentWithCaptionMessage.message;
+            continue;
+        }
+
+        break;
     }
 
-    // Extract the replied message
-    const quoted = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
-    const quotedImage = quoted?.imageMessage;
-    const quotedVideo = quoted?.videoMessage;
+    return current;
+}
 
-    if (quotedImage && quotedImage.viewOnce) {
-        const stream = await downloadContentFromMessage(quotedImage, 'image');
-        let buffer = Buffer.from([]);
+async function downloadMedia(mediaMessage, type) {
+    const stream = await downloadContentFromMessage(mediaMessage, type);
 
-        for await (const chunk of stream) {
-            buffer = Buffer.concat([buffer, chunk]);
+    const chunks = [];
+
+    for await (const chunk of stream) {
+        chunks.push(chunk);
+    }
+
+    return Buffer.concat(chunks);
+}
+
+async function viewonceCommand(sock, chatId, message) {
+    try {
+        /*
+         * The command must be a reply to another message.
+         */
+        const context =
+            message?.message?.extendedTextMessage?.contextInfo;
+
+        const quotedRaw = context?.quotedMessage;
+
+        if (!quotedRaw) {
+            return;
         }
 
-        await sock.sendMessage(botJid, {
-            image: buffer,
-            fileName: 'media.jpg',
-            caption: quotedImage.caption || '📥 View Once Image'
-        });
+        /*
+         * Unwrap view-once containers.
+         */
+        const quoted = unwrapMessage(quotedRaw);
 
-        await sock.sendMessage(chatId, {
-            text: '✅ View-once image sent to your inbox.'
-        }, { quoted: message });
-
-    } else if (quotedVideo && quotedVideo.viewOnce) {
-        const stream = await downloadContentFromMessage(quotedVideo, 'video');
-        let buffer = Buffer.from([]);
-
-        for await (const chunk of stream) {
-            buffer = Buffer.concat([buffer, chunk]);
+        if (!quoted) {
+            return;
         }
 
-        await sock.sendMessage(botJid, {
-            video: buffer,
-            fileName: 'media.mp4',
-            caption: quotedVideo.caption || '📥 View Once Video'
-        });
+        const imageMessage = quoted.imageMessage;
+        const videoMessage = quoted.videoMessage;
 
-        await sock.sendMessage(chatId, {
-            text: '✅ View-once video sent to your inbox.'
-        }, { quoted: message });
+        /*
+         * Get the WhatsApp account running the bot.
+         * jidNormalizedUser removes device suffixes such as :12.
+         */
+        const botInbox = sock.user?.id
+            ? jidNormalizedUser(sock.user.id)
+            : null;
 
-    } else {
-        await sock.sendMessage(chatId, {
-            text: '❌ Please reply to a view-once image or video.'
-        }, { quoted: message });
+        if (!botInbox) {
+            return;
+        }
+
+        /*
+         * VIEW-ONCE IMAGE
+         */
+        if (imageMessage) {
+            const buffer = await downloadMedia(
+                imageMessage,
+                'image'
+            );
+
+            if (!buffer || !buffer.length) {
+                return;
+            }
+
+            await sock.sendMessage(botInbox, {
+                image: buffer,
+                caption: imageMessage.caption || ''
+            });
+
+            return;
+        }
+
+        /*
+         * VIEW-ONCE VIDEO
+         */
+        if (videoMessage) {
+            const buffer = await downloadMedia(
+                videoMessage,
+                'video'
+            );
+
+            if (!buffer || !buffer.length) {
+                return;
+            }
+
+            await sock.sendMessage(botInbox, {
+                video: buffer,
+                caption: videoMessage.caption || ''
+            });
+
+            return;
+        }
+
+        /*
+         * Nothing usable was found.
+         * Stay completely silent.
+         */
+        return;
+
+    } catch (error) {
+        /*
+         * Silent failure.
+         * Do NOT send anything back to the chat.
+         */
+        console.error('[VV] View-once processing failed:', error.message);
+        return;
     }
 }
 
