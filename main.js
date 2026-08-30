@@ -50,6 +50,14 @@ const muteCommand = require('./commands/mute');
 const unmuteCommand = require('./commands/unmute');
 const stickerCommand = require('./commands/sticker');
 const isAdmin = require('./lib/isAdmin');
+const {
+    protectionCommand,
+    handleAntiBotMessage,
+    handleAntiFlood,
+    handleAntiViewOnce,
+    removeCommand
+} = require('./commands/protection');
+
 const warnCommand = require('./commands/warn');
 const warningsCommand = require('./commands/warnings');
 const ttsCommand = require('./commands/tts');
@@ -524,6 +532,21 @@ async function handleMessages(sock, messageUpdate, printLog) {
                 await sock.sendMessage(chatId, { text: '❌ This command is only available for the owner or sudo!' }, { quoted: message });
                 return;
             }
+        }
+
+        // ============================================
+        // REAL ANTIBOT
+        // Block commands from registered bot accounts
+        // before the normal command dispatcher.
+        // ============================================
+        if (await handleAntiBotMessage(
+            sock,
+            chatId,
+            message,
+            senderId,
+            isGroup
+        )) {
+            return;
         }
 
         // Command handlers - Execute commands immediately without waiting for typing indicator
