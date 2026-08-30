@@ -407,60 +407,6 @@ async function handleMessages(sock, messageUpdate, printLog) {
             }
         }
 
-        // Numbered menu navigation
-        if (/^(?:00|0|[1-9])$/.test(userMessage)) {
-            const menuResult = await handleMenuNumber(
-                sock,
-                chatId,
-                message,
-                userMessage
-            );
-
-            if (menuResult === true) {
-                return;
-            }
-
-            if (typeof menuResult === 'string') {
-                userMessage = menuResult;
-            } else if (/^[1-9]$/.test(userMessage)) {
-                // No menu session: preserve Tic-Tac-Toe numeric moves.
-                await handleTicTacToeMove(
-                    sock,
-                    chatId,
-                    senderId,
-                    userMessage
-                );
-                return;
-            }
-        }
-
-        // Numbered menu navigation
-        if (/^(?:00|0|[1-9])$/.test(userMessage)) {
-            const menuResult = await handleMenuNumber(
-                sock,
-                chatId,
-                message,
-                userMessage
-            );
-
-            if (menuResult === true) {
-                return;
-            }
-
-            if (typeof menuResult === 'string') {
-                userMessage = menuResult;
-            } else if (/^[1-9]$/.test(userMessage)) {
-                // No menu session: preserve Tic-Tac-Toe numeric moves.
-                await handleTicTacToeMove(
-                    sock,
-                    chatId,
-                    senderId,
-                    userMessage
-                );
-                return;
-            }
-        }
-
         // Apply prefix logic
         userMessage = applyPrefixLogic(userMessage);
 

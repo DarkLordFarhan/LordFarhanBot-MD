@@ -31,48 +31,44 @@ function extractTikTokUrl(text) {
     return match[0].replace(/[),.!?]+$/, '');
 }
 
-function isTikTokUrl(url) {
-    return /^https?:\/\/(?:www\.)?(?:tiktok\.com|vm\.tiktok\.com|vt\.tiktok\.com)\//i.test(url);
-}
-
 function safeName() {
-    return crypto.randomBytes(8).toString('hex');
+    return crypto.randomBytes(10).toString('hex');
 }
 
-function runYtDlp(url, output) {
-    return new Promise((resolve, reject) => {
-        const args = [
-            '--no-playlist',
-            '--no-warnings',
-            '--no-progress',
-            '--restrict-filenames',
-            '--merge-output-format',
-            'mp4',
-            '-f',
-            'bv*[ext=mp4]+ba[ext=m4a]/b[ext=mp4]/b',
-            '-o',
-            output,
-            url
-        ];
+function getYtDlpCommand() {
+    try {
+        const result = spawn('yt-dlp', ['--version']);
 
-        const proc = spawn('yt-dlp', args, {
+        return new Promise(resolve => {
+            result.on('error', () => resolve(null));
+
+            result.on('close', code => {
+                resolve(code === 0 ? 'yt-dlp' : null);
+            });
+        });
+    } catch {
+        return Promise.resolve(null);
+    }
+}
+
+function runProcess(command, args) {
+    return new Promise((resolve, reject) => {
+        const proc = spawn(command, args, {
             stdio: ['ignore', 'pipe', 'pipe']
         });
 
         let stdout = '';
         let stderr = '';
 
-        proc.stdout.on('data', chunk => {
-            stdout += chunk.toString();
+        proc.stdout.on('data', data => {
+            stdout += data.toString();
         });
 
-        proc.stderr.on('data', chunk => {
-            stderr += chunk.toString();
+        proc.stderr.on('data', data => {
+            stderr += data.toString();
         });
 
-        proc.on('error', err => {
-            reject(err);
-        });
+        proc.on('error', reject);
 
         proc.on('close', code => {
             if (code === 0) {
@@ -85,12 +81,25 @@ function runYtDlp(url, output) {
                     new Error(
                         stderr.trim() ||
                         stdout.trim() ||
-                        `yt-dlp exited with code ${code}`
+                        `${command} exited with code ${code}`
                     )
                 );
             }
         });
     });
+}
+
+async function runYtDlp(args) {
+    const direct = await getYtDlpCommand();
+
+    if (direct) {
+        return runProcess(direct, args);
+    }
+
+    return runProcess(
+        'python',
+        ['-m', 'yt_dlp', ...args]
+    );
 }
 
 function cleanup(file) {
@@ -102,29 +111,26 @@ function cleanup(file) {
 }
 
 async function tiktokCommand(sock, chatId, message) {
-    let output = null;
+    let actualFile = null;
 
     try {
         const text = getText(message);
         const url = extractTikTokUrl(text);
 
-        if (!url || !isTikTokUrl(url)) {
+        if (!url) {
             await sock.sendMessage(
                 chatId,
                 {
                     text:
-`🎵 *TikTok Downloader*
+`🎵 *LORD FARHAN MD — TIKTOK*
 
-Usage:
-.tiktok <TikTok link>
+Use:
+
+.tiktok <TikTok URL>
 
 Example:
-.tiktok https://www.tiktok.com/@user/video/123456789
 
-Also supports:
-• tiktok.com
-• vm.tiktok.com
-• vt.tiktok.com`
+.tiktok https://www.tiktok.com/@user/video/123456789`
                 },
                 { quoted: message }
             );
@@ -134,138 +140,85 @@ Also supports:
 
         await sock.sendMessage(chatId, {
             react: {
-                text: '⏳',
+                text: '⬇️',
                 key: message.key
             }
         });
 
         const id = safeName();
 
-        output = path.join(
+        const outputTemplate = path.join(
             TMP_DIR,
             `${id}.%(ext)s`
         );
 
         /*
-         * First get metadata so we can show
-         * the TikTok title/uploader.
+         * Download the best available MP4.
+         * FFmpeg is installed by the setup block,
+         * so separate audio/video can be merged.
          */
-        let info = null;
 
-        try {
-            const meta = await new Promise((resolve, reject) => {
-                const proc = spawn('yt-dlp', [
-                    '--dump-single-json',
-                    '--no-playlist',
-                    '--no-warnings',
-                    '--no-progress',
-                    url
-                ]);
+        const args = [
+            '--no-playlist',
+            '--no-warnings',
+            '--no-progress',
+            '--restrict-filenames',
+            '--retries',
+            '3',
+            '--fragment-retries',
+            '3',
+            '--socket-timeout',
+            '30',
+            '--merge-output-format',
+            'mp4',
+            '-f',
+            'bv*[ext=mp4]+ba[ext=m4a]/b[ext=mp4]/b',
+            '-o',
+            outputTemplate,
+            url
+        ];
 
-                let out = '';
-                let err = '';
+        console.log('🎵 TikTok URL:', url);
 
-                proc.stdout.on('data', d => {
-                    out += d.toString();
-                });
-
-                proc.stderr.on('data', d => {
-                    err += d.toString();
-                });
-
-                proc.on('error', reject);
-
-                proc.on('close', code => {
-                    if (code !== 0) {
-                        reject(new Error(err || `metadata failed: ${code}`));
-                        return;
-                    }
-
-                    try {
-                        resolve(JSON.parse(out));
-                    } catch {
-                        reject(new Error('Invalid yt-dlp metadata'));
-                    }
-                });
-            });
-
-            info = meta;
-        } catch (err) {
-            console.log(
-                'TikTok metadata warning:',
-                err.message
-            );
-        }
-
-        await sock.sendMessage(chatId, {
-            text: '⬇️ Downloading TikTok video...'
-        }, { quoted: message });
-
-        await runYtDlp(url, output);
+        await runYtDlp(args);
 
         /*
-         * yt-dlp may produce .mp4, .webm, etc.
-         * Find the actual generated file.
+         * Find whatever yt-dlp actually created.
          */
+
         const files = fs.readdirSync(TMP_DIR)
             .filter(file => file.startsWith(id + '.'));
 
         if (!files.length) {
-            throw new Error('Downloaded file was not found');
+            throw new Error(
+                'yt-dlp completed but no video file was created'
+            );
         }
 
-        const actualFile = path.join(
+        actualFile = path.join(
             TMP_DIR,
             files[0]
         );
 
         const stat = fs.statSync(actualFile);
 
-        if (!stat.size) {
-            cleanup(actualFile);
-            throw new Error('Downloaded file is empty');
+        if (!stat.isFile() || stat.size === 0) {
+            throw new Error(
+                'Downloaded TikTok file is empty'
+            );
         }
 
         /*
-         * WhatsApp has practical media-size limits.
-         * Refuse unusually huge files rather than
-         * crashing the bot.
+         * Keep WhatsApp media size reasonable.
          */
-        const MAX_SIZE = 90 * 1024 * 1024;
+
+        const MAX_SIZE = 95 * 1024 * 1024;
 
         if (stat.size > MAX_SIZE) {
-            cleanup(actualFile);
-
-            await sock.sendMessage(
-                chatId,
-                {
-                    text:
-`❌ TikTok video is too large to send.
-
-Size:
-${(stat.size / 1024 / 1024).toFixed(1)} MB`
-                },
-                { quoted: message }
+            throw new Error(
+                `Video is too large: ${(stat.size / 1024 / 1024).toFixed(1)} MB`
             );
-
-            return;
         }
-
-        const title =
-            info?.title ||
-            info?.description ||
-            'TikTok Video';
-
-        const uploader =
-            info?.uploader ||
-            info?.creator ||
-            info?.channel ||
-            '';
-
-        const caption =
-`🎵 *${String(title).slice(0, 500)}*
-${uploader ? `👤 ${uploader}\n` : ''}
-🤖 🌑༒『𝕃𝕆ℝ𝔻 𝔽𝔸ℝℍ𝔸ℕ 𝕄𝔻』༒☠️`;
 
         await sock.sendMessage(
             chatId,
@@ -274,7 +227,10 @@ ${uploader ? `👤 ${uploader}\n` : ''}
                     url: actualFile
                 },
                 mimetype: 'video/mp4',
-                caption
+                caption:
+`🎵 *TikTok Downloaded Successfully*
+
+🤖 🌑༒『𝕃𝕆ℝ𝔻 𝔽𝔸ℝℍ𝔸ℕ 𝕄𝔻』༒☠️`
             },
             { quoted: message }
         );
@@ -287,25 +243,32 @@ ${uploader ? `👤 ${uploader}\n` : ''}
         });
 
         cleanup(actualFile);
+        actualFile = null;
 
-    } catch (err) {
+        console.log('✅ TikTok sent successfully.');
+
+    } catch (error) {
+
         console.error(
-            'TikTok downloader error:',
-            err?.message || err
+            '❌ TikTok downloader:',
+            error?.message || error
         );
 
-        if (output) {
-            try {
-                const prefix = path.basename(output)
-                    .split('.%(ext)s')[0];
+        cleanup(actualFile);
 
-                for (const file of fs.readdirSync(TMP_DIR)) {
-                    if (file.startsWith(prefix)) {
-                        cleanup(path.join(TMP_DIR, file));
-                    }
+        /*
+         * Clean temporary files belonging to this command.
+         */
+
+        try {
+            const all = fs.readdirSync(TMP_DIR);
+
+            for (const file of all) {
+                if (actualFile && file === path.basename(actualFile)) {
+                    cleanup(path.join(TMP_DIR, file));
                 }
-            } catch {}
-        }
+            }
+        } catch {}
 
         await sock.sendMessage(
             chatId,
@@ -313,14 +276,16 @@ ${uploader ? `👤 ${uploader}\n` : ''}
                 text:
 `❌ *TikTok download failed.*
 
-Possible reasons:
-• TikTok link is unavailable
-• Video is private/deleted
-• TikTok changed its page
-• yt-dlp needs updating
-• Network connection failed
+Possible causes:
 
-Try another public TikTok link.`
+• Link is private/deleted
+• TikTok blocked the request
+• Invalid TikTok URL
+• yt-dlp needs an update
+• Network problem
+• Video is too large
+
+Try another PUBLIC TikTok video.`
             },
             { quoted: message }
         );
