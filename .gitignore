@@ -24,3 +24,5 @@ yarn-error.log*
 *.sln
 *.sw?
 .env
+*.backup
+*.before-*
