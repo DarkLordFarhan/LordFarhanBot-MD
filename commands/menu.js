@@ -4,75 +4,141 @@ const fs = require('fs');
 const path = require('path');
 const settings = require('../settings');
 
-// Keep the menu image in the repository. A remote image made the menu fail
-// when the image host was unavailable and made deployments depend on a third
-// party URL.
+// Keep the menu image in the repository so deployments do not depend on a
+// third-party image host.
 const MENU_IMAGE = path.join(__dirname, '..', 'assets', 'bot_image.jpg');
+const OWNER_NAME = 'FÆRHÁÑ_MR $AVÆGÈ';
 
 function command(name) {
     const prefix = global.prefix || settings.prefixChar || '.';
     return `${prefix}${name}`;
 }
 
+function getDateTime() {
+    const timezone = settings.timezone || 'Africa/Nairobi';
+    const now = new Date();
+
+    return {
+        day: new Intl.DateTimeFormat('en-KE', {
+            weekday: 'long',
+            day: '2-digit',
+            month: 'long',
+            year: 'numeric',
+            timeZone: timezone
+        }).format(now),
+        time: new Intl.DateTimeFormat('en-KE', {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: true,
+            timeZone: timezone
+        }).format(now)
+    };
+}
+
 function getMenuText() {
     const botName = settings.botName || 'Lord Farhan MD';
     const version = settings.version || '3.0.7';
+    const ownerNumber = settings.ownerNumber || '254795463911';
+    const { day, time } = getDateTime();
     const p = (name) => command(name);
 
     return `
 ╭────────────────────────────╮
 │  🌑  *${botName}*  🌑
-│  ✨ *Version ${version}* · ready to help
+│  ✨ *Version ${version}*
+│  📅 *Day:* ${day}
+│  🕒 *Time:* ${time} EAT
+│  🌦️ *Weather:* ${p('weather')} <city>
+│  👑 *Owner:* ${OWNER_NAME}
+│  📞 *Owner number:* ${ownerNumber}
 ╰────────────────────────────╯
 
 ╭─〔 🌐 QUICK START 〕
-│  ${p('menu')} / ${p('help')}  · show this menu
-│  ${p('ping')} / ${p('alive')}  · check status
-│  ${p('owner')}              · contact owner
-│  ${p('groupinfo')}          · group details
+│  ${p('menu')}
+│  ${p('help')}
+│  ${p('ping')}
+│  ${p('alive')}
+│  ${p('owner')}
+│  ${p('groupinfo')}
 ╰────────────────────────────╯
 
 ╭─〔 👮 GROUP CARE 〕
-│  ${p('warn')} @user       ${p('kick')} @user
-│  ${p('ban')} @user        ${p('promote')} @user
-│  ${p('demote')} @user     ${p('mute')} [minutes]
-│  ${p('antilink')}         ${p('antibadword')}
-│  ${p('tagall')} / ${p('hidetag')} · mention tools
-│  ${p('welcome')} / ${p('goodbye')}
+│  ${p('warn')} @user
+│  ${p('kick')} @user
+│  ${p('ban')} @user
+│  ${p('promote')} @user
+│  ${p('demote')} @user
+│  ${p('mute')} [minutes]
+│  ${p('unmute')}
+│  ${p('antilink')}
+│  ${p('antibadword')}
+│  ${p('tagall')}
+│  ${p('hidetag')}
+│  ${p('welcome')}
+│  ${p('goodbye')}
 ╰────────────────────────────╯
 
 ╭─〔 🎨 MEDIA 〕
-│  ${p('sticker')} · make a sticker from an image/video
-│  ${p('simage')}  · turn a sticker into an image
-│  ${p('meme')} · ${p('blur')} · ${p('removebg')}
-│  ${p('remini')} · ${p('emojimix')} · ${p('tgsticker')}
+│  ${p('sticker')}
+│  ${p('simage')}
+│  ${p('meme')}
+│  ${p('blur')}
+│  ${p('removebg')}
+│  ${p('remini')}
+│  ${p('emojimix')}
+│  ${p('tgsticker')}
 ╰────────────────────────────╯
 
 ╭─〔 🤖 AI & DOWNLOADS 〕
-│  ${p('ai')} / ${p('gpt')} / ${p('gemini')}
-│  ${p('imagine')} / ${p('flux')} / ${p('sora')}
-│  ${p('play')} / ${p('song')} / ${p('video')}
-│  ${p('tiktok')} / ${p('instagram')} / ${p('facebook')}
+│  ${p('ai')}
+│  ${p('gpt')}
+│  ${p('gemini')}
+│  ${p('imagine')}
+│  ${p('flux')}
+│  ${p('sora')}
+│  ${p('play')}
+│  ${p('song')}
+│  ${p('video')}
+│  ${p('tiktok')}
+│  ${p('instagram')}
+│  ${p('facebook')}
 ╰────────────────────────────╯
 
 ╭─〔 🎮 FUN & TOOLS 〕
-│  ${p('tictactoe')} · ${p('truth')} · ${p('dare')} · ${p('hangman')}
-│  ${p('joke')} · ${p('fact')} · ${p('quote')} · ${p('8ball')}
-│  ${p('fancyfonts')} <text> · ${p('reverse')} <text>
-│  ${p('upper')} <text> · ${p('lower')} <text> · ${p('calc')} <expression>
-│  ${p('tts')} <text> · ${p('weather')} <city> · ${p('news')}
+│  ${p('tictactoe')}
+│  ${p('truth')}
+│  ${p('dare')}
+│  ${p('hangman')}
+│  ${p('joke')}
+│  ${p('fact')}
+│  ${p('quote')}
+│  ${p('8ball')}
+│  ${p('fancyfonts')} <text>
+│  ${p('reverse')} <text>
+│  ${p('upper')} <text>
+│  ${p('lower')} <text>
+│  ${p('calc')} <expression>
+│  ${p('tts')} <text>
+│  ${p('weather')} <city>
+│  ${p('news')}
 ╰────────────────────────────╯
 
 ╭─〔 🔒 OWNER SETTINGS 〕
-│  ${p('mode')} · ${p('settings')} · ${p('restart')}
-│  ${p('autoread')} · ${p('autotyping')} · ${p('autostatus')}
-│  ${p('anticall')} · ${p('pmblocker')} · ${p('antidelete')}
-│  ${p('setbotpic')}  · reply to a photo to change this image
+│  ${p('mode')}
+│  ${p('settings')}
+│  ${p('restart')}
+│  ${p('autoread')}
+│  ${p('autotyping')}
+│  ${p('autostatus')}
+│  ${p('anticall')}
+│  ${p('pmblocker')}
+│  ${p('antidelete')}
+│  ${p('setbotpic')}
 ╰────────────────────────────╯
 
-> 🛡️ Admin/owner commands are permission-checked.
+> 🛡️ Admin and owner commands are permission-checked.
 > ⚡ Fast · reliable · deployment-friendly
-> 💜 Built for responsible WhatsApp automation
 `;
 }
 

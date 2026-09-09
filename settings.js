@@ -2,7 +2,7 @@ const settings = {
   packname: '🌑༒𓆩『𝕃𝕆ℝ𝔻 𝔽𝔸ℝℍ𝔸ℕ 𝕄𝔻』𓆪༒☠️',
   author: '🌑༒ 𝕷𝖔𝖗𝖉 𝕱𝖆𝖗𝖍𝖆𝖓 ༒🌑',
   botName: "🌑༒𓆩『𝕃𝕆ℝ𝔻 𝔽𝔸ℝℍ𝔸ℕ 𝕄𝔻』𓆪༒☠️",
-  botOwner: '🌑༒ 𝕷𝖔𝖗𝖉 𝕱𝖆𝖗𝖍𝖆𝖓 ༒🌑',
+  botOwner: 'FÆRHÁÑ_MR $AVÆGÈ',
   ownerNumber: '254795463911',
   // Never commit service credentials. Set GIPHY_API_KEY in the deployment
   // environment when the GIF command is needed.
