@@ -9,6 +9,13 @@ async function gifCommand(sock, chatId, query) {
         return;
     }
 
+    if (!apiKey) {
+        await sock.sendMessage(chatId, {
+            text: 'GIF search is not configured. Add GIPHY_API_KEY to the deployment environment.'
+        });
+        return;
+    }
+
     try {
         const response = await axios.get(`https://api.giphy.com/v1/gifs/search`, {
             params: {

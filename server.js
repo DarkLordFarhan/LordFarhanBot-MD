@@ -34,6 +34,7 @@ const {
 // ─── App ────────────────────────────────────────────────────────────────────
 const app  = express();
 const PORT = process.env.PORT || 3000;
+app.disable('x-powered-by');
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -54,11 +55,40 @@ let cachedVersion = null;
 // pending   : Map<number, Promise<string>>
 const codeCache = new Map();
 const pending   = new Map();
+const requestWindows = new Map();
+const RATE_WINDOW_MS = 10 * 60 * 1000;
+const MAX_REQUESTS_PER_IP = 8;
+const MAX_REQUESTS_PER_NUMBER = 3;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 function cleanNumber(raw) {
     return (raw || '').replace(/\D/g, '');
 }
+
+function clientIp(req) {
+    // Do not trust arbitrary forwarded headers unless the deployment explicitly
+    // enables a trusted proxy in front of this process.
+    return req.socket?.remoteAddress || 'unknown';
+}
+
+function allowPairRequest(key, limit) {
+    const now = Date.now();
+    const current = requestWindows.get(key);
+    if (!current || now >= current.resetAt) {
+        requestWindows.set(key, { count: 1, resetAt: now + RATE_WINDOW_MS });
+        return true;
+    }
+    if (current.count >= limit) return false;
+    current.count += 1;
+    return true;
+}
+
+setInterval(() => {
+    const now = Date.now();
+    for (const [key, state] of requestWindows) {
+        if (now >= state.resetAt) requestWindows.delete(key);
+    }
+}, RATE_WINDOW_MS).unref();
 
 function cleanup(dir) {
     try { fs.rmSync(dir, { recursive: true, force: true }); } catch (_) {}
@@ -148,6 +178,16 @@ app.get('/code', async (req, res) => {
         return res.status(400).json({ error: 'Provide a valid phone number with country code (digits only).' });
     }
 
+    const ipKey = `ip:${clientIp(req)}`;
+    const numberKey = `number:${number}`;
+    if (!allowPairRequest(ipKey, MAX_REQUESTS_PER_IP) ||
+        !allowPairRequest(numberKey, MAX_REQUESTS_PER_NUMBER)) {
+        res.set('Retry-After', String(Math.ceil(RATE_WINDOW_MS / 1000)));
+        return res.status(429).json({
+            error: 'Too many pairing requests. Please wait before trying again.'
+        });
+    }
+
     // 1. Return cached code if still valid — zero extra sockets, zero extra WA notifications
     const cached = codeCache.get(number);
     if (cached && Date.now() < cached.expiresAt) {
@@ -184,7 +224,7 @@ app.get('/code', async (req, res) => {
         const code = await promise;
         return res.json({ code });
     } catch (err) {
-        console.error('[server] /code error for', number, ':', err.message);
+        console.error('[server] /code error:', err.message);
         return res.status(500).json({ error: err.message || 'Failed to generate pairing code. Try again.' });
     }
 });

@@ -302,6 +302,23 @@ The LordFarhan WhatsApp Bot assists group admins by providing tools to efficient
 
 ---
 
+## 🔐 Environment and pairing safety
+
+- Copy `.env.example` to `.env` for local development, or set the same values
+  in your host's secret/environment settings.
+- Keep `SESSION_ID` private. It grants access to the linked WhatsApp session;
+  never commit it or paste it into a public issue, log, or chat.
+- `GIPHY_API_KEY` is optional. The GIF command reports a configuration message
+  instead of using a hard-coded credential when it is not set.
+- The web pairing endpoint reuses pending codes and applies per-IP and
+  per-number request limits to avoid duplicate linking attempts.
+
+The project intentionally does not include WhatsApp crash, bug, spam, or
+message-disruption payloads. Use the bot only for legitimate automation and
+group administration.
+
+---
+
 ## ☕ Support Me
 
 <div align="center">
