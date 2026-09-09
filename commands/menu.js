@@ -4,8 +4,6 @@ const fs = require('fs');
 const path = require('path');
 const settings = require('../settings');
 
-// Keep the menu image in the repository so deployments do not depend on a
-// third-party image host.
 const MENU_IMAGE = path.join(__dirname, '..', 'assets', 'bot_image.jpg');
 const OWNER_NAME = 'FÆRHÁÑ_MR $AVÆGÈ';
 
@@ -36,12 +34,19 @@ function getDateTime() {
     };
 }
 
-function getMenuText() {
+function section(title, entries) {
+    return [
+        `╭─〔 ${title} 〕`,
+        ...entries.map((entry) => `│  ${command(entry)}`),
+        '╰────────────────────────────╯'
+    ].join('\n');
+}
+
+function getMenuIntro() {
     const botName = settings.botName || 'Lord Farhan MD';
     const version = settings.version || '3.0.7';
     const ownerNumber = settings.ownerNumber || '254795463911';
     const { day, time } = getDateTime();
-    const p = (name) => command(name);
 
     return `
 ╭────────────────────────────╮
@@ -49,109 +54,378 @@ function getMenuText() {
 │  ✨ *Version ${version}*
 │  📅 *Day:* ${day}
 │  🕒 *Time:* ${time} EAT
-│  🌦️ *Weather:* ${p('weather')} <city>
+│  🌦️ *Weather:* ${command('weather')} <city>
 │  👑 *Owner:* ${OWNER_NAME}
 │  📞 *Owner number:* ${ownerNumber}
-╰────────────────────────────╯
+╰────────────────────────────╯`;
+}
 
-╭─〔 🌐 QUICK START 〕
-│  ${p('menu')}
-│  ${p('help')}
-│  ${p('ping')}
-│  ${p('alive')}
-│  ${p('owner')}
-│  ${p('groupinfo')}
-╰────────────────────────────╯
+function getCommandsText() {
+    const sections = [
+        section('🌐 GENERAL COMMANDS', [
+            'help',
+            'menu',
+            'ping',
+            'alive',
+            'tts <text>',
+            'owner',
+            'joke',
+            'quote',
+            'fact',
+            'weather <city>',
+            'news',
+            'attp <text>',
+            'lyrics <song_title>',
+            '8ball <question>',
+            'groupinfo',
+            'staff',
+            'admins',
+            'vv',
+            'trt <text> <lang>',
+            'ss <link>',
+            'jid'
+        ]),
+        section('👮 ADMIN COMMANDS', [
+            'ban @user',
+            'unban @user',
+            'promote @user',
+            'demote @user',
+            'mute <minutes>',
+            'unmute',
+            'delete',
+            'del',
+            'kick @user',
+            'warn @user',
+            'warnings',
+            'antilink',
+            'antibadword',
+            'antitag',
+            'tag',
+            'tagall',
+            'hidetag',
+            'chatbot',
+            'welcome',
+            'goodbye',
+            'setgname',
+            'setgdesc'
+        ]),
+        section('🔒 OWNER COMMANDS', [
+            'mode',
+            'settings',
+            'autostatus',
+            'autoreact',
+            'autotyping',
+            'autoread',
+            'anticall',
+            'pmblocker',
+            'antidelete',
+            'antibot',
+            'setstatusreact',
+            'setbotpic',
+            'restart'
+        ]),
+        section('🎨 MEDIA & STICKERS', [
+            'sticker',
+            's',
+            'simage',
+            'blur',
+            'meme',
+            'removebg',
+            'remini',
+            'emojimix',
+            'tgsticker',
+            'attp <text>',
+            'take <name>',
+            'stickerpack',
+            'stickercrop'
+        ]),
+        section('🤖 ARTIFICIAL INTELLIGENCE', [
+            'gpt',
+            'gemini',
+            'ai',
+            'imagine',
+            'flux',
+            'sora',
+            'cohere',
+            'mistral',
+            'moreai',
+            'aimenu'
+        ]),
+        section('📥 DOWNLOADER', [
+            'play <query>',
+            'song <query>',
+            'video <query>',
+            'spotify <query>',
+            'tiktok <url>',
+            'tiktokstalk <username>',
+            'instagram <url>',
+            'igstalk <username>',
+            'facebook <url>',
+            'gif <query>'
+        ]),
+        section('🎮 GAMES & FUN', [
+            'tictactoe',
+            'truth',
+            'dare',
+            'trivia',
+            'ship',
+            'hangman',
+            'coin',
+            'flip',
+            'dice',
+            'roll',
+            'rps <r/p/s>',
+            'riddle',
+            'wyr',
+            'nhie',
+            'compliment',
+            'flirt',
+            'insult',
+            'simp',
+            'stupid',
+            'shayari',
+            'roseday'
+        ]),
+        section('✨ FANCY FONTS', [
+            'fancyfonts <text>',
+            'ff bold <text>',
+            'ff italic <text>',
+            'ff script <text>',
+            'ff boldscript <text>',
+            'ff fraktur <text>',
+            'ff doublestruck <text>',
+            'ff bubble <text>',
+            'ff square <text>',
+            'ff aesthetic <text>',
+            'ff smallcaps <text>',
+            'ff upsidedown <text>',
+            'ff mock <text>',
+            'ff strikethrough <text>',
+            'ff underline <text>'
+        ]),
+        section('🔤 TEXT TOOLS', [
+            'reverse <text>',
+            'rev <text>',
+            'upper <text>',
+            'lower <text>',
+            'mock <text>',
+            'clap <text>',
+            'morse <text>',
+            'binary <text>',
+            'base64 <text>',
+            'unbase64 <text>',
+            'snake <text>',
+            'camel <text>',
+            'calc <expression>',
+            'password <length>'
+        ]),
+        section('🎲 FUN & RANDOM', [
+            'pickup',
+            'roast',
+            'yomama',
+            'catfact',
+            'cat',
+            'dogfact',
+            'dog',
+            'motivate',
+            'inspire',
+            'zodiac <dd/mm>',
+            'bmi <kg> <cm>',
+            'numberfact <n>',
+            'color',
+            'uptime',
+            'bf',
+            'gf',
+            'couple',
+            'movie <title>',
+            'trailer <title>',
+            'genmusic <prompt>',
+            'genlyrics <topic>',
+            'goodmorning',
+            'gm',
+            'goodnight'
+        ]),
+        section('🛡️ GROUP MANAGEMENT+', [
+            'add <number>',
+            'leave',
+            'creategroup',
+            'promoteall',
+            'demoteall',
+            'kickall',
+            'grouplink',
+            'tagadmin',
+            'getgpp',
+            'antileave on/off',
+            'gctime',
+            'addbadword',
+            'removebadword',
+            'listbadword',
+            'approveall',
+            'rejectall',
+            'disp',
+            'fangtrace',
+            'ex'
+        ]),
+        section('🤖 AUTO-MOD', [
+            'automod',
+            'antisticker',
+            'antiimage',
+            'antivideo',
+            'antiaudio',
+            'antimention',
+            'antispam',
+            'antigrouplink',
+            'antidemote',
+            'antipromote',
+            'antistatusmention',
+            'antigroupcall'
+        ]),
+        section('🧠 MORE AI MODELS', [
+            'deepseek',
+            'grok',
+            'blackbox',
+            'copilot',
+            'bing',
+            'claudeai',
+            'bard',
+            'groq',
+            'metai',
+            'perplexity',
+            'wormgpt',
+            'qwenai',
+            'ilama',
+            'venice',
+            'wizard',
+            'vicuna',
+            'zephyr',
+            'mixtral',
+            'analyze',
+            'humanizer',
+            'summarize',
+            'speechwriter',
+            'vision',
+            'totext'
+        ]),
+        section('🕵️ STALKER & INFO', [
+            'igstalk',
+            'tiktokstalk',
+            'gitstalk',
+            'twitterstalk',
+            'ipstalk',
+            'npmstalk',
+            'wachannel',
+            'stalkermenu'
+        ]),
+        section('🔐 SECURITY & NETWORK TOOLS', [
+            'whois',
+            'dnslookup',
+            'subdomain',
+            'reverseip',
+            'geoip',
+            'asnlookup',
+            'portscan',
+            'nmap',
+            'pinghost',
+            'traceroute',
+            'sslcheck',
+            'headers',
+            'hashidentify',
+            'hashcheck',
+            'passwordstrength',
+            'urlscan',
+            'phishcheck',
+            'techstack',
+            'securitymenu'
+        ]),
+        section('🛠️ UTILITY+', [
+            'wiki <query>',
+            'define <word>',
+            'covid <country>',
+            'country <name>',
+            'qr <text>',
+            'shazam',
+            'vcf <name> <number>',
+            'remind <time> <text>',
+            'sessioninfo',
+            'iplookup',
+            'getip',
+            'platform',
+            'github <query>',
+            'dnslookup <host>'
+        ]),
+        section('👑 OWNER+', [
+            'setbotname',
+            'resetbotname',
+            'about',
+            'setowner',
+            'resetowner',
+            'iamowner',
+            'broadcast',
+            'bc',
+            'shutdown',
+            'disk',
+            'hostip',
+            'getsettings',
+            'silent',
+            'privacy',
+            'lastseen',
+            'setchannel',
+            'setfooter',
+            'test'
+        ]),
+        section('🏆 SPORTS', [
+            'football',
+            'matchstats',
+            'teamnews',
+            'sportsnews',
+            'f1',
+            'nfl',
+            'mma',
+            'baseball',
+            'hockey',
+            'golf',
+            'sportsmenu',
+            'basketball',
+            'cricket',
+            'tennis'
+        ]),
+        section('🎨 LOGO STUDIO', [
+            'goldlogo',
+            'silverlogo',
+            'firelogo',
+            'neonlogo',
+            'icelogo',
+            'dragonlogo',
+            'rainbowlogo',
+            'shadowlogo',
+            'bloodlogo',
+            'logomenu'
+        ])
+    ];
 
-╭─〔 👮 GROUP CARE 〕
-│  ${p('warn')} @user
-│  ${p('kick')} @user
-│  ${p('ban')} @user
-│  ${p('promote')} @user
-│  ${p('demote')} @user
-│  ${p('mute')} [minutes]
-│  ${p('unmute')}
-│  ${p('antilink')}
-│  ${p('antibadword')}
-│  ${p('tagall')}
-│  ${p('hidetag')}
-│  ${p('welcome')}
-│  ${p('goodbye')}
-╰────────────────────────────╯
-
-╭─〔 🎨 MEDIA 〕
-│  ${p('sticker')}
-│  ${p('simage')}
-│  ${p('meme')}
-│  ${p('blur')}
-│  ${p('removebg')}
-│  ${p('remini')}
-│  ${p('emojimix')}
-│  ${p('tgsticker')}
-╰────────────────────────────╯
-
-╭─〔 🤖 AI & DOWNLOADS 〕
-│  ${p('ai')}
-│  ${p('gpt')}
-│  ${p('gemini')}
-│  ${p('imagine')}
-│  ${p('flux')}
-│  ${p('sora')}
-│  ${p('play')}
-│  ${p('song')}
-│  ${p('video')}
-│  ${p('tiktok')}
-│  ${p('instagram')}
-│  ${p('facebook')}
-╰────────────────────────────╯
-
-╭─〔 🎮 FUN & TOOLS 〕
-│  ${p('tictactoe')}
-│  ${p('truth')}
-│  ${p('dare')}
-│  ${p('hangman')}
-│  ${p('joke')}
-│  ${p('fact')}
-│  ${p('quote')}
-│  ${p('8ball')}
-│  ${p('fancyfonts')} <text>
-│  ${p('reverse')} <text>
-│  ${p('upper')} <text>
-│  ${p('lower')} <text>
-│  ${p('calc')} <expression>
-│  ${p('tts')} <text>
-│  ${p('weather')} <city>
-│  ${p('news')}
-╰────────────────────────────╯
-
-╭─〔 🔒 OWNER SETTINGS 〕
-│  ${p('mode')}
-│  ${p('settings')}
-│  ${p('restart')}
-│  ${p('autoread')}
-│  ${p('autotyping')}
-│  ${p('autostatus')}
-│  ${p('anticall')}
-│  ${p('pmblocker')}
-│  ${p('antidelete')}
-│  ${p('setbotpic')}
-╰────────────────────────────╯
+    return `${sections.join('\n\n')}
 
 > 🛡️ Admin and owner commands are permission-checked.
 > ⚡ Fast · reliable · deployment-friendly
 `;
 }
 
+function getMenuText() {
+    return `${getMenuIntro()}\n\n${getCommandsText()}`;
+}
+
 async function openMenu(sock, chatId, message) {
     const menu = getMenuText();
+    const intro = getMenuIntro();
 
     try {
         if (!fs.existsSync(MENU_IMAGE)) throw new Error('Menu image is missing');
         await sock.sendMessage(
             chatId,
-            { image: fs.readFileSync(MENU_IMAGE), caption: menu },
+            { image: fs.readFileSync(MENU_IMAGE), caption: intro },
             { quoted: message }
         );
+        await sock.sendMessage(chatId, { text: getCommandsText() }, { quoted: message });
     } catch (error) {
         console.error('[menu] Could not send local image:', error.message);
         await sock.sendMessage(chatId, { text: menu }, { quoted: message });
