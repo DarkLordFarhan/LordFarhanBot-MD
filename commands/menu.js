@@ -420,9 +420,10 @@ async function openMenu(sock, chatId, message) {
 
     try {
         if (!fs.existsSync(MENU_IMAGE)) throw new Error('Menu image is missing');
+        const imageBuffer = fs.readFileSync(MENU_IMAGE);
         await sock.sendMessage(
             chatId,
-            { image: fs.readFileSync(MENU_IMAGE), caption: intro },
+            { image: imageBuffer, mimetype: 'image/jpeg', caption: intro },
             { quoted: message }
         );
         await sock.sendMessage(chatId, { text: getCommandsText() }, { quoted: message });
