@@ -36,9 +36,8 @@ function getDateTime() {
 
 function section(title, entries) {
     return [
-        `╭─〔 ${title} 〕`,
-        ...entries.map((entry) => `│  ${command(entry)}`),
-        '╰────────────────────────────╯'
+        `*${title}*`,
+        ...entries.map((entry) => command(entry)),
     ].join('\n');
 }
 
@@ -403,10 +402,7 @@ function getCommandsText() {
         ])
     ];
 
-    return `${sections.join('\n\n')}
-
-> 🛡️ Admin and owner commands are permission-checked.
-> ⚡ Fast · reliable · deployment-friendly
+    return `${sections.join('\n')}
 `;
 }
 
@@ -416,17 +412,15 @@ function getMenuText() {
 
 async function openMenu(sock, chatId, message) {
     const menu = getMenuText();
-    const intro = getMenuIntro();
 
     try {
         if (!fs.existsSync(MENU_IMAGE)) throw new Error('Menu image is missing');
         const imageBuffer = fs.readFileSync(MENU_IMAGE);
         await sock.sendMessage(
             chatId,
-            { image: imageBuffer, mimetype: 'image/jpeg', caption: intro },
+            { image: imageBuffer, mimetype: 'image/jpeg', caption: menu },
             { quoted: message }
         );
-        await sock.sendMessage(chatId, { text: getCommandsText() }, { quoted: message });
     } catch (error) {
         console.error('[menu] Could not send local image:', error.message);
         await sock.sendMessage(chatId, { text: menu }, { quoted: message });
