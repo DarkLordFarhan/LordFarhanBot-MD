@@ -36,8 +36,9 @@ function getDateTime() {
 
 function section(title, entries) {
     return [
-        `*${title}*`,
-        ...entries.map((entry) => command(entry)),
+        `╭━━━〔 ${title} 〕━━━╮`,
+        ...entries.map((entry) => `🔹 ${command(entry)}`),
+        '╰━━━━━━━━━━━━━━━━━━━━╯'
     ].join('\n');
 }
 
@@ -48,15 +49,15 @@ function getMenuIntro() {
     const { day, time } = getDateTime();
 
     return `
-╭────────────────────────────╮
-│  🌑  *${botName}*  🌑
-│  ✨ *Version ${version}*
-│  📅 *Day:* ${day}
-│  🕒 *Time:* ${time} EAT
-│  🌦️ *Weather:* ${command('weather')} <city>
-│  👑 *Owner:* ${OWNER_NAME}
-│  📞 *Owner number:* ${ownerNumber}
-╰────────────────────────────╯`;
+╭━━━━━━━━━━━━━━━━━━━━━━━━━━━━╮
+┃ 🌑  *${botName}*  🌑
+┃ ✨ *Version ${version}*
+┃ 📅 *Day:* ${day}
+┃ 🕒 *Time:* ${time} EAT
+┃ 🌦️ *Weather:* ${command('weather')} <city>
+┃ 👑 *Owner:* ${OWNER_NAME}
+┃ 📞 *Owner number:* ${ownerNumber}
+╰━━━━━━━━━━━━━━━━━━━━━━━━━━━━╯`;
 }
 
 function getCommandsText() {
