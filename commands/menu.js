@@ -37,7 +37,8 @@ function getDateTime() {
 function section(title, entries) {
     return [
         `╭━━━〔 ${title} 〕━━━╮`,
-        ...entries.map((entry) => `🔹 ${command(entry)}`),
+        '┃',
+        ...entries.map((entry) => `┃ 🔹 ${command(entry)}`),
         '╰━━━━━━━━━━━━━━━━━━━━╯'
     ].join('\n');
 }
@@ -47,16 +48,18 @@ function getMenuIntro() {
     const version = settings.version || '3.0.7';
     const ownerNumber = settings.ownerNumber || '254795463911';
     const { day, time } = getDateTime();
+    const mode = settings.commandMode === 'private' ? 'Private' : 'Public';
 
     return `
 ╭━━━━━━━━━━━━━━━━━━━━━━━━━━━━╮
 ┃ 🌑  *${botName}*  🌑
-┃ ✨ *Version ${version}*
-┃ 📅 *Day:* ${day}
-┃ 🕒 *Time:* ${time} EAT
-┃ 🌦️ *Weather:* ${command('weather')} <city>
+┃ ✨ *Version:* ${version}
 ┃ 👑 *Owner:* ${OWNER_NAME}
-┃ 📞 *Owner number:* ${ownerNumber}
+┃ 🕒 *Time:* ${time} EAT
+┃ 📅 *Date:* ${day}
+┃ 🌐 *Zone:* Nairobi, Kenya (EAT)
+┃ ⚙️ *Mode:* ${mode}
+┃ 🌦️ *Weather:* ${command('weather')} <city>
 ╰━━━━━━━━━━━━━━━━━━━━━━━━━━━━╯`;
 }
 
@@ -403,7 +406,10 @@ function getCommandsText() {
         ])
     ];
 
-    return `${sections.join('\n')}
+    return `━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+*Available Commands:*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+${sections.join('\n')}
 `;
 }
 
